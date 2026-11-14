@@ -1,0 +1,115 @@
+# Stage 0 check: can the 2.4.0 Thymio Device Manager still be built on current Windows and macOS?
+# It fetches Mobsya/aseba unchanged and builds only the device manager. A failure here is useful
+# information: the log (uploaded as an artifact) shows exactly what needs fixing.
+name: device-manager build check
+
+on:
+  push:
+    branches: [main, setup]
+  workflow_dispatch:
+
+env:
+  ASEBA_REPO: https://github.com/Mobsya/aseba
+  ASEBA_REF: master
+  # Same vcpkg snapshot as aseba's vcpkg.json "builtin-baseline" (2022): keeps the old Boost
+  # that the code was written for. Upgrading Boost is a later step.
+  VCPKG_COMMIT: 456b97564391c78f0c61d8e8b617042aa7ae77bf
+  # aseba requires CMake 3.13; newer CMake refuses very old minimums in sub-projects without this.
+  CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+
+jobs:
+  build:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows (x64)
+            os: windows-latest
+            triplet: x64-windows-static
+          - name: macOS (Apple Silicon)
+            os: macos-latest
+            triplet: arm64-osx
+
+    steps:
+      - name: Fetch aseba 2.4.0 source with submodules
+        shell: bash
+        run: |
+          git clone --depth 1 --branch "$ASEBA_REF" "$ASEBA_REPO" aseba
+          cd aseba
+          git submodule update --init --recursive --depth 1 \
+            third_party/libusb/libusb third_party/spdlog/spdlog third_party/expected/expected \
+            third_party/aware third_party/flatbuffers third_party/fmt third_party/mpark.variant \
+            third_party/pugixml third_party/range-v3 third_party/qtzeroconf \
+            third_party/qt-solutions/qt-solutions third_party/quazip
+          git log -1 --format='aseba commit: %H %cd'
+
+      - name: Fetch vcpkg (pinned snapshot)
+        shell: bash
+        run: |
+          git clone https://github.com/microsoft/vcpkg vcpkg
+          git -C vcpkg checkout "$VCPKG_COMMIT"
+
+      - name: Bootstrap vcpkg (Windows)
+        if: runner.os == 'Windows'
+        run: .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
+
+      - name: Bootstrap vcpkg (macOS)
+        if: runner.os == 'macOS'
+        run: ./vcpkg/bootstrap-vcpkg.sh -disableMetrics && brew install ninja
+
+      - name: Cache vcpkg packages
+        uses: actions/cache@v4
+        with:
+          path: vcpkg-cache
+          key: vcpkg-${{ matrix.triplet }}-${{ env.VCPKG_COMMIT }}-${{ hashFiles('aseba/vcpkg.json') }}
+
+      - name: Set up MSVC (Windows)
+        if: runner.os == 'Windows'
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Configure
+        shell: bash
+        env:
+          VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-cache
+        run: |
+          mkdir -p vcpkg-cache logs
+          cmake -S aseba -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DCMAKE_TOOLCHAIN_FILE="$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake" \
+            -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+            -DBUILD_SHARED_LIBS=OFF \
+            2>&1 | tee logs/configure.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Build thymio-device-manager
+        shell: bash
+        run: |
+          cmake --build build --target thymio-device-manager 2>&1 | tee logs/build.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Smoke test (does it start?)
+        shell: bash
+        run: |
+          exe=$(find build -type f \( -name 'thymio-device-manager' -o -name 'thymio-device-manager.exe' \) | head -1)
+          echo "binary: $exe"
+          ls -l "$exe"
+          # No robot is attached in the cloud; we only check it starts and opens its WebSocket port.
+          ("$exe" > logs/tdm-run.log 2>&1 &) ; sleep 10
+          (curl -s -o /dev/null -w "port 8597 HTTP status: %{http_code}\n" http://127.0.0.1:8597/ || true) | tee -a logs/tdm-run.log
+          cat logs/tdm-run.log
+
+      - name: Upload logs and binary
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: device-manager-${{ matrix.triplet }}
+          path: |
+            logs/
+            build/**/thymio-device-manager
+            build/**/thymio-device-manager.exe
+          if-no-files-found: warn
