@@ -114,6 +114,8 @@ target_compile_definitions(aware PUBLIC AWARE_HAS_BONJOUR)
 target_link_libraries(aware PUBLIC Boost::asio Boost::chrono zeroconf)
 
 # flatbuffers: build flatc for the host, then generate the protocol header
+# The 2018 flatbuffers CMakeLists asks for CMake 2.8, which CMake 4 refuses without this.
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
 set(FLATBUFFERS_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(FLATBUFFERS_BUILD_FLATHASH OFF CACHE BOOL "" FORCE)
 set(FLATBUFFERS_INSTALL OFF CACHE BOOL "" FORCE)
