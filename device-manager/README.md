@@ -21,6 +21,8 @@ Patches:
 
 - `0001-build-with-current-boost-and-compilers.patch`: missing includes, Boost.UUID and Beast API
   changes (in the bundled `belle` HTTP library). `compat/` restores `beast::handler_ptr`.
+- `compat/force_include.h`: lets old bundled headers (range-v3, fmt 6) compile with current GCC and
+  Visual Studio without modifying them.
 - `0002-do-not-crash-when-usb-is-unavailable.patch`: the TDM crashed at start when USB access
   failed (missing permission, sandbox). It now logs an error and keeps serving.
 
@@ -40,5 +42,7 @@ cmake --build build
 - Linux (GCC 13, Boost 1.86, OpenSSL 3): builds; starts without USB access and without zeroconf;
   the WebSocket upgrade on 8597 works; `tdmclient` (the library behind the Thonny plug-in) connects
   on 8596 and completes the protocol handshake.
-- Windows and macOS: see the `device-manager` workflow runs.
+- GitHub cloud machines (`device-manager` workflow): builds, starts and answers the WebSocket
+  handshake on **Windows x64, macOS Apple Silicon, macOS Intel and Linux**.
+- Windows binary depends only on Windows system DLLs (OpenSSL and the C++ runtime are built in).
 - Not yet tested with a real robot.

@@ -47,3 +47,6 @@ Source: Mobsya/aseba `master` (VERSION.txt = 2.4.0), plus the VPL3, Blockly and 
   (libusb_init failure not checked). Fixed in device-manager/patches/0002.
 - Without zeroconf (as on school networks that block it) the device manager keeps running and the
   local WebSocket and TCP ports still work.
+- Note for maintainers: Boost.Asio settings such as `BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT` must
+  be identical for every library linked into the device manager; a mismatch crashes at start-up
+  (seen on macOS while setting up this build, not a 2.4.0 bug).

@@ -36,8 +36,9 @@ Thymio Suite 2.4.0 has four layers. Only the outer one is badly aged.
 
 ### Stage 0 — Diagnose (now)
 - [x] Audit 2.4.0 source (see docs/findings.md)
-- [x] Standalone device manager build with Boost 1.86 + OpenSSL 3, no Qt (device-manager/) — builds and runs on Linux
-- [ ] Same build passing on Windows and macOS in CI (`.github/workflows/device-manager.yml`)
+- [x] Standalone device manager build with Boost 1.86 + OpenSSL 3, no Qt (device-manager/)
+- [x] Builds, starts and answers on Windows, macOS (Apple Silicon + Intel) and Linux in CI
+- [ ] Test the new device manager with a real Thymio II (wired, then wireless dongle) on Windows
 - [ ] Find why the dongle / robot is not detected (Windows serial and USB code, macOS serial code, drivers)
 - [ ] Collect exact error reports from schools (wording, OS version, wired or wireless)
 
