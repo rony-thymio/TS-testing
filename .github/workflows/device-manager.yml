@@ -74,16 +74,27 @@ jobs:
         with:
           arch: x64
 
-      - name: Configure
+      - name: Install libraries with vcpkg (Boost 1.78, OpenSSL)
         shell: bash
         env:
           VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-cache
         run: |
           mkdir -p vcpkg-cache logs
+          # Classic mode, like the original 2.4.0 CI: install the packages listed in vcpkg-list.txt
+          # from the pinned snapshot. (Manifest mode needs the fork's full git history.)
+          rm -f aseba/vcpkg.json
+          ./vcpkg/vcpkg install --triplet ${{ matrix.triplet }} --clean-after-build \
+            $(tr -d '\r' < aseba/vcpkg-list.txt | sort -u) 2>&1 | tee logs/vcpkg.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Configure
+        shell: bash
+        run: |
           cmake -S aseba -B build -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DCMAKE_TOOLCHAIN_FILE="$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake" \
             -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} \
+            -DVCPKG_MANIFEST_MODE=OFF \
             -DBUILD_SHARED_LIBS=OFF \
             2>&1 | tee logs/configure.log
           exit ${PIPESTATUS[0]}
