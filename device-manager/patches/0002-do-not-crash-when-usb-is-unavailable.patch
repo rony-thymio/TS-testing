@@ -1,0 +1,74 @@
+diff --git a/aseba/thymio-device-manager/usbacceptor.cpp b/aseba/thymio-device-manager/usbacceptor.cpp
+index 788bd84..6b16fa7 100644
+--- a/aseba/thymio-device-manager/usbacceptor.cpp
++++ b/aseba/thymio-device-manager/usbacceptor.cpp
+@@ -84,8 +84,14 @@ int usb_acceptor_service::device_plugged(struct libusb_context* ctx, struct libu
+ 
+ 
+ void usb_acceptor_service::handle_request_by_active_enumeration() {
+-    libusb_device** devices;
++    if(!m_context || !*m_context)
++        return;  // USB unavailable (libusb_init failed)
++    libusb_device** devices = nullptr;
+     ssize_t ndevices = libusb_get_device_list(*m_context, &devices);
++    if(ndevices < 0) {
++        mLogWarn("USB enumeration failed: {}", libusb_error_name(int(ndevices)));
++        return;
++    }
+     std::vector<libusb_device*> sessions;
+     sessions.reserve(ndevices);
+ 
+diff --git a/aseba/thymio-device-manager/usbcontext.h b/aseba/thymio-device-manager/usbcontext.h
+index cc3e9bc..6fcbb3b 100644
+--- a/aseba/thymio-device-manager/usbcontext.h
++++ b/aseba/thymio-device-manager/usbcontext.h
+@@ -1,5 +1,6 @@
+ #pragma once
+ #include <libusb/libusb.h>
++#include <atomic>
+ #include <mutex>
+ #include <memory>
+ #include <thread>
+@@ -14,7 +15,14 @@ namespace details {
+     class usb_context {
+     public:
+         usb_context() {
+-            libusb_init(&ctx);
++            // If USB is unavailable (sandbox, missing permissions), keep running without USB
++            // instead of crashing in the event thread with an uninitialised context.
++            if(int r = libusb_init(&ctx); r != 0) {
++                mLogError("USB unavailable, libusb_init failed: {}", libusb_error_name(r));
++                ctx = nullptr;
++                return;
++            }
++            m_running = true;  // set before the thread starts, so the destructor cannot miss it
+             m_thread = std::thread([this]() { run(); });
+             // libusb_set_debug(ctx, LIBUSB_LOG_LEVEL_DEBUG);
+         }
+@@ -24,7 +32,8 @@ namespace details {
+             m_running = false;
+             if(m_thread.joinable())
+                 m_thread.join();
+-            libusb_exit(ctx);
++            if(ctx)
++                libusb_exit(ctx);
+         }
+         usb_context(const usb_context&) = delete;
+         usb_context(usb_context&& other) {
+@@ -69,7 +78,6 @@ namespace details {
+ 
+     private:
+         void run() {
+-            m_running = true;
+             timeval tv{7, 0};
+             while(m_running) {
+                 libusb_handle_events_timeout(ctx, &tv);
+@@ -78,7 +86,7 @@ namespace details {
+ 
+         libusb_context* ctx;
+         std::thread m_thread;
+-        std::atomic_bool m_running;
++        std::atomic_bool m_running{false};
+         std::vector<libusb_device*> m_open_devices;
+         mutable std::mutex m_device_mutex;
+     };

@@ -1,0 +1,128 @@
+diff --git a/aseba/common/msg/TargetDescription.h b/aseba/common/msg/TargetDescription.h
+index b742171..11e851c 100644
+--- a/aseba/common/msg/TargetDescription.h
++++ b/aseba/common/msg/TargetDescription.h
+@@ -20,6 +20,7 @@
+ #ifndef ASEBA_TARGET_DESCRIPTION
+ #define ASEBA_TARGET_DESCRIPTION
+ 
++#include <cstdint>
+ #include <map>
+ #include <string>
+ #include <vector>
+diff --git a/aseba/thymio-device-manager/interfaces.h b/aseba/thymio-device-manager/interfaces.h
+index 60e6847..faa8593 100644
+--- a/aseba/thymio-device-manager/interfaces.h
++++ b/aseba/thymio-device-manager/interfaces.h
+@@ -1,4 +1,5 @@
+ #pragma once
++#include <map>
+ #include <boost/asio/ip/address.hpp>
+ #include <boost/asio/ip/tcp.hpp>
+ #include <set>
+diff --git a/aseba/thymio-device-manager/main.cpp b/aseba/thymio-device-manager/main.cpp
+index e791f0b..a6df1b6 100644
+--- a/aseba/thymio-device-manager/main.cpp
++++ b/aseba/thymio-device-manager/main.cpp
+@@ -1,3 +1,4 @@
++#include <fstream>
+ #include <boost/program_options.hpp>
+ #include <boost/asio/executor_work_guard.hpp>
+ #include <boost/interprocess/sync/file_lock.hpp>
+diff --git a/aseba/thymio-device-manager/node_id.h b/aseba/thymio-device-manager/node_id.h
+index b4d1ca0..b2e1a11 100644
+--- a/aseba/thymio-device-manager/node_id.h
++++ b/aseba/thymio-device-manager/node_id.h
+@@ -1,4 +1,5 @@
+ #pragma once
++#include <cstring>
+ #include <boost/container_hash/hash.hpp>
+ #include <boost/uuid/uuid.hpp>
+ #include <boost/uuid/uuid_generators.hpp>
+@@ -22,7 +23,9 @@ public:
+ 
+     /*Return a short node id compatible with thyimio 2, but with much less entropy*/
+     uint16_t short_for_thymio2() const {
+-        return *reinterpret_cast<const uint16_t*>(data);
++        uint16_t v;
++        std::memcpy(&v, &(*this).data[0], sizeof(v));
++        return v;
+     }
+ };
+ }  // namespace mobsya
+diff --git a/third_party/belle/include/belle/belle.hh b/third_party/belle/include/belle/belle.hh
+index 44eabdd..8a790b4 100644
+--- a/third_party/belle/include/belle/belle.hh
++++ b/third_party/belle/include/belle/belle.hh
+@@ -814,7 +814,7 @@ public:
+   // serialize path and query parameters to the target
+   void params_serialize()
+   {
+-    std::string path {target().to_string()};
++    std::string path {std::string(target())};
+ 
+     _path.clear();
+     _path.emplace_back(path);
+@@ -836,7 +836,7 @@ public:
+   // parse the query parameters from the target
+   void params_parse()
+   {
+-    std::string path {target().to_string()};
++    std::string path {std::string(target())};
+ 
+     // separate the query params
+     auto params = Detail::split(path, "?", 1);
+@@ -1232,14 +1232,19 @@ private:
+         }
+       );
+ 
+-      derived().socket().async_accept_ex(_ctx.req,
+-        [&](auto& res)
+-        {
+-          for (auto const& e : _attr->http_headers)
++      // Boost >= 1.74: response headers are added with a decorator option (async_accept_ex was removed).
++      {
++        auto headers = _attr->http_headers;
++        derived().socket().set_option(websocket::stream_base::decorator(
++          [headers](websocket::response_type& res)
+           {
+-            res.insert(e.name_string(), e.value());
+-          }
+-        },
++            for (auto const& e : headers)
++            {
++              res.insert(e.name_string(), e.value());
++            }
++          }));
++      }
++      derived().socket().async_accept(_ctx.req,
+         net::bind_executor(_strand,
+           [self = derived().shared_from_this()](error_code ec)
+           {
+@@ -1579,7 +1584,7 @@ private:
+         return 404;
+       }
+ 
+-      std::string path {_attr->public_dir + _ctx.req.target().to_string()};
++      std::string path {_attr->public_dir + std::string(_ctx.req.target())};
+ 
+       if (path.back() == '/')
+       {
+@@ -1636,7 +1641,7 @@ private:
+       std::regex_constants::match_flag_type const rx_flgs {std::regex_constants::match_not_null};
+ 
+       // the request path
+-      std::string path {_ctx.req.target().to_string()};
++      std::string path {std::string(_ctx.req.target())};
+ 
+       // separate the query parameters
+       auto params = Detail::split(path, "?", 1);
+@@ -1802,7 +1807,7 @@ private:
+     bool handle_websocket()
+     {
+       // the request path
+-      std::string path {_ctx.req.target().to_string()};
++      std::string path {std::string(_ctx.req.target())};
+ 
+       // separate the query parameters
+       auto params = Detail::split(path, "?", 1);

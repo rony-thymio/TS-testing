@@ -1,146 +1,119 @@
-# Stage 0 check: can the 2.4.0 Thymio Device Manager still be built on current Windows and macOS?
-# It fetches Mobsya/aseba unchanged and builds only the device manager. A failure here is useful
-# information: the log (uploaded as an artifact) shows exactly what needs fixing.
-name: device-manager build check
+# Builds the Thymio Device Manager from the Mobsya/aseba 2.4.0 source with current libraries
+# (Boost 1.86, OpenSSL 3, no Qt), using device-manager/CMakeLists.txt and device-manager/patches/.
+# Then starts it and checks that its WebSocket server (port 8597, used by VPL3/Blockly/Scratch) answers.
+name: device-manager
 
 on:
   push:
     branches: [main]
+    paths: ['device-manager/**', '.github/workflows/device-manager.yml']
   workflow_dispatch:
 
 env:
   ASEBA_REPO: https://github.com/Mobsya/aseba
-  ASEBA_REF: master
-  # Same vcpkg snapshot as aseba's vcpkg.json "builtin-baseline" (Feb 2022, Boost 1.78): keeps the
-  # old Boost that the code was written for. Upgrading Boost is a later step.
-  VCPKG_COMMIT: 456b97564391c78f0c61d8e8b617042aa7ae77bf
-  # aseba requires CMake 3.13; newer CMake refuses very old minimums in sub-projects without this.
-  CMAKE_POLICY_VERSION_MINIMUM: "3.5"
+  ASEBA_COMMIT: 78225eb6a9fcdb0bb92b0e2e556321687d94c307   # master, Dec 2022 (Thymio Suite 2.4.0)
 
 jobs:
   build:
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 120
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Windows (x64)
-            os: windows-latest
-            triplet: x64-windows-static
-          - name: macOS (Apple Silicon)
-            os: macos-latest
-            triplet: arm64-osx
-          # Same code, but with today's Boost and OpenSSL 3 from Homebrew instead of the 2022 versions.
-          # Shows what must be ported for a modern, secure build.
-          - name: macOS (Apple Silicon, current libraries)
-            os: macos-latest
-            triplet: arm64-osx
-            deps: brew
+          - { name: Windows x64, os: windows-latest }
+          - { name: macOS Apple Silicon, os: macos-latest }
+          - { name: macOS Intel, os: macos-15-intel }
+          - { name: Linux x64, os: ubuntu-latest }
 
     steps:
-      - name: Fetch aseba 2.4.0 source with submodules
+      - uses: actions/checkout@v4
+
+      - name: Fetch aseba source (2.4.0) and apply patches
         shell: bash
         run: |
-          git clone --depth 1 --branch "$ASEBA_REF" "$ASEBA_REPO" aseba
-          cd aseba
-          git submodule update --init --recursive --depth 1 \
+          git init -q aseba && cd aseba
+          git fetch -q --depth 1 "$ASEBA_REPO" "$ASEBA_COMMIT" && git checkout -q FETCH_HEAD
+          git submodule update --init --depth 1 \
             third_party/libusb/libusb third_party/spdlog/spdlog third_party/expected/expected \
             third_party/aware third_party/flatbuffers third_party/fmt third_party/mpark.variant \
-            third_party/pugixml third_party/range-v3 third_party/qtzeroconf \
-            third_party/qt-solutions/qt-solutions third_party/quazip
-          git log -1 --format='aseba commit: %H %cd'
+            third_party/pugixml third_party/range-v3
+          for p in ../device-manager/patches/*.patch; do echo "applying $p"; git apply --whitespace=nowarn "$p"; done
 
-      - name: Fetch vcpkg (pinned snapshot)
-        if: matrix.deps != 'brew'
-        shell: bash
-        run: |
-          # 2.4.0 used Mobsya's own vcpkg fork; this commit (Feb 2022, Boost 1.78) only exists there.
-          git init -q vcpkg
-          git -C vcpkg fetch -q --depth 1 https://github.com/Mobsya/vcpkg "$VCPKG_COMMIT"
-          git -C vcpkg checkout -q FETCH_HEAD
+      - name: Install tools (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ninja openssl@3 && echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl@3)" >> $GITHUB_ENV
 
-      - name: Bootstrap vcpkg (Windows)
-        if: runner.os == 'Windows'
-        run: .\vcpkg\bootstrap-vcpkg.bat -disableMetrics
-
-      - name: Bootstrap vcpkg (macOS)
-        if: runner.os == 'macOS' && matrix.deps != 'brew'
-        run: ./vcpkg/bootstrap-vcpkg.sh -disableMetrics && brew install ninja
-
-      - name: Install current libraries (Homebrew)
-        if: matrix.deps == 'brew'
-        run: brew install ninja boost openssl@3 && mkdir -p logs && brew list --versions boost openssl@3 | tee logs/versions.log
-
-      - name: Cache vcpkg packages
-        if: matrix.deps != 'brew'
-        uses: actions/cache@v4
-        with:
-          path: vcpkg-cache
-          key: vcpkg-${{ matrix.triplet }}-${{ env.VCPKG_COMMIT }}-${{ hashFiles('aseba/vcpkg.json') }}
+      - name: Install tools (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -q && sudo apt-get install -y -q ninja-build libssl-dev libavahi-compat-libdnssd-dev
 
       - name: Set up MSVC (Windows)
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: x64
+        with: { arch: x64 }
 
-      - name: Install libraries with vcpkg (Boost 1.78, OpenSSL)
-        if: matrix.deps != 'brew'
-        shell: bash
-        env:
-          VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/vcpkg-cache
+      - name: Install OpenSSL 3 (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
         run: |
-          mkdir -p vcpkg-cache logs
-          # Classic mode, like the original 2.4.0 CI: install the packages listed in vcpkg-list.txt
-          # from the pinned snapshot. (Manifest mode needs the fork's full git history.)
-          rm -f aseba/vcpkg.json
-          # The Visual Studio shell sets VCPKG_ROOT to its own vcpkg; force ours.
-          unset VCPKG_ROOT
-          ./vcpkg/vcpkg install --vcpkg-root "$PWD/vcpkg" --triplet ${{ matrix.triplet }} --clean-after-build \
-            $(tr -d '\r' < aseba/vcpkg-list.txt | sort -u) 2>&1 | tee logs/vcpkg.log
-          exit ${PIPESTATUS[0]}
+          choco install openssl --no-progress -y
+          $root = @("C:\Program Files\OpenSSL-Win64", "C:\Program Files\OpenSSL") | Where-Object { Test-Path $_ } | Select-Object -First 1
+          "OPENSSL_ROOT_DIR=$root" >> $env:GITHUB_ENV
+          Get-ChildItem -Recurse "$root\lib" -Filter *.lib | Select-Object -First 10 FullName
+
+      - name: Cache Boost download
+        uses: actions/cache@v4
+        with:
+          path: build/_deps/boost-subbuild/boost-populate-prefix/src
+          key: boost-1.86.0-${{ runner.os }}
 
       - name: Configure
         shell: bash
         run: |
           mkdir -p logs
-          if [ "${{ matrix.deps }}" = brew ]; then
-            DEPS="-DOPENSSL_ROOT_DIR=$(brew --prefix openssl@3)"
-          else
-            unset VCPKG_ROOT
-            DEPS="-DCMAKE_TOOLCHAIN_FILE=$PWD/vcpkg/scripts/buildsystems/vcpkg.cmake -DVCPKG_TARGET_TRIPLET=${{ matrix.triplet }} -DVCPKG_MANIFEST_MODE=OFF"
-          fi
-          cmake -S aseba -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=OFF $DEPS \
-            2>&1 | tee logs/configure.log
+          cmake -S device-manager -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+            -DASEBA_SOURCE_DIR="$PWD/aseba" 2>&1 | tee logs/configure.log
           exit ${PIPESTATUS[0]}
 
-      - name: Build thymio-device-manager
+      - name: Build
         shell: bash
         run: |
-          cmake --build build --target thymio-device-manager 2>&1 | tee logs/build.log
+          cmake --build build --target thymio-device-manager thymio2-firmware-upgrader 2>&1 | tee logs/build.log
           exit ${PIPESTATUS[0]}
 
-      - name: Smoke test (does it start?)
+      - name: Check dependencies of the binary
         shell: bash
         run: |
-          exe=$(find build -type f \( -name 'thymio-device-manager' -o -name 'thymio-device-manager.exe' \) | head -1)
-          echo "binary: $exe"
-          ls -l "$exe"
-          # No robot is attached in the cloud; we only check it starts and opens its WebSocket port.
-          ("$exe" > logs/tdm-run.log 2>&1 &) ; sleep 10
-          (curl -s -o /dev/null -w "port 8597 HTTP status: %{http_code}\n" http://127.0.0.1:8597/ || true) | tee -a logs/tdm-run.log
+          case "$RUNNER_OS" in
+            macOS)   otool -L build/bin/thymio-device-manager ;;
+            Linux)   ldd build/bin/thymio-device-manager ;;
+            Windows) dumpbin //dependents build/bin/thymio-device-manager.exe ;;
+          esac 2>&1 | tee logs/dependencies.log
+
+      - name: Smoke test (starts, WebSocket answers on port 8597)
+        shell: bash
+        run: |
+          exe=build/bin/thymio-device-manager; [ "$RUNNER_OS" = Windows ] && exe=$exe.exe
+          "$exe" > logs/tdm-run.log 2>&1 &
+          pid=$!
+          sleep 8
+          code=$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 \
+            -H 'Connection: Upgrade' -H 'Upgrade: websocket' -H 'Sec-WebSocket-Version: 13' \
+            -H 'Sec-WebSocket-Key: dGhlIHNhbXBsZSBub25jZQ==' http://127.0.0.1:8597/ || true)
+          echo "WebSocket handshake HTTP status: $code" | tee -a logs/tdm-run.log
+          kill $pid 2>/dev/null || true
           cat logs/tdm-run.log
+          [ "$code" = 101 ]
 
-      - name: Upload logs and binary
+      - name: Upload binaries and logs
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: device-manager-${{ matrix.triplet }}-${{ matrix.deps || 'pinned' }}
+          name: thymio-device-manager-${{ runner.os }}-${{ runner.arch }}
           path: |
             logs/
-            vcpkg/buildtrees/*/*.log
-            build/**/thymio-device-manager
-            build/**/thymio-device-manager.exe
+            build/bin/thymio-device-manager*
+            build/bin/thymio2-firmware-upgrader*
           if-no-files-found: warn

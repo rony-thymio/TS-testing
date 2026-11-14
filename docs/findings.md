@@ -12,7 +12,7 @@ Source: Mobsya/aseba `master` (VERSION.txt = 2.4.0), plus the VPL3, Blockly and 
 | Windows builder | windows-2019, MSVC 2019 | Old, but Windows build still works on current PCs |
 | Windows drivers | `dpinst` / `devcon` (windows/thymio-drivers) | Legacy driver install tools; to check on Windows 11 |
 | Discovery | zeroconf (Bonjour / avahi) | Often blocked on school networks; macOS asks for Local Network permission |
-| Boost | via vcpkg, pinned 2022 baseline | Code uses `io_service`, removed in Boost 1.87 — needs pinning or a small port |
+| Boost | Mobsya's own vcpkg fork (commit 456b975, Feb 2022) | Code relies on Beast APIs removed in Boost 1.74 (`handler_ptr`, `async_accept_ex`); the 2022 snapshot no longer builds on current macOS (boost-thread fails with the new Apple compiler) |
 
 ## Components
 
@@ -35,3 +35,15 @@ Source: Mobsya/aseba `master` (VERSION.txt = 2.4.0), plus the VPL3, Blockly and 
 
 - Exact error messages and OS versions from failing machines.
 - Whether detection failures are drivers, serial-port detection, or zeroconf.
+
+## Build findings (Stage 0)
+
+- Rebuilding 2.4.0 as it was (Mobsya vcpkg snapshot) fails on current macOS: Boost from that snapshot
+  does not compile with today's Apple compiler. The top-level build also requires Qt 5 even for the
+  device manager.
+- The device manager itself does **not** need Qt. A standalone build (device-manager/) with
+  Boost 1.86 and OpenSSL 3 needs only small source patches.
+- Bug found: the device manager crashed at start-up when USB access was unavailable
+  (libusb_init failure not checked). Fixed in device-manager/patches/0002.
+- Without zeroconf (as on school networks that block it) the device manager keeps running and the
+  local WebSocket and TCP ports still work.
