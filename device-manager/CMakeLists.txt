@@ -20,6 +20,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(BUILD_SHARED_LIBS OFF)
+if(WIN32)
+    # Keep <windows.h> from pulling in the old <winsock.h>, which conflicts with Boost.Asio.
+    add_compile_definitions(WIN32_LEAN_AND_MEAN NOMINMAX _WIN32_WINNT=0x0A00)
+endif()
 if(MSVC)
     add_compile_options(/utf-8 /permissive- /bigobj)
     # Static runtime: a single .exe with no Visual C++ redistributable needed in schools.

@@ -47,7 +47,7 @@ jobs:
 
       - name: Install tools (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update -q && sudo apt-get install -y -q ninja-build libssl-dev libavahi-compat-libdnssd-dev
+        run: sudo apt-get update -q && sudo apt-get install -y -q ninja-build libssl-dev  # no dns_sd: uses dev stub (Linux packaging is Stage 2)
 
       - name: Set up MSVC (Windows)
         if: runner.os == 'Windows'
@@ -73,7 +73,7 @@ jobs:
         shell: bash
         run: |
           mkdir -p logs
-          cmake -S device-manager -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
+          cmake -S device-manager -B build -G Ninja -DCMAKE_BUILD_TYPE=RelWithDebInfo \
             -DASEBA_SOURCE_DIR="$PWD/aseba" 2>&1 | tee logs/configure.log
           exit ${PIPESTATUS[0]}
 
@@ -106,6 +106,13 @@ jobs:
           kill $pid 2>/dev/null || true
           cat logs/tdm-run.log
           [ "$code" = 101 ]
+
+      - name: Crash report (macOS)
+        if: failure() && runner.os == 'macOS'
+        run: |
+          lldb --batch -o "run" -o "thread backtrace all" -k "thread backtrace all" -k "quit 1" \
+            -- build/bin/thymio-device-manager 2>&1 | tee logs/crash.log | head -150 &
+          sleep 25; pkill -f build/bin/thymio-device-manager || true; wait || true
 
       - name: Upload binaries and logs
         if: always()
