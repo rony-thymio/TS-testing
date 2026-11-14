@@ -5,14 +5,14 @@ name: device-manager build check
 
 on:
   push:
-    branches: [main, setup]
+    branches: [main]
   workflow_dispatch:
 
 env:
   ASEBA_REPO: https://github.com/Mobsya/aseba
   ASEBA_REF: master
-  # Same vcpkg snapshot as aseba's vcpkg.json "builtin-baseline" (2022): keeps the old Boost
-  # that the code was written for. Upgrading Boost is a later step.
+  # Same vcpkg snapshot as aseba's vcpkg.json "builtin-baseline" (Feb 2022, Boost 1.78): keeps the
+  # old Boost that the code was written for. Upgrading Boost is a later step.
   VCPKG_COMMIT: 456b97564391c78f0c61d8e8b617042aa7ae77bf
   # aseba requires CMake 3.13; newer CMake refuses very old minimums in sub-projects without this.
   CMAKE_POLICY_VERSION_MINIMUM: "3.5"
@@ -49,8 +49,10 @@ jobs:
       - name: Fetch vcpkg (pinned snapshot)
         shell: bash
         run: |
-          git clone https://github.com/microsoft/vcpkg vcpkg
-          git -C vcpkg checkout "$VCPKG_COMMIT"
+          # 2.4.0 used Mobsya's own vcpkg fork; this commit (Feb 2022, Boost 1.78) only exists there.
+          git init -q vcpkg
+          git -C vcpkg fetch -q --depth 1 https://github.com/Mobsya/vcpkg "$VCPKG_COMMIT"
+          git -C vcpkg checkout -q FETCH_HEAD
 
       - name: Bootstrap vcpkg (Windows)
         if: runner.os == 'Windows'
