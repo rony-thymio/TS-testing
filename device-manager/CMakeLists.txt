@@ -40,6 +40,23 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 find_package(Threads REQUIRED)
 
+# These change the layout of Boost.Asio types, so they must be identical for every library
+# linked into the device manager (aware, belle, the TDM itself). Setting them only on the TDM
+# target made aware's sockets a different size and crashed at start-up on macOS.
+add_compile_definitions(
+    BOOST_ALLOW_DEPRECATED_HEADERS
+    BOOST_THREAD_PROVIDES_FUTURE_CONTINUATION
+    BOOST_BEAST_ALLOW_DEPRECATED
+    BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT   # pre-1.74 executor model the code was written for
+    $<$<BOOL:${WIN32}>:BOOST_USE_WINDOWS_H>)
+
+# Workarounds for old bundled headers with current compilers (see compat/force_include.h).
+if(MSVC)
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:/FI${CMAKE_CURRENT_SOURCE_DIR}/compat/force_include.h>")
+else()
+    add_compile_options("$<$<COMPILE_LANGUAGE:CXX>:SHELL:-include ${CMAKE_CURRENT_SOURCE_DIR}/compat/force_include.h>")
+endif()
+
 # ---------------------------------------------------------------- Boost (current, fetched)
 set(TDM_BOOST_VERSION "1.86.0" CACHE STRING "Boost release to use")
 include(FetchContent)
@@ -188,14 +205,7 @@ endif()
 # compat/ goes first: it restores APIs that newer Boost removed (see compat/README.md).
 target_include_directories(thymio-device-manager-lib BEFORE PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/compat")
 target_include_directories(thymio-device-manager-lib PUBLIC "${A}/third_party/belle/include")
-target_compile_definitions(thymio-device-manager-lib PUBLIC
-    SPDLOG_FMT_EXTERNAL
-    BOOST_ALLOW_DEPRECATED_HEADERS
-    BOOST_THREAD_PROVIDES_FUTURE_CONTINUATION
-    BOOST_BEAST_ALLOW_DEPRECATED
-    # Keep the pre-1.74 polymorphic executor model the code was written for.
-    BOOST_ASIO_USE_TS_EXECUTOR_AS_DEFAULT
-    $<$<BOOL:${WIN32}>:BOOST_USE_WINDOWS_H _WIN32_WINNT=0x0A00>)
+target_compile_definitions(thymio-device-manager-lib PUBLIC SPDLOG_FMT_EXTERNAL)
 target_link_libraries(thymio-device-manager-lib PUBLIC
     asebacommon asebacompiler thymio-flatbuffers
     Boost::asio Boost::beast Boost::program_options Boost::filesystem Boost::date_time
