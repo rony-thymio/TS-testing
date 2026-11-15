@@ -62,8 +62,12 @@ jobs:
           Invoke-WebRequest "https://github.com/thonny/thonny/releases/download/v$ver/thonny-$ver-x64.exe" -OutFile thonny-setup.exe
           $dest = Join-Path $PWD "thonny"
           Start-Process -Wait -FilePath .\thonny-setup.exe -ArgumentList "/SP-","/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/CURRENTUSER","/NOICONS","/DIR=`"$dest`""
-          & "$dest\python.exe" -m pip install --no-warn-script-location --disable-pip-version-check tdmclient_ty
+          # tdmclient from GitHub: the PyPI release (0.1.21) fails on Python 3.14 (ast.Num removed);
+          # this upstream commit has the fix.
+          & "$dest\python.exe" -m pip install --no-warn-script-location --disable-pip-version-check `
+            "tdmclient @ git+https://github.com/epfl-mobots/tdm-python@42ef302f2255ff0ede3c4b8e9d5abd1d31f9ad6a" tdmclient_ty
           & "$dest\python.exe" -c "import thonnycontrib.tdmclient_ty, tdmclient; print('plug-in OK')"
+          & "$dest\python.exe" -c "from tdmclient.atranspiler import ATranspiler; t=ATranspiler(); t.set_source('leds_top = [32, 0, 0]'); t.transpile(); print(t.get_output())"
           Remove-Item thonny-setup.exe
           Get-ChildItem $dest | Select-Object -First 15 Name
 

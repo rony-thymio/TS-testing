@@ -47,6 +47,11 @@
         ws.binaryType = 'arraybuffer';
         this._ws = ws;
         let settled = false;
+        // A device manager that accepts the connection but never answers (busy or stuck)
+        // must not block the launcher: give up after 8 s and let the caller retry.
+        const timer = setTimeout(() => {
+          if (!settled) { settled = true; try { ws.close(); } catch (e) {} reject(new Error('handshake timeout')); }
+        }, 8000);
         ws.onopen = () => this._sendHandshake();
         ws.onerror = (e) => { if (!settled) { settled = true; reject(e); } };
         ws.onclose = () => {
@@ -57,7 +62,7 @@
         ws.onmessage = (ev) => {
           const kind = this._onMessage(new Uint8Array(ev.data));
           if (kind === 'handshake' && !settled) {
-            settled = true;
+            settled = true; clearTimeout(timer);
             if (this.onConnectionChanged) this.onConnectionChanged(true);
             resolve(this);
           }

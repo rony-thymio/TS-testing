@@ -38,3 +38,11 @@ dialog with Copy and Save to Desktop, device manager on loopback only, accept er
 - **0.4: robot Y4918 (wireless, dongle, firmware 14) listed as Ready; VPL3 opened and a
   program (start event → top/bottom colours) ran on the robot.** First complete end-to-end
   test of the new suite.
+
+## 2026-11-15/16 — Launcher 0.6, Windows
+
+- Rename: works (robot renamed "hello"), but the text field was shrunk to 20 px by the radio-button CSS rule. Fixed in 0.7.
+- Thonny: opens; "Run on Thymio" failed with `AttributeError: module 'ast' has no attribute 'Num'` (Python 3.14 in Thonny 5,
+  tdmclient 0.1.21 from PyPI). Fixed in 0.7 by installing tdmclient from upstream commit 42ef302.
+- Pairing: first attempt left the launcher unable to reach the device manager (not reproduced after restart, no log).
+  Second attempt: one robot with one dongle, firmware 14, paired on network C0E4 channel 1. 0.7 adds an 8 s handshake timeout.

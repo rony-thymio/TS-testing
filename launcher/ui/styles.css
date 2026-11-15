@@ -28,7 +28,7 @@ h2 { margin: 0; font-size: 18px; font-weight: 600; }
 .robot { display: flex; gap: 12px; align-items: center; padding: 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
 .robot.selected { border: 2px solid var(--accent); background: var(--accent-soft); padding: 11px; }
 .robot.disabled { cursor: not-allowed; opacity: .8; }
-.robot input { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); }
+.robot input[type=radio] { width: 20px; height: 20px; margin: 0; accent-color: var(--accent); flex-shrink: 0; }
 .robot-main { flex: 1; min-width: 0; }
 .robot-name { font-size: 16px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .robot-sub { font-size: 13px; color: var(--muted); }
@@ -71,7 +71,7 @@ dialog::backdrop { background: rgba(28, 26, 41, .45); }
 .robot-actions { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
 .mini { min-height: 32px; padding: 0 10px; font-size: 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; font: inherit; font-size: 12px; }
 .mini:hover { border-color: var(--accent); }
-.rename-input { font: inherit; font-size: 15px; padding: 4px 8px; border: 1px solid var(--accent); border-radius: 8px; width: 100%; }
+.rename-input { font: inherit; font-size: 15px; padding: 4px 8px; border: 1px solid var(--accent); border-radius: 8px; width: 100%; min-width: 0; box-sizing: border-box; color: var(--ink); background: #fff; }
 .pairing { align-items: stretch; }
 .pair-modes { flex: 1 1 300px; max-width: 380px; display: flex; flex-direction: column; gap: 12px; align-self: flex-start; }
 .pair-modes .btn { align-self: flex-start; }
