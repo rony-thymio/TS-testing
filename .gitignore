@@ -3,6 +3,7 @@ node_modules/
 target/
 .DS_Store
 launcher/ui/apps/
+launcher/webapps/
 launcher/src-tauri/binaries/
 launcher/src-tauri/gen/
 launcher/src-tauri/icons/*

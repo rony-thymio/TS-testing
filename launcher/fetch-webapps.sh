@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Downloads the VPL3, Blockly and Scratch web apps (same releases as Thymio Suite 2.4.0)
-# into launcher/ui/apps/ so they are bundled with the launcher and work offline.
+# into launcher/webapps/; they are installed next to the launcher and served locally, offline.
 set -euo pipefail
 cd "$(dirname "$0")"
-dest=ui/apps
+dest=webapps
 rm -rf "$dest" && mkdir -p "$dest"
 fetch() { curl -fsSL --retry 3 "$1" | tar xz -C "$dest"; }
 fetch https://github.com/Mobsya/thymio-blockly-standalone/releases/download/v20210908.3/thymio-blockly.tar.gz

@@ -5,6 +5,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use std::fs::{self, File};
+use std::io::Read;
 use std::io::{BufRead, BufReader};
 use std::net::{SocketAddr, TcpStream};
 use std::path::PathBuf;
@@ -20,6 +21,13 @@ const TDM_WS_PORT: u16 = 8597;
 // Same WebView2 arguments for every window (WebView2 requires it). Tauri's defaults, plus turning
 // off Chromium's private/local-network checks so pages can reach the device manager on localhost.
 const BROWSER_ARGS: &str = "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection,LocalNetworkAccessChecks,BlockInsecurePrivateNetworkRequests,PrivateNetworkAccessSendPreflights";
+
+/// Port of the local web server that serves the bundled VPL3 / Blockly / Scratch files.
+#[derive(Default)]
+struct WebApps {
+    port: Mutex<Option<u16>>,
+    error: Mutex<Option<String>>,
+}
 
 #[derive(Default)]
 struct DeviceManager {
@@ -97,6 +105,108 @@ fn stop_device_manager(app: &tauri::AppHandle) {
     }
 }
 
+fn mime_type(path: &std::path::Path) -> &'static str {
+    match path.extension().and_then(|e| e.to_str()).map(|e| e.to_ascii_lowercase()).as_deref() {
+        Some("html") | Some("htm") => "text/html; charset=utf-8",
+        Some("js") | Some("mjs") => "text/javascript; charset=utf-8",
+        Some("css") => "text/css; charset=utf-8",
+        Some("json") | Some("map") => "application/json",
+        Some("svg") => "image/svg+xml",
+        Some("png") => "image/png",
+        Some("jpg") | Some("jpeg") => "image/jpeg",
+        Some("gif") => "image/gif",
+        Some("webp") => "image/webp",
+        Some("ico") => "image/x-icon",
+        Some("wav") => "audio/wav",
+        Some("mp3") => "audio/mpeg",
+        Some("ogg") => "audio/ogg",
+        Some("woff") => "font/woff",
+        Some("woff2") => "font/woff2",
+        Some("ttf") => "font/ttf",
+        Some("otf") => "font/otf",
+        Some("wasm") => "application/wasm",
+        Some("txt") | Some("md") => "text/plain; charset=utf-8",
+        Some("xml") => "application/xml",
+        _ => "application/octet-stream",
+    }
+}
+
+fn percent_decode(s: &str) -> String {
+    let bytes = s.as_bytes();
+    let mut out = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' && i + 2 < bytes.len() {
+            if let Ok(v) = u8::from_str_radix(&s[i + 1..i + 3], 16) {
+                out.push(v);
+                i += 3;
+                continue;
+            }
+        }
+        out.push(bytes[i]);
+        i += 1;
+    }
+    String::from_utf8_lossy(&out).into_owned()
+}
+
+/// Serves `root` on http://127.0.0.1:<free port>/ (this computer only). The programming
+/// environments are ordinary web pages, so they are opened from a normal http address, exactly
+/// as in a browser, and can reach the device manager on ws://127.0.0.1:8597.
+fn start_webapp_server(root: PathBuf) -> Result<u16, String> {
+    let server = tiny_http::Server::http("127.0.0.1:0").map_err(|e| e.to_string())?;
+    let port = server.server_addr().to_ip().map(|a| a.port()).ok_or("no port")?;
+    std::thread::spawn(move || {
+        for request in server.incoming_requests() {
+            let raw = request.url().split(['?', '#']).next().unwrap_or("/").to_string();
+            let rel = percent_decode(raw.trim_start_matches('/'));
+            let mut path = root.clone();
+            let mut ok = true;
+            for part in rel.split('/') {
+                if part.is_empty() || part == "." {
+                    continue;
+                }
+                if part == ".." || part.contains('\\') || part.contains(':') {
+                    ok = false;
+                    break;
+                }
+                path.push(part);
+            }
+            if ok && path.is_dir() {
+                path.push("index.html");
+            }
+            let response = if !ok {
+                tiny_http::Response::from_string("forbidden").with_status_code(403).boxed()
+            } else {
+                match File::open(&path) {
+                    Ok(mut f) => {
+                        let mut data = Vec::new();
+                        let _ = f.read_to_end(&mut data);
+                        let ct = tiny_http::Header::from_bytes(&b"Content-Type"[..], mime_type(&path).as_bytes()).unwrap();
+                        let nc = tiny_http::Header::from_bytes(&b"Cache-Control"[..], &b"no-cache"[..]).unwrap();
+                        tiny_http::Response::from_data(data).with_header(ct).with_header(nc).boxed()
+                    }
+                    Err(_) => tiny_http::Response::from_string("not found").with_status_code(404).boxed(),
+                }
+            };
+            let _ = request.respond(response);
+        }
+    });
+    Ok(port)
+}
+
+fn webapps_dir(app: &tauri::AppHandle) -> Option<PathBuf> {
+    let mut candidates = Vec::new();
+    if let Ok(res) = app.path().resource_dir() {
+        candidates.push(res.join("webapps"));
+    }
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            candidates.push(dir.join("webapps"));
+        }
+    }
+    candidates.into_iter().find(|p| p.is_dir())
+}
+
 fn require_main(window: &WebviewWindow) -> Result<(), String> {
     if window.label() == "main" {
         Ok(())
@@ -106,15 +216,20 @@ fn require_main(window: &WebviewWindow) -> Result<(), String> {
 }
 
 /// Opens a bundled programming environment in its own window.
-/// `path` is relative to the UI folder and must start with "apps/" (query and fragment allowed).
+/// `path` is relative to the web-app folder, e.g. "vpl3-thymio-suite/index.html?…#…".
 #[tauri::command]
 fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String) -> Result<(), String> {
     require_main(&window)?;
-    if !path.starts_with("apps/") || path.contains("..") {
+    if path.starts_with('/') || path.contains("..") || path.contains("://") {
         return Err("invalid path".into());
     }
-    let base = window.url().map_err(|e| e.to_string())?;
-    let url = base.join(&path).map_err(|e| e.to_string())?;
+    let webapps = app.state::<WebApps>();
+    let port = *webapps.port.lock().unwrap();
+    let port = match port {
+        Some(p) => p,
+        None => return Err(webapps.error.lock().unwrap().clone().unwrap_or_else(|| "web apps not available".into())),
+    };
+    let url = tauri::Url::parse(&format!("http://127.0.0.1:{port}/{path}")).map_err(|e| e.to_string())?;
     let label = format!("app-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0));
     WebviewWindowBuilder::new(&app, label, WebviewUrl::External(url))
         .title(title)
@@ -164,7 +279,7 @@ fn device_manager_log(app: tauri::AppHandle, window: WebviewWindow) -> Result<St
     require_main(&window)?;
     let state = app.state::<DeviceManager>();
     let Some(path) = state.log_path.lock().unwrap().clone() else {
-        return Ok(String::from("(device manager log not available: it was started by another program)"));
+        return Ok(String::from("(no log: the device manager was not started by this launcher, or could not start)"));
     };
     let file = File::open(&path).map_err(|e| e.to_string())?;
     let lines: Vec<String> = BufReader::new(file).lines().map_while(Result::ok).collect();
@@ -184,8 +299,15 @@ fn restart_device_manager(app: tauri::AppHandle, window: WebviewWindow) -> Resul
 fn main() {
     tauri::Builder::default()
         .manage(DeviceManager::default())
+        .manage(WebApps::default())
         .invoke_handler(tauri::generate_handler![open_app, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
+            let handle = app.handle().clone();
+            let state = app.state::<WebApps>();
+            match webapps_dir(&handle).ok_or_else(|| "web apps folder missing from the installation".to_string()).and_then(start_webapp_server) {
+                Ok(port) => *state.port.lock().unwrap() = Some(port),
+                Err(e) => *state.error.lock().unwrap() = Some(e),
+            }
             start_device_manager(app.handle());
             Ok(())
         })

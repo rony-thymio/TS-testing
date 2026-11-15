@@ -10,7 +10,7 @@ view (WebView2 on Windows, WebKit on macOS), so no browser engine is bundled.
 | `ui/tdm.js` | Client for the device manager protocol (WebSocket, port 8597) |
 | `ui/vendor/` | FlatBuffers runtime (Apache-2.0) and code generated from aseba's `thymio.fbs` (flatc 1.10) |
 | `ui/modes.js` | The six programming environments, their descriptions (from 2.4.0) and launch URLs |
-| `ui/apps/` | VPL3, Blockly, Scratch, downloaded by `fetch-webapps.sh` (not committed) |
+| `webapps/` | VPL3, Blockly, Scratch, downloaded by `fetch-webapps.sh` (not committed); installed next to the launcher and served on http://127.0.0.1:<random port> |
 | `src-tauri/` | Starts/stops the device manager, opens programming windows, support log |
 | `test/tdm-smoke.cjs` | `node launcher/test/tdm-smoke.cjs` checks the protocol against a running device manager |
 

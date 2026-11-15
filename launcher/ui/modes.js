@@ -16,7 +16,7 @@ window.THYMIO_MODES = [
     id: 'vpl3', name: 'VPL3', mark: 'VPL3', tint: '#E3F4EA', ink: '#1E6B43', level: 'Beginner',
     short: 'The newer visual language, also comfortable on touch screens.',
     available: true, groups: false,
-    url: (r, c) => `apps/vpl3-thymio-suite/index.html?robot=thymio-tdm&role=teacher&uilanguage=en#uuid=${tdmId(r)}&w=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
+    url: (r, c) => `vpl3-thymio-suite/index.html?robot=thymio-tdm&role=teacher&uilanguage=en#uuid=${tdmId(r)}&w=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
     details: `<p><b>VPL 3 is a block based programming language that allows to learn the logic behind programming.</b></p>
       <ul><li>The simplest way to start programming Thymio</li><li>Students do not need to know how to read to use VPL</li>
       <li>Drag and drop icons to code</li><li>From the first program up to understanding variables and loops</li>
@@ -26,7 +26,7 @@ window.THYMIO_MODES = [
     id: 'blockly', name: 'Blockly', mark: 'B', tint: '#FFF1DC', ink: '#8A4B00', level: 'Intermediate',
     short: 'Puzzle-piece blocks that show the matching text code.',
     available: true, groups: false,
-    url: (r, c) => `apps/thymio_blockly/thymio_blockly.en.html#device=${tdmId(r)}&ws=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
+    url: (r, c) => `thymio_blockly/thymio_blockly.en.html#device=${tdmId(r)}&ws=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
     details: `<p><b>Take a first step into a more challenging programming syntax including more computer science concepts.</b></p>
       <ul><li>Suitable for children who can read and are more familiar with computers</li>
       <li>First step from visual to textual programming language</li><li>Drag and drop blocks of text to program Thymio</li>
@@ -37,7 +37,7 @@ window.THYMIO_MODES = [
     id: 'scratch', name: 'Scratch', mark: 'S', tint: '#FDE8EF', ink: '#9B1C4A', level: 'Intermediate',
     short: 'The popular block language, with Thymio blocks added.',
     available: true, groups: false,
-    url: (r, c) => `apps/scratch/index.html?device=${tdmId(r)}&ws=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
+    url: (r, c) => `scratch/index.html?device=${tdmId(r)}&ws=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
     details: `<p><b>Scratch allows you to create interactions between the real world, with Thymio, and your screen using the Scratch "Scene" and "Sprites" system.</b></p>
       <p>For example, you can create an interactive story, or even a Thymio controlled video game. Creativity is the only limit.</p>
       <ul><li>Create interaction between your robot and your computer screen</li>
