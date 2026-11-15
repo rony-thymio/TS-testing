@@ -220,6 +220,8 @@ fn file_kind(path: &str) -> (&'static str, &'static str) {
         ("VPL3 program", "vpl3")
     } else if path.starts_with("thymio_blockly/") {
         ("Aseba program", "aesl")
+    } else if path.starts_with("aseba/") {
+        ("Aseba program", "aesl")
     } else if path.starts_with("scratch/") {
         ("Scratch project", "sb3")
     } else {

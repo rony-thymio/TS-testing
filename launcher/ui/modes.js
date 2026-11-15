@@ -45,13 +45,15 @@ window.THYMIO_MODES = [
       <p>Wireless Thymio robots are the best choice with Scratch. A wired Thymio must stay plugged in.</p>`
   },
   {
-    id: 'studio', name: 'Aseba Studio', mark: '{ }', tint: '#EEE9FB', ink: '#4A23B0', level: 'Advanced',
+    id: 'studio', name: 'Aseba', mark: '{ }', tint: '#EEE9FB', ink: '#4A23B0', level: 'Advanced',
     short: 'Text programming with live variables and the full robot API.',
-    available: false, groups: true,
+    available: true, groups: true,
+    url: (r, c) => `aseba/index.html#device=${tdmId(r)}&ws=${encodeURIComponent(c.ws)}&pass=${encodeURIComponent(c.pass)}`,
     details: `<p><b>Aseba is a complete text programming language for robots that will allow you to have a precise control on everything inside your Thymio robot.</b></p>
       <ul><li>Discover text programming</li><li>Get the full control of your Thymio robot</li>
       <li>Get real-time graphs of what is recorded by the sensors</li>
-      <li>Connect several Thymio robots to one dongle and make them interact together</li><li>No need of an internet connection</li></ul>`
+      <li>Connect several Thymio robots to one dongle and make them interact together (one tab per robot)</li>
+      <li>Opens and saves Aseba Studio files (.aesl), so programs made with Thymio Suite 2.4.0 still work</li><li>No need of an internet connection</li></ul>`
   },
   {
     id: 'thonny', name: 'Python (Thonny)', mark: 'Py', tint: '#E5F3F6', ink: '#145868', level: 'Advanced',

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Aseba – Thymio Suite</title>
+  <link rel="stylesheet" href="aseba.css">
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">{ }</span>
+      <span class="title">Aseba</span>
+      <span id="file-name" class="file" title="Current file">untitled.aesl</span>
+    </div>
+    <div class="actions" role="toolbar" aria-label="Program">
+      <button type="button" class="btn" id="btn-new" title="New program">New</button>
+      <button type="button" class="btn" id="btn-open" title="Open an .aesl file">Open…</button>
+      <button type="button" class="btn" id="btn-save" title="Save as .aesl (Ctrl+S)">Save</button>
+      <span class="sep" aria-hidden="true"></span>
+      <button type="button" class="btn run" id="btn-run" title="Load and run on the robot (F5)">▶ Run</button>
+      <button type="button" class="btn" id="btn-stop" title="Stop the program (F6)">■ Stop</button>
+      <button type="button" class="btn" id="btn-runall" title="Run each tab on its robot" hidden>▶ Run all</button>
+      <button type="button" class="btn" id="btn-flash" title="Keep this program in the robot, also after switching it off">Keep in robot</button>
+    </div>
+    <span id="conn" class="pill neutral" role="status">Connecting…</span>
+    <input type="file" id="file-input" accept=".aesl,.txt" hidden>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Robots" id="tabs"></div>
+
+  <main class="workspace">
+    <section class="editor-wrap" aria-label="Program editor">
+      <div class="editor" id="editor">
+        <div class="gutter" id="gutter" aria-hidden="true"></div>
+        <div class="code-area">
+          <pre class="highlight" id="highlight" aria-hidden="true"></pre>
+          <textarea id="code" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Aseba code"></textarea>
+        </div>
+      </div>
+      <div id="message" class="message neutral" role="status" aria-live="polite">Write your program, then press ▶ Run.</div>
+    </section>
+
+    <aside class="side" aria-label="Robot information">
+      <div class="side-tabs" role="tablist">
+        <button type="button" role="tab" class="side-tab active" data-panel="vars" aria-selected="true">Variables</button>
+        <button type="button" role="tab" class="side-tab" data-panel="api" aria-selected="false">Robot API</button>
+        <button type="button" role="tab" class="side-tab" data-panel="events" aria-selected="false">Events</button>
+      </div>
+      <div class="panel" id="panel-vars">
+        <input type="search" id="var-filter" placeholder="Filter variables…" aria-label="Filter variables">
+        <div id="vars" class="vars"><p class="muted">Variables appear here once the robot is connected.</p></div>
+      </div>
+      <div class="panel" id="panel-api" hidden>
+        <input type="search" id="api-filter" placeholder="Search functions and events…" aria-label="Search the robot API">
+        <div id="api" class="api"><p class="muted">Loading the robot's functions…</p></div>
+      </div>
+      <div class="panel" id="panel-events" hidden>
+        <h3>Global events</h3>
+        <div id="global-events" class="defs"></div>
+        <form id="event-form" class="inline-form">
+          <input id="event-name" placeholder="name" aria-label="Event name" pattern="[A-Za-z_][A-Za-z0-9_.]*" required>
+          <input id="event-size" type="number" min="0" max="32" value="0" aria-label="Number of values">
+          <button type="submit" class="btn small">Add</button>
+        </form>
+        <h3>Constants</h3>
+        <div id="constants" class="defs"></div>
+        <form id="const-form" class="inline-form">
+          <input id="const-name" placeholder="NAME" aria-label="Constant name" pattern="[A-Za-z_][A-Za-z0-9_.]*" required>
+          <input id="const-value" type="number" min="-32768" max="32767" value="0" aria-label="Constant value">
+          <button type="submit" class="btn small">Add</button>
+        </form>
+        <h3>Emitted events</h3>
+        <div id="event-log" class="log" aria-live="off"></div>
+      </div>
+    </aside>
+  </main>
+
+  <script src="lib/flatbuffers.js"></script>
+  <script src="lib/thymio_generated.js"></script>
+  <script src="lib/flexbuffers.js"></script>
+  <script src="lib/tdm.js"></script>
+  <script src="editor.js"></script>
+  <script src="aesl.js"></script>
+  <script src="aseba.js"></script>
+</body>
+</html>

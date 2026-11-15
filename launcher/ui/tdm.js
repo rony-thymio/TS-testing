@@ -36,6 +36,10 @@
       this.onNodesChanged = null;
       this.onDonglesChanged = null;
       this.onConnectionChanged = null;
+      this.onVariablesChanged = null;   // (nodeId, {name: value})
+      this.onEventsEmitted = null;      // (nodeId, [{name, value}])
+      this.onVMStateChanged = null;     // (nodeId, {state, line, error, errorMsg})
+      this.onEventsDescriptions = null; // (groupOrNodeId, [{name, size}])
       this._requests = new Map();
       this._nextRequest = 1;
       this._ws = null;
@@ -106,6 +110,87 @@
         M.addNetworkId(b, networkId); M.addChannelId(b, channel);
         return M.endThymio2WirelessDonglePairingRequest(b);
       }, fb().AnyMessage.Thymio2WirelessDonglePairingRequest);
+    }
+
+    // ---- programming (Aseba editor) -------------------------------------------------------
+    _simple(table, fields, type) {
+      // Builds a table with request_id + node id (+ extra scalar fields) and waits for completion.
+      return this._request((b, rid) => {
+        const n = this._nodeId(b, fields.id);
+        const T = fb()[table];
+        T['start' + table](b); T.addRequestId(b, rid);
+        if (T.addNodeId) T.addNodeId(b, n); else T.addNodeOrGroupId(b, n);
+        if (fields.extra) fields.extra(T, b);
+        return T['end' + table](b);
+      }, type);
+    }
+    lock(id) { return this._simple('LockNode', { id }, fb().AnyMessage.LockNode); }
+    unlock(id) { return this._simple('UnlockNode', { id }, fb().AnyMessage.UnlockNode); }
+    setVMState(id, command) {
+      return this._simple('SetVMExecutionState', { id, extra: (T, b) => T.addCommand(b, command) }, fb().AnyMessage.SetVMExecutionState);
+    }
+    watch(id, flags) {
+      return this._simple('WatchNode', { id, extra: (T, b) => T.addInfoType(b, flags) }, fb().AnyMessage.WatchNode);
+    }
+    requestVMDescription(id) {
+      return this._simple('RequestNodeAsebaVMDescription', { id }, fb().AnyMessage.RequestNodeAsebaVMDescription);
+    }
+    // Resolves {ok: true, bytecodeSize, ...} or {ok: false, message, line, column, character}.
+    compile(id, program, loadOnTarget) {
+      return this._request((b, rid) => {
+        const n = this._nodeId(b, id), code = b.createString(program);
+        const T = fb().CompileAndLoadCodeOnVM;
+        T.startCompileAndLoadCodeOnVM(b); T.addRequestId(b, rid); T.addNodeId(b, n);
+        T.addLanguage(b, fb().ProgrammingLanguage.Aseba); T.addProgram(b, code);
+        T.addOptions(b, loadOnTarget === false ? fb().CompilationOptions.NoOption : fb().CompilationOptions.LoadOnTarget);
+        return T.endCompileAndLoadCodeOnVM(b);
+      }, fb().AnyMessage.CompileAndLoadCodeOnVM);
+    }
+    registerEvents(groupOrNodeId, events) {
+      return this._request((b, rid) => {
+        const n = this._nodeId(b, groupOrNodeId);
+        const offs = events.map((e) => {
+          const name = b.createString(e.name);
+          const E = fb().EventDescription;
+          E.startEventDescription(b); E.addName(b, name); E.addFixedSized(b, e.size || 0);
+          return E.endEventDescription(b);
+        });
+        const T = fb().RegisterEvents;
+        const vec = T.createEventsVector(b, offs);
+        T.startRegisterEvents(b); T.addRequestId(b, rid); T.addNodeOrGroupId(b, n); T.addEvents(b, vec);
+        return T.endRegisterEvents(b);
+      }, fb().AnyMessage.RegisterEvents);
+    }
+    // vars: {name: integer or array of integers}
+    setVariables(groupOrNodeId, vars) {
+      return this._request((b, rid) => {
+        const n = this._nodeId(b, groupOrNodeId);
+        const offs = Object.keys(vars).map((k) => {
+          const name = b.createString(k);
+          const val = fb().NodeVariable.createValueVector(b, root.FlexBuffers.encode(vars[k]));
+          const V = fb().NodeVariable;
+          V.startNodeVariable(b); V.addName(b, name); V.addValue(b, val);
+          return V.endNodeVariable(b);
+        });
+        const T = fb().SetVariables;
+        const vec = T.createVarsVector(b, offs);
+        T.startSetVariables(b); T.addRequestId(b, rid); T.addNodeOrGroupId(b, n); T.addVars(b, vec);
+        return T.endSetVariables(b);
+      }, fb().AnyMessage.SetVariables);
+    }
+    sendEvent(id, name, value) {
+      return this._request((b, rid) => {
+        const n = this._nodeId(b, id);
+        const nm = b.createString(name);
+        const val = fb().NamedValue.createValueVector(b, root.FlexBuffers.encode(value == null ? [] : value));
+        const V = fb().NamedValue;
+        V.startNamedValue(b); V.addName(b, nm); V.addValue(b, val);
+        const ev = V.endNamedValue(b);
+        const T = fb().SendEvents;
+        const vec = T.createEventsVector(b, [ev]);
+        T.startSendEvents(b); T.addRequestId(b, rid); T.addNodeId(b, n); T.addEvents(b, vec);
+        return T.endSendEvents(b);
+      }, fb().AnyMessage.SendEvents);
     }
 
     // ---- internals ------------------------------------------------------------------------
@@ -201,6 +286,66 @@
           if (r && r.onProgress) r.onProgress(m.progress());
           if (m.progress() >= 1) this._settle(m.requestId(), true);
           return 'fw';
+        }
+        case T.CompilationResultSuccess: {
+          const m = M.message(new (fb().CompilationResultSuccess)());
+          this._settle(m.requestId(), true, { ok: true, bytecodeSize: m.bytecodeSize(), totalBytecodeSize: m.totalBytecodeSize(),
+            variablesSize: m.variablesSize(), totalVariablesSize: m.totalVariablesSize() });
+          return 'compiled';
+        }
+        case T.CompilationResultFailure: {
+          const m = M.message(new (fb().CompilationResultFailure)());
+          this._settle(m.requestId(), true, { ok: false, message: m.message(), line: m.line(), column: m.column(), character: m.character() });
+          return 'compiled';
+        }
+        case T.NodeAsebaVMDescription: {
+          const m = M.message(new (fb().NodeAsebaVMDescription)());
+          const list = (n, get) => { const out = []; for (let i = 0; i < n; i++) out.push(get(i)); return out; };
+          this._settle(m.requestId(), true, {
+            bytecodeSize: m.bytecodeSize(), dataSize: m.dataSize(), stackSize: m.stackSize(),
+            variables: list(m.variablesLength(), (i) => { const v = m.variables(i); return { name: v.name(), size: v.size() }; }),
+            events: list(m.eventsLength(), (i) => { const e = m.events(i); return { name: e.name(), description: e.description() || '' }; }),
+            functions: list(m.functionsLength(), (i) => {
+              const f = m.functions(i);
+              return { name: f.name(), description: f.description() || '',
+                parameters: list(f.parametersLength(), (j) => { const p = f.parameters(j); return { name: p.name(), size: p.size() }; }) };
+            })
+          });
+          return 'description';
+        }
+        case T.VariablesChanged: {
+          const m = M.message(new (fb().VariablesChanged)());
+          const vars = {};
+          for (let i = 0; i < m.varsLength(); i++) {
+            const v = m.vars(i);
+            try { vars[v.name()] = root.FlexBuffers.decode(v.valueArray()); } catch (e) { vars[v.name()] = null; }
+          }
+          if (this.onVariablesChanged) this.onVariablesChanged(uuidString(m.nodeId().idArray()), vars);
+          return 'variables';
+        }
+        case T.EventsEmitted: {
+          const m = M.message(new (fb().EventsEmitted)());
+          const events = [];
+          for (let i = 0; i < m.eventsLength(); i++) {
+            const e = m.events(i);
+            let value = null; try { value = root.FlexBuffers.decode(e.valueArray()); } catch (err) {}
+            events.push({ name: e.name(), value });
+          }
+          if (this.onEventsEmitted) this.onEventsEmitted(uuidString(m.nodeId().idArray()), events);
+          return 'events';
+        }
+        case T.VMExecutionStateChanged: {
+          const m = M.message(new (fb().VMExecutionStateChanged)());
+          if (this.onVMStateChanged) this.onVMStateChanged(uuidString(m.nodeId().idArray()),
+            { state: ['stopped', 'running', 'paused'][m.state()] || 'unknown', line: m.line(), error: m.error(), errorMsg: m.errorMsg() || '' });
+          return 'vmstate';
+        }
+        case T.EventsDescriptionsChanged: {
+          const m = M.message(new (fb().EventsDescriptionsChanged)());
+          const events = [];
+          for (let i = 0; i < m.eventsLength(); i++) { const e = m.events(i); events.push({ name: e.name(), size: e.fixedSized() }); }
+          if (this.onEventsDescriptions) this.onEventsDescriptions(uuidString(m.nodeOrGroupId().idArray()), events);
+          return 'eventdescs';
         }
         default:
           return 'other';
