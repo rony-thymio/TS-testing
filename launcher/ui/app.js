@@ -126,7 +126,8 @@
       };
       if (canRename && state.renaming !== r.id) addAction('Rename', () => { state.renaming = r.id; renderRobots(); });
       if (canUpdate && outdated) addAction(`Update firmware to ${r.latestFwVersion}`, () => showFirmware(r));
-      else if (canUpdate) addAction('Reinstall firmware', () => showFirmware(r));
+      else if (canUpdate && state.moreOpen === r.id) addAction('Reinstall firmware (repair)', () => showFirmware(r));
+      else if (canUpdate) addAction('⋯ More', () => { state.moreOpen = r.id; renderRobots(); });
       if (actions.childElementCount) main.append(actions);
       const badge = document.createElement('span'); badge.className = 'badge ' + tone; badge.textContent = label;
       el.append(input, main, badge);

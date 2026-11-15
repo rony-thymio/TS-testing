@@ -212,7 +212,27 @@ fn webapps_dir(app: &tauri::AppHandle) -> Option<PathBuf> {
 /// "Save" in VPL3, Blockly and Scratch is a browser download. The launcher catches it, lets the
 /// file finish into a temporary folder, then shows the usual "Save as" window so the teacher
 /// chooses where the project goes. If the dialog is cancelled, nothing is kept.
-fn handle_download(app: &tauri::AppHandle, event: DownloadEvent<'_>) -> bool {
+/// What a programming window saves: file-type name and extension (VPL3 projects are
+/// "program.vpl3", Blockly saves Aseba ".aesl", Scratch ".sb3"). Used when the browser's
+/// suggested name has lost its extension, and as the Save-as filter.
+fn file_kind(path: &str) -> (&'static str, &'static str) {
+    if path.starts_with("vpl3-thymio-suite/") {
+        ("VPL3 program", "vpl3")
+    } else if path.starts_with("thymio_blockly/") {
+        ("Aseba program", "aesl")
+    } else if path.starts_with("scratch/") {
+        ("Scratch project", "sb3")
+    } else {
+        ("File", "")
+    }
+}
+
+fn with_extension(name: &str, ext: &str) -> String {
+    let has_ext = std::path::Path::new(name).extension().map(|e| !e.is_empty()).unwrap_or(false);
+    if has_ext || ext.is_empty() { name.to_string() } else { format!("{name}.{ext}") }
+}
+
+fn handle_download(app: &tauri::AppHandle, kind: (&'static str, &'static str), event: DownloadEvent<'_>) -> bool {
     match event {
         DownloadEvent::Requested { destination, .. } => {
             let name = destination.file_name().map(|n| n.to_os_string()).unwrap_or_else(|| "project".into());
@@ -231,17 +251,28 @@ fn handle_download(app: &tauri::AppHandle, event: DownloadEvent<'_>) -> bool {
             }
             let file_name = tmp.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
             let suggested = file_name.split_once('-').map(|(_, rest)| rest.to_string()).unwrap_or(file_name);
+            let (kind_name, ext) = kind;
+            let suggested = with_extension(&suggested, ext);
             let mut dialog = app.dialog().file().set_file_name(&suggested);
+            if !ext.is_empty() {
+                dialog = dialog.add_filter(kind_name, &[ext]).add_filter("All files", &["*"]);
+            }
             if let Ok(docs) = app.path().document_dir() {
                 dialog = dialog.set_directory(docs);
             }
             let handle = app.clone();
             dialog.save_file(move |chosen| {
                 let message = match chosen.and_then(|p| p.into_path().ok()) {
-                    Some(target) => match fs::copy(&tmp, &target) {
+                    Some(target) => {
+                        let target = match target.file_name().map(|n| n.to_string_lossy().to_string()) {
+                            Some(n) => target.with_file_name(with_extension(&n, ext)),
+                            None => target,
+                        };
+                        match fs::copy(&tmp, &target) {
                         Ok(_) => format!("Saved: {}", target.display()),
                         Err(e) => format!("Could not save: {e}"),
-                    },
+                        }
+                    }
                     None => String::from("Save cancelled."),
                 };
                 let _ = fs::remove_file(&tmp);
@@ -280,9 +311,10 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
     let url = tauri::Url::parse(&format!("http://127.0.0.1:{port}/{path}")).map_err(|e| e.to_string())?;
     let label = format!("app-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0));
     let dl_app = app.clone();
+    let kind = file_kind(&path);
     WebviewWindowBuilder::new(&app, label, WebviewUrl::External(url))
         .title(title)
-        .on_download(move |_webview, event| handle_download(&dl_app, event))
+        .on_download(move |_webview, event| handle_download(&dl_app, kind, event))
         // Let pages use HTML5 drag and drop (Windows: Tauri's own file-drop handler would take it).
         .disable_drag_drop_handler()
         .inner_size(1280.0, 800.0)
