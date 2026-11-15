@@ -46,3 +46,8 @@ dialog with Copy and Save to Desktop, device manager on loopback only, accept er
   tdmclient 0.1.21 from PyPI). Fixed in 0.7 by installing tdmclient from upstream commit 42ef302.
 - Pairing: first attempt left the launcher unable to reach the device manager (not reproduced after restart, no log).
   Second attempt: one robot with one dongle, firmware 14, paired on network C0E4 channel 1. 0.7 adds an 8 s handshake timeout.
+
+## 2026-11-16 — Launcher 0.7, Windows
+
+- Rename field: OK (full width, text visible).
+- Python (Thonny 5.0.1, Python 3.14, tdmclient upstream): `leds_top = [32, 0, 0]` runs on the robot. OK.
