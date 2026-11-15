@@ -28,3 +28,13 @@ Notes:
 
 Fixed in 0.2: single retry with back-off, device manager status shown in the checklist, report in a
 dialog with Copy and Save to Desktop, device manager on loopback only, accept errors handled.
+
+## 2026-11-15 — Launcher 0.2–0.4, Windows 11 (Smart App Control)
+
+- 0.2: device manager blocked by Smart App Control (unsigned, os error 4551) — the new
+  status line reported it. Signing is required for schools; for testing SAC was turned off.
+- 0.2/0.3: VPL3 window blank and frozen (could not close). Cause: window created from a
+  synchronous Tauri command, which deadlocks on Windows (documented Tauri issue). Fixed in 0.4.
+- **0.4: robot Y4918 (wireless, dongle, firmware 14) listed as Ready; VPL3 opened and a
+  program (start event → top/bottom colours) ran on the robot.** First complete end-to-end
+  test of the new suite.
