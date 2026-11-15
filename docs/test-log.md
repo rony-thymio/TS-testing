@@ -51,3 +51,8 @@ dialog with Copy and Save to Desktop, device manager on loopback only, accept er
 
 - Rename field: OK (full width, text visible).
 - Python (Thonny 5.0.1, Python 3.14, tdmclient upstream): `leds_top = [32, 0, 0]` runs on the robot. OK.
+
+## 0.9 (Windows, real robot "hello")
+- VPL3 save: file gets the .vpl3 extension automatically (fix from 0.8 confirmed).
+- Aseba editor: Run works with the buttons, the compile error ("blah") is shown on the right line, Save/Open .aesl works.
+- Change after testing: New now gives an empty program instead of the example (in next build).
