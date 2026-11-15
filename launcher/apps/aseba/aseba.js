@@ -12,6 +12,7 @@
 
   const CMD = { Stop: 0, Run: 1, Reset: 5, WriteProgramToDeviceMemory: 8 };
   const WATCH = 0x01 | 0x02 | 0x04; // variables, events, execution state
+  const EMPTY_PROGRAM = '# New Thymio program\n\n';
   const NEW_PROGRAM = `# Thymio program in Aseba
 # The centre button turns the top lights red; the back button turns them off.
 
@@ -293,8 +294,8 @@ onevent button.backward
   // ---------- files ------------------------------------------------------------------------
   function newProgram() {
     if (state.dirty && !confirm('Discard the changes in the current program?')) return;
-    state.tabs.forEach((t) => { t.code = NEW_PROGRAM; });
-    editor.value = NEW_PROGRAM; state.events = []; state.constants = []; state.fileName = 'untitled.aesl';
+    state.tabs.forEach((t) => { t.code = EMPTY_PROGRAM; });
+    editor.value = EMPTY_PROGRAM; state.events = []; state.constants = []; state.fileName = 'untitled.aesl';
     setDirty(false); renderDefs(); pushDefinitions(); message('New program.', 'neutral');
   }
 
