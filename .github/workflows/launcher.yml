@@ -2,28 +2,31 @@
 # bundled, and produces unsigned test installers: Windows (.exe setup) and macOS (.dmg).
 name: launcher
 
+# To save build minutes: Windows only by default, and the device manager is taken from the latest
+# successful build (artifact) instead of being rebuilt. Run manually with "macos: true" for Macs.
 on:
   push:
     branches: [main]
-    paths: ['launcher/**', 'device-manager/**', '.github/workflows/launcher.yml', '.github/workflows/device-manager.yml']
+    paths: ['launcher/**', '.github/workflows/launcher.yml']
   workflow_dispatch:
+    inputs:
+      macos:
+        description: Also build the macOS versions (uses ~10x more build minutes)
+        type: boolean
+        default: false
 
 jobs:
-  device-manager:
-    uses: ./.github/workflows/device-manager.yml
-
   app:
     name: Launcher ${{ matrix.name }}
-    needs: device-manager
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
+    permissions:
+      contents: read
+      actions: read
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - { name: Windows x64, os: windows-latest, triple: x86_64-pc-windows-msvc, tdm: thymio-device-manager-Windows-X64, ext: .exe, bundles: nsis }
-          - { name: macOS Apple Silicon, os: macos-latest, triple: aarch64-apple-darwin, tdm: thymio-device-manager-macOS-ARM64, ext: '', bundles: 'app,dmg' }
-          - { name: macOS Intel, os: macos-15-intel, triple: x86_64-apple-darwin, tdm: thymio-device-manager-macOS-X64, ext: '', bundles: 'app,dmg' }
+        include: ${{ fromJSON(inputs.macos && '[{"name":"Windows x64","os":"windows-latest","triple":"x86_64-pc-windows-msvc","tdm":"thymio-device-manager-Windows-X64","ext":".exe","bundles":"nsis"},{"name":"macOS Apple Silicon","os":"macos-latest","triple":"aarch64-apple-darwin","tdm":"thymio-device-manager-macOS-ARM64","ext":"","bundles":"app,dmg"},{"name":"macOS Intel","os":"macos-15-intel","triple":"x86_64-apple-darwin","tdm":"thymio-device-manager-macOS-X64","ext":"","bundles":"app,dmg"}]' || '[{"name":"Windows x64","os":"windows-latest","triple":"x86_64-pc-windows-msvc","tdm":"thymio-device-manager-Windows-X64","ext":".exe","bundles":"nsis"}]') }}
     defaults:
       run:
         shell: bash
@@ -31,11 +34,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Get the device manager built by the previous job
-        uses: actions/download-artifact@v4
-        with:
-          name: ${{ matrix.tdm }}
-          path: tdm
+      - name: Get the latest device manager build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          id=$(gh api "repos/${{ github.repository }}/actions/artifacts?name=${{ matrix.tdm }}&per_page=1" --jq '.artifacts[0].id')
+          echo "device manager artifact: $id"
+          gh api "repos/${{ github.repository }}/actions/artifacts/$id/zip" > ../tdm.zip
+          mkdir -p ../tdm && unzip -q -o ../tdm.zip -d ../tdm
 
       - name: Place the device manager next to the launcher
         run: |

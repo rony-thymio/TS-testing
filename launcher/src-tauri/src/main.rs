@@ -217,8 +217,10 @@ fn require_main(window: &WebviewWindow) -> Result<(), String> {
 
 /// Opens a bundled programming environment in its own window.
 /// `path` is relative to the web-app folder, e.g. "vpl3-thymio-suite/index.html?…#…".
+// Must be `async`: on Windows, creating a window from a synchronous command deadlocks
+// (Tauri known issue, wry#583). That was the blank, frozen VPL3 window in test versions 0.1-0.3.
 #[tauri::command]
-fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String) -> Result<(), String> {
+async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String) -> Result<(), String> {
     require_main(&window)?;
     if path.starts_with('/') || path.contains("..") || path.contains("://") {
         return Err("invalid path".into());
