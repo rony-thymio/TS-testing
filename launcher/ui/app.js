@@ -200,6 +200,9 @@
   $('pair-btn').addEventListener('click', () => toast('Pairing comes in the next test version. Thymio Suite 2.4.0 can pair meanwhile.'));
   $('help-btn').addEventListener('click', () => toast('Help: www.thymio.org/support'));
 
+  // Result of "Save" in a programming window (see handle_download in main.rs).
+  if (tauri && tauri.event) tauri.event.listen('save-result', (e) => toast(String(e.payload)));
+
   renderModes();
   renderRobots();
   connect();

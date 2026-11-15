@@ -14,7 +14,9 @@ use std::sync::Mutex;
 use std::time::Duration;
 
 use serde::Serialize;
-use tauri::{Manager, RunEvent, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent};
+use tauri::webview::DownloadEvent;
+use tauri::{Emitter, Manager, RunEvent, WebviewUrl, WebviewWindow, WebviewWindowBuilder, WindowEvent};
+use tauri_plugin_dialog::DialogExt;
 
 const TDM_WS_PORT: u16 = 8597;
 
@@ -207,6 +209,50 @@ fn webapps_dir(app: &tauri::AppHandle) -> Option<PathBuf> {
     candidates.into_iter().find(|p| p.is_dir())
 }
 
+/// "Save" in VPL3, Blockly and Scratch is a browser download. The launcher catches it, lets the
+/// file finish into a temporary folder, then shows the usual "Save as" window so the teacher
+/// chooses where the project goes. If the dialog is cancelled, nothing is kept.
+fn handle_download(app: &tauri::AppHandle, event: DownloadEvent<'_>) -> bool {
+    match event {
+        DownloadEvent::Requested { destination, .. } => {
+            let name = destination.file_name().map(|n| n.to_os_string()).unwrap_or_else(|| "project".into());
+            let dir = std::env::temp_dir().join("thymio-suite-downloads");
+            let _ = fs::create_dir_all(&dir);
+            let stamp = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0);
+            let tmp = dir.join(format!("{stamp}-{}", name.to_string_lossy()));
+            *destination = tmp;
+            true
+        }
+        DownloadEvent::Finished { path, success, .. } => {
+            let Some(tmp) = path else { return true };
+            if !success {
+                let _ = app.emit_to("main", "save-result", "The project could not be saved.");
+                return true;
+            }
+            let file_name = tmp.file_name().map(|n| n.to_string_lossy().to_string()).unwrap_or_default();
+            let suggested = file_name.split_once('-').map(|(_, rest)| rest.to_string()).unwrap_or(file_name);
+            let mut dialog = app.dialog().file().set_file_name(&suggested);
+            if let Ok(docs) = app.path().document_dir() {
+                dialog = dialog.set_directory(docs);
+            }
+            let handle = app.clone();
+            dialog.save_file(move |chosen| {
+                let message = match chosen.and_then(|p| p.into_path().ok()) {
+                    Some(target) => match fs::copy(&tmp, &target) {
+                        Ok(_) => format!("Saved: {}", target.display()),
+                        Err(e) => format!("Could not save: {e}"),
+                    },
+                    None => String::from("Save cancelled."),
+                };
+                let _ = fs::remove_file(&tmp);
+                let _ = handle.emit_to("main", "save-result", message);
+            });
+            true
+        }
+        _ => true,
+    }
+}
+
 fn require_main(window: &WebviewWindow) -> Result<(), String> {
     if window.label() == "main" {
         Ok(())
@@ -233,8 +279,12 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
     };
     let url = tauri::Url::parse(&format!("http://127.0.0.1:{port}/{path}")).map_err(|e| e.to_string())?;
     let label = format!("app-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0));
+    let dl_app = app.clone();
     WebviewWindowBuilder::new(&app, label, WebviewUrl::External(url))
         .title(title)
+        .on_download(move |_webview, event| handle_download(&dl_app, event))
+        // Let pages use HTML5 drag and drop (Windows: Tauri's own file-drop handler would take it).
+        .disable_drag_drop_handler()
         .inner_size(1280.0, 800.0)
         .min_inner_size(800.0, 600.0)
         .additional_browser_args(BROWSER_ARGS)
@@ -300,6 +350,7 @@ fn restart_device_manager(app: tauri::AppHandle, window: WebviewWindow) -> Resul
 
 fn main() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_dialog::init())
         .manage(DeviceManager::default())
         .manage(WebApps::default())
         .invoke_handler(tauri::generate_handler![open_app, device_manager_status, device_manager_log, restart_device_manager, save_report])
