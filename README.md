@@ -1,4 +1,4 @@
-# Thymio Suite — Next (working title)
+# TS testing
 
 An updated, maintainable desktop suite for programming **Thymio II** robots (wired and wireless),
 replacing Thymio Suite 2.4.0, which no longer works reliably on recent operating systems.
