@@ -113,9 +113,14 @@ jobs:
         run: |
           version=$(python3 -c "import json;print(json.load(open('launcher/src-tauri/tauri.conf.json'))['version'])")
           tag="v${version}-test"
-          find dist -type f \( -name '*.exe' -o -name '*.dmg' \) -print
+          # Simple file names without spaces, one per system.
+          mkdir -p out
+          find dist -type f -name '*.exe' -exec cp {} "out/ThymioSuiteNext-${version}-windows-x64-setup.exe" \;
+          find dist -type f -name '*aarch64*.dmg' -exec cp {} "out/ThymioSuiteNext-${version}-macos-apple-silicon.dmg" \;
+          find dist -type f -name '*x64*.dmg' -exec cp {} "out/ThymioSuiteNext-${version}-macos-intel.dmg" \;
+          ls -l out
           gh release delete "$tag" --yes --cleanup-tag 2>/dev/null || true
           gh release create "$tag" --prerelease --target "${{ github.sha }}" \
             --title "Thymio Suite Next ${version} (test version)" \
             --notes "Test version for evaluation only. Not signed yet: Windows Smart App Control must be off to run it. See docs/test-log.md." \
-            $(find dist -type f \( -name '*.exe' -o -name '*.dmg' \))
+            out/*
