@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Thymio Suite</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="20" rx="8" fill="#5A2FC2"/><circle cx="11" cy="16" r="3" fill="#fff"/><circle cx="21" cy="16" r="3" fill="#fff"/></svg>
+      <span class="brand-name">Thymio Suite</span>
+      <span class="pill">Test version</span>
+    </div>
+    <nav class="topnav" aria-label="Main">
+      <button type="button" class="btn" id="pair-btn">Pair wireless robots</button>
+      <button type="button" class="btn" id="help-btn">Help</button>
+    </nav>
+  </header>
+
+  <main class="layout">
+    <section class="panel robots" aria-labelledby="robots-title">
+      <div class="panel-head">
+        <h2 id="robots-title">1. Choose your robot</h2>
+        <span class="muted" id="robot-count"></span>
+      </div>
+      <div id="robot-list" class="robot-list" role="radiogroup" aria-labelledby="robots-title"></div>
+      <div id="no-robot" class="no-robot" hidden>
+        <p class="no-robot-title">No robot found yet</p>
+        <ol class="checklist">
+          <li id="check-tdm"><span class="dot"></span><span>Connecting to the device manager…</span></li>
+          <li><span class="dot todo">!</span><span>Plug the robot in with its USB cable, or plug in the wireless dongle.</span></li>
+          <li><span class="dot todo">!</span><span>Switch the robot on: press the centre button until the lights turn on. Wireless robots can take up to 20 seconds to appear.</span></li>
+          <li><span class="dot todo">!</span><span>A new wireless robot must be paired with the dongle once.</span></li>
+        </ol>
+      </div>
+      <div id="fw-note" class="note warn" hidden></div>
+    </section>
+
+    <section class="modes" aria-labelledby="modes-title">
+      <div>
+        <h2 id="modes-title">2. Choose how to program <span id="selected-name">your robot</span></h2>
+        <p class="muted">Everything runs on this computer. No internet needed.</p>
+      </div>
+      <div id="mode-grid" class="mode-grid"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span id="tdm-status">Starting the device manager…</span>
+    <button type="button" class="link-btn" id="report-btn">Copy a report for support</button>
+  </footer>
+
+  <dialog id="details" aria-labelledby="details-title">
+    <form method="dialog" class="details">
+      <div class="details-head">
+        <span class="mode-mark" id="details-mark"></span>
+        <div>
+          <h2 id="details-title"></h2>
+          <span class="level" id="details-level"></span>
+        </div>
+      </div>
+      <div id="details-body" class="details-body"></div>
+      <p id="details-warning" class="note warn" hidden></p>
+      <div class="details-actions">
+        <button type="submit" value="cancel" class="btn">Back</button>
+        <button type="button" id="details-open" class="btn primary">Open</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="vendor/flatbuffers.js"></script>
+  <script src="vendor/thymio_generated.js"></script>
+  <script src="tdm.js"></script>
+  <script src="modes.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

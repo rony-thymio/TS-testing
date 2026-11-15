@@ -1,0 +1,70 @@
+# Builds the launcher (Tauri) with the device manager and the VPL3 / Blockly / Scratch web apps
+# bundled, and produces unsigned test installers: Windows (.exe setup) and macOS (.dmg).
+name: launcher
+
+on:
+  push:
+    branches: [main]
+    paths: ['launcher/**', 'device-manager/**', '.github/workflows/launcher.yml', '.github/workflows/device-manager.yml']
+  workflow_dispatch:
+
+jobs:
+  device-manager:
+    uses: ./.github/workflows/device-manager.yml
+
+  app:
+    name: Launcher ${{ matrix.name }}
+    needs: device-manager
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Windows x64, os: windows-latest, triple: x86_64-pc-windows-msvc, tdm: thymio-device-manager-Windows-X64, ext: .exe, bundles: nsis }
+          - { name: macOS Apple Silicon, os: macos-latest, triple: aarch64-apple-darwin, tdm: thymio-device-manager-macOS-ARM64, ext: '', bundles: 'app,dmg' }
+          - { name: macOS Intel, os: macos-15-intel, triple: x86_64-apple-darwin, tdm: thymio-device-manager-macOS-X64, ext: '', bundles: 'app,dmg' }
+    defaults:
+      run:
+        shell: bash
+        working-directory: launcher
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Get the device manager built by the previous job
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.tdm }}
+          path: tdm
+
+      - name: Place the device manager next to the launcher
+        run: |
+          mkdir -p src-tauri/binaries
+          cp ../tdm/build/bin/thymio-device-manager${{ matrix.ext }} \
+             src-tauri/binaries/thymio-device-manager-${{ matrix.triple }}${{ matrix.ext }}
+          chmod +x src-tauri/binaries/*
+          ls -l src-tauri/binaries
+
+      - name: Download the web apps (VPL3, Blockly, Scratch)
+        run: ./fetch-webapps.sh
+
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: launcher/src-tauri }
+
+      - name: Generate icons
+        run: npx --yes @tauri-apps/cli@2 icon src-tauri/icons/app-icon.png
+
+      - name: Build
+        run: npx --yes @tauri-apps/cli@2 build --bundles ${{ matrix.bundles }}
+
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: thymio-suite-next-${{ matrix.triple }}
+          path: |
+            launcher/src-tauri/target/release/bundle/nsis/*.exe
+            launcher/src-tauri/target/release/bundle/dmg/*.dmg
+          if-no-files-found: error

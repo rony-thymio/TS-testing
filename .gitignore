@@ -2,3 +2,8 @@ build/
 node_modules/
 target/
 .DS_Store
+launcher/ui/apps/
+launcher/src-tauri/binaries/
+launcher/src-tauri/gen/
+launcher/src-tauri/icons/*
+!launcher/src-tauri/icons/app-icon.png

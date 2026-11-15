@@ -1,0 +1,7 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "The launcher window only. Programming apps (VPL3, Blockly, Scratch) get no access to the launcher's commands.",
+  "windows": ["main"],
+  "permissions": ["core:default"]
+}
