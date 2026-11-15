@@ -1,0 +1,100 @@
+diff --git a/aseba/thymio-device-manager/app_server.h b/aseba/thymio-device-manager/app_server.h
+index 0561c16..7f1f62d 100644
+--- a/aseba/thymio-device-manager/app_server.h
++++ b/aseba/thymio-device-manager/app_server.h
+@@ -10,20 +10,27 @@ using tcp = boost::asio::ip::tcp;
+ template <typename socket_type>
+ class application_server {
+ public:
+-    application_server(boost::asio::io_context& io_context, uint16_t port = 0)
++    // By default the servers listen on the loopback interface only: only programs on this computer
++    // can connect, and Windows does not show a firewall prompt. With remote connections enabled
++    // (--allow-remote-connections) they listen on every interface, as before.
++    application_server(boost::asio::io_context& io_context, uint16_t port = 0, bool all_interfaces = false)
+         : m_io_context(io_context), m_acceptor(io_context) {
+-        try {
+-            m_acceptor = tcp::acceptor(io_context, tcp::endpoint(tcp::v6(), port));
+-            // Make sure we accept both ipv4 + ipv6
+-            boost::asio::ip::v6_only opt(false);
+-            boost::system::error_code ec;
+-            m_acceptor.set_option(opt, ec);
+-        } catch (std::exception &e) {
+-            // IPv6 failed: try IPv4
+-            mLogInfo("IPv6 failed, switch to IPv4-only");
+-            m_acceptor = tcp::acceptor(io_context, tcp::endpoint(tcp::v4(), port));
++        if(!all_interfaces) {
++            m_acceptor = tcp::acceptor(io_context, tcp::endpoint(boost::asio::ip::address_v4::loopback(), port));
++        } else {
++            try {
++                m_acceptor = tcp::acceptor(io_context, tcp::endpoint(tcp::v6(), port));
++                // Make sure we accept both ipv4 + ipv6
++                boost::asio::ip::v6_only opt(false);
++                boost::system::error_code ec;
++                m_acceptor.set_option(opt, ec);
++            } catch(std::exception& e) {
++                // IPv6 failed: try IPv4
++                mLogInfo("IPv6 failed, switch to IPv4-only");
++                m_acceptor = tcp::acceptor(io_context, tcp::endpoint(tcp::v4(), port));
++            }
+         }
+-		m_acceptor.listen(boost::asio::socket_base::max_listen_connections);
++        m_acceptor.listen(boost::asio::socket_base::max_listen_connections);
+     }
+ 
+     tcp::acceptor::endpoint_type endpoint() const {
+@@ -33,20 +40,25 @@ public:
+     void accept() {
+         auto endpoint = std::make_shared<application_endpoint<socket_type>>(m_io_context);
+         m_acceptor.async_accept(endpoint->tcp_socket(), [this, endpoint](const boost::system::error_code& error) {
+-            bool same_machine = mobsya::endpoint_is_local(endpoint->tcp_socket().remote_endpoint());
+-            bool same_network = mobsya::endpoint_is_network_local(endpoint->tcp_socket().remote_endpoint());
+-            mLogInfo("New {} connection from {} {}",
+-                     same_network ? "Local" : "Remote",
+-                     endpoint->tcp_socket().remote_endpoint().address().to_string(),
+-                     error.message());
++            if(error == boost::asio::error::operation_aborted)
++                return;  // server shutting down
++            // The peer may already be gone: never let remote_endpoint() throw (it crashed the TDM).
++            boost::system::error_code ec;
++            const auto remote = endpoint->tcp_socket().remote_endpoint(ec);
++            if(error || ec) {
++                mLogWarn("Incoming connection failed: {}", (error ? error : ec).message());
++                this->accept();
++                return;
++            }
++            bool same_machine = mobsya::endpoint_is_local(remote);
++            bool same_network = mobsya::endpoint_is_network_local(remote);
++            mLogInfo("New {} connection from {}", same_network ? "Local" : "Remote", remote.address().to_string());
+ 
+             // Drop connections to non-locale machines unless the TDM
+             // was started with --allow-remote-connections
+             if(!same_machine && !m_allow_remote_connections) {
+-                mLogWarn("Connection from {} dropped: remote connections not allowed",
+-                         endpoint->tcp_socket().remote_endpoint().address().to_string());
+-            }
+-            else if(!error) {
++                mLogWarn("Connection from {} dropped: remote connections not allowed", remote.address().to_string());
++            } else {
+                 if(same_machine)
+                     endpoint->set_is_machine_local();
+                 if(same_network)
+diff --git a/aseba/thymio-device-manager/main.cpp b/aseba/thymio-device-manager/main.cpp
+index a6df1b6..8e74862 100644
+--- a/aseba/thymio-device-manager/main.cpp
++++ b/aseba/thymio-device-manager/main.cpp
+@@ -60,13 +60,13 @@ void run_service(boost::asio::io_context& ctx, const options& opts) {
+     //ws.enable();
+ 
+     // Create a server for regular tcp connection
+-    mobsya::application_server<mobsya::tcp::socket> tcp_server(ctx, 8596);
++    mobsya::application_server<mobsya::tcp::socket> tcp_server(ctx, 8596, opts.allow_remote_connections);
+     node_registery.set_tcp_endpoint(tcp_server.endpoint());
+    
+     mobsya::aseba_tcp_acceptor aseba_tcp_acceptor(ctx);
+ 
+     // Create a server for websocket
+-    mobsya::application_server<mobsya::websocket_t> websocket_server(ctx, 8597);
++    mobsya::application_server<mobsya::websocket_t> websocket_server(ctx, 8597, opts.allow_remote_connections);
+ 	node_registery.set_ws_endpoint(websocket_server.endpoint());
+ 
+ #ifdef MOBSYA_TDM_ENABLE_USB

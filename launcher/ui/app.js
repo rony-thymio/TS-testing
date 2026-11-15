@@ -9,30 +9,65 @@
   const state = { client: null, connected: false, robots: [], selected: null, pass: '' };
 
   // ---------- device manager connection --------------------------------------------------
+  // One connection attempt at a time; retries back off up to 5 s. (Test version 0.1 started two
+  // new attempts per failure, which piled up thousands of connections when the TDM was unreachable.)
+  let connecting = false, retryTimer = null, retryDelay = 1000;
+  function scheduleReconnect() {
+    if (retryTimer) return;
+    retryTimer = setTimeout(() => { retryTimer = null; connect(); }, retryDelay);
+    retryDelay = Math.min(retryDelay * 2, 5000);
+  }
   function connect() {
+    if (connecting || state.client) return;
+    connecting = true;
     const c = new window.TdmClient(TDM_URL);
     c.onNodesChanged = (nodes) => { state.robots = nodes.filter((n) => n.type !== 'DummyNode'); renderRobots(); };
     c.onConnectionChanged = (up) => {
       state.connected = up;
+      if (!up) {
+        if (state.client === c) { state.client = null; state.robots = []; renderRobots(); }
+        scheduleReconnect();
+      }
       renderStatus();
-      if (!up) setTimeout(connect, 2000);
     };
     c.connect().then(() => {
-      state.client = c;
+      connecting = false; retryDelay = 1000;
+      state.client = c; state.connectedOnce = true;
       state.pass = c.serverPassword || '';
       c.requestNodes();
-    }).catch(() => { state.connected = false; renderStatus(); setTimeout(connect, 2000); });
+      renderStatus();
+    }).catch(() => { connecting = false; try { c.close(); } catch (e) {} scheduleReconnect(); });
   }
+
+  // Ask the launcher process whether the device manager runs, to explain connection problems.
+  async function pollDeviceManager() {
+    try { state.dm = await invoke('device_manager_status'); } catch (e) { state.dm = null; }
+    renderStatus();
+  }
+  setInterval(pollDeviceManager, 3000);
+
+  function dmProblem() {
+    const dm = state.dm;
+    if (state.connected || !dm) return null;
+    if (!dm.exe_found) return 'The device manager is missing from the installation. Please reinstall Thymio Suite.';
+    if (dm.error) return `The device manager could not start: ${dm.error}`;
+    if (!dm.running) return 'The device manager stopped. Click "Copy a report for support" and send it to us.';
+    if (dm.port_open && Date.now() - startedAt > 8000) return 'The device manager is running, but this window cannot reach it. Click "Copy a report for support" and send it to us.';
+    return null;
+  }
+  const startedAt = Date.now();
 
   function renderStatus() {
     const n = state.robots.length;
+    const problem = dmProblem();
     $('tdm-status').textContent = state.connected
       ? `Device manager running · ${n} robot${n === 1 ? '' : 's'}`
-      : 'Connecting to the device manager…';
+      : problem || 'Connecting to the device manager…';
     const check = $('check-tdm');
-    check.querySelector('.dot').className = 'dot ' + (state.connected ? 'ok' : '');
-    check.querySelector('.dot').textContent = state.connected ? '✓' : '…';
-    check.lastElementChild.textContent = state.connected ? 'Device manager is running.' : 'Connecting to the device manager…';
+    const dot = check.querySelector('.dot');
+    dot.className = 'dot ' + (state.connected ? 'ok' : problem ? 'todo' : '');
+    dot.textContent = state.connected ? '✓' : problem ? '!' : '…';
+    check.lastElementChild.textContent = state.connected ? 'Device manager is running.' : problem || 'Connecting to the device manager…';
   }
 
   // ---------- robots ---------------------------------------------------------------------
@@ -136,15 +171,31 @@
     clearTimeout(toast.timer); toast.timer = setTimeout(() => { t.hidden = true; }, 4000);
   }
 
-  $('report-btn').addEventListener('click', async () => {
+  async function buildReport() {
     let log = '';
     try { log = await invoke('device_manager_log'); } catch (e) { log = `(log unavailable: ${e})`; }
-    const report = [
-      'Thymio Suite Next – support report', `Date: ${new Date().toISOString()}`, `System: ${navigator.userAgent}`,
-      `Device manager connected: ${state.connected}`, `Robots: ${JSON.stringify(state.robots, null, 1)}`, '', 'Device manager log:', log
+    return [
+      'Thymio Suite Next – support report', `Version: ${window.THYMIO_VERSION || 'test'}`, `Date: ${new Date().toISOString()}`,
+      `System: ${navigator.userAgent}`, `Device manager status: ${JSON.stringify(state.dm)}`,
+      `Connected: ${state.connected} (ever: ${!!state.connectedOnce})`, `Robots: ${JSON.stringify(state.robots, null, 1)}`,
+      '', 'Device manager log:', log
     ].join('\n');
-    try { await navigator.clipboard.writeText(report); toast('Report copied. Paste it into an email to support.'); }
-    catch (e) { toast('Could not copy the report.'); }
+  }
+  $('report-btn').addEventListener('click', async () => {
+    $('report-text').value = 'Collecting…';
+    $('report').showModal();
+    $('report-text').value = await buildReport();
+  });
+  $('report-copy').addEventListener('click', async () => {
+    const ta = $('report-text');
+    ta.focus(); ta.select();
+    let ok = false;
+    try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) {} }
+    toast(ok ? 'Report copied. Paste it into your message to support.' : 'Select the text and press Ctrl+C (Cmd+C on Mac).');
+  });
+  $('report-save').addEventListener('click', async () => {
+    try { const path = await invoke('save_report', { text: $('report-text').value }); toast(`Saved: ${path}`); }
+    catch (e) { toast(`Could not save the report: ${e}`); }
   });
   $('pair-btn').addEventListener('click', () => toast('Pairing comes in the next test version. Thymio Suite 2.4.0 can pair meanwhile.'));
   $('help-btn').addEventListener('click', () => toast('Help: www.thymio.org/support'));

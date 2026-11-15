@@ -17,3 +17,14 @@ Notes:
 - Several identical "Got description" lines when the wireless robot appears: description was requested
   repeatedly while waiting; harmless, to tidy.
 - Log noise to fix: "Requesting list nodes" every second at *info* level; unplugging logged as *error*.
+
+## 2026-11-15 — Launcher test version 0.1, Windows
+
+- Installs and opens. Windows Firewall prompt for thymio-device-manager (it listened on all interfaces).
+- Stuck on "Connecting to the device manager…"; WebView2 process grew to ~12 GB.
+  Cause found: the launcher started two new connection attempts per failure (exponential).
+  A burst of failed connections could also crash the device manager (`remote_endpoint()` throw).
+- "Copy a report for support" did nothing (page frozen; clipboard API also unavailable on that origin).
+
+Fixed in 0.2: single retry with back-off, device manager status shown in the checklist, report in a
+dialog with Copy and Save to Desktop, device manager on loopback only, accept errors handled.

@@ -17,17 +17,26 @@ use tauri::{Manager, RunEvent, WebviewUrl, WebviewWindow, WebviewWindowBuilder, 
 
 const TDM_WS_PORT: u16 = 8597;
 
+// Same WebView2 arguments for every window (WebView2 requires it). Tauri's defaults, plus turning
+// off Chromium's private/local-network checks so pages can reach the device manager on localhost.
+const BROWSER_ARGS: &str = "--disable-features=msWebOOUI,msPdfOOUI,msSmartScreenProtection,LocalNetworkAccessChecks,BlockInsecurePrivateNetworkRequests,PrivateNetworkAccessSendPreflights";
+
 #[derive(Default)]
 struct DeviceManager {
     child: Mutex<Option<Child>>,
     log_path: Mutex<Option<PathBuf>>,
     started_by_us: Mutex<bool>,
+    error: Mutex<Option<String>>,
 }
 
 #[derive(Serialize)]
 struct DeviceManagerStatus {
     started_by_us: bool,
     running: bool,
+    exe_found: bool,
+    port_open: bool,
+    exit_code: Option<i32>,
+    error: Option<String>,
     log_path: Option<String>,
 }
 
@@ -50,7 +59,7 @@ fn start_device_manager(app: &tauri::AppHandle) {
         return;
     }
     let Some(exe) = tdm_executable() else {
-        eprintln!("thymio-device-manager not found next to the launcher");
+        *state.error.lock().unwrap() = Some("thymio-device-manager not found next to the launcher".into());
         return;
     };
     let log_dir = app.path().app_log_dir().unwrap_or_else(|_| std::env::temp_dir());
@@ -75,7 +84,7 @@ fn start_device_manager(app: &tauri::AppHandle) {
             *state.started_by_us.lock().unwrap() = true;
             *state.log_path.lock().unwrap() = Some(log_path);
         }
-        Err(e) => eprintln!("failed to start the device manager: {e}"),
+        Err(e) => *state.error.lock().unwrap() = Some(e.to_string()),
     }
 }
 
@@ -111,6 +120,7 @@ fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: S
         .title(title)
         .inner_size(1280.0, 800.0)
         .min_inner_size(800.0, 600.0)
+        .additional_browser_args(BROWSER_ARGS)
         .center()
         .build()
         .map_err(|e| e.to_string())?;
@@ -120,16 +130,37 @@ fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: S
 #[tauri::command]
 fn device_manager_status(app: tauri::AppHandle) -> DeviceManagerStatus {
     let state = app.state::<DeviceManager>();
-    let running = {
+    let port_open = tdm_listening();
+    let (running, exit_code) = {
         let mut guard = state.child.lock().unwrap();
         match guard.as_mut() {
-            Some(c) => matches!(c.try_wait(), Ok(None)),
-            None => tdm_listening(),
+            Some(c) => match c.try_wait() {
+                Ok(None) => (true, None),
+                Ok(Some(status)) => (false, status.code()),
+                Err(_) => (false, None),
+            },
+            None => (port_open, None),
         }
     };
-    let started_by_us = *state.started_by_us.lock().unwrap();
-    let log_path = state.log_path.lock().unwrap().as_ref().map(|p| p.display().to_string());
-    DeviceManagerStatus { started_by_us, running, log_path }
+    DeviceManagerStatus {
+        started_by_us: *state.started_by_us.lock().unwrap(),
+        running,
+        exe_found: tdm_executable().is_some(),
+        port_open,
+        exit_code,
+        error: state.error.lock().unwrap().clone(),
+        log_path: state.log_path.lock().unwrap().as_ref().map(|p| p.display().to_string()),
+    }
+}
+
+/// Saves the support report on the Desktop (or in Documents) and returns the file path.
+#[tauri::command]
+fn save_report(app: tauri::AppHandle, window: WebviewWindow, text: String) -> Result<String, String> {
+    require_main(&window)?;
+    let dir = app.path().desktop_dir().or_else(|_| app.path().document_dir()).map_err(|e| e.to_string())?;
+    let path = dir.join("thymio-suite-report.txt");
+    fs::write(&path, text).map_err(|e| e.to_string())?;
+    Ok(path.display().to_string())
 }
 
 /// Last lines of the device manager log, for the "copy a report for support" button.
@@ -158,7 +189,7 @@ fn restart_device_manager(app: tauri::AppHandle, window: WebviewWindow) -> Resul
 fn main() {
     tauri::Builder::default()
         .manage(DeviceManager::default())
-        .invoke_handler(tauri::generate_handler![open_app, device_manager_status, device_manager_log, restart_device_manager])
+        .invoke_handler(tauri::generate_handler![open_app, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             start_device_manager(app.handle());
             Ok(())

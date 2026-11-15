@@ -25,6 +25,10 @@ Patches:
   Visual Studio without modifying them.
 - `0002-do-not-crash-when-usb-is-unavailable.patch`: the TDM crashed at start when USB access
   failed (missing permission, sandbox). It now logs an error and keeps serving.
+- `0003-listen-on-loopback-by-default-and-survive-failed-accepts.patch`: without
+  `--allow-remote-connections`, ports 8596/8597 listen on 127.0.0.1 only, so Windows shows no
+  firewall prompt; a connection that drops before it is accepted no longer crashes the device
+  manager (it called `remote_endpoint()` without an error code). Tested with 300 reset connections.
 
 ## Build locally
 

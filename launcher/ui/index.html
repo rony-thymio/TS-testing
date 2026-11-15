@@ -11,7 +11,7 @@
     <div class="brand">
       <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="20" rx="8" fill="#5A2FC2"/><circle cx="11" cy="16" r="3" fill="#fff"/><circle cx="21" cy="16" r="3" fill="#fff"/></svg>
       <span class="brand-name">Thymio Suite</span>
-      <span class="pill">Test version</span>
+      <span class="pill">Test version 0.2</span>
     </div>
     <nav class="topnav" aria-label="Main">
       <button type="button" class="btn" id="pair-btn">Pair wireless robots</button>
@@ -70,10 +70,24 @@
     </form>
   </dialog>
 
+  <dialog id="report" aria-labelledby="report-title">
+    <form method="dialog" class="details">
+      <h2 id="report-title">Report for support</h2>
+      <p class="muted">This text helps us understand a problem. It contains no personal files.</p>
+      <textarea id="report-text" readonly rows="14" style="width:100%;font:12px ui-monospace,Consolas,monospace;border:1px solid var(--line-strong);border-radius:10px;padding:10px"></textarea>
+      <div class="details-actions">
+        <button type="submit" value="close" class="btn">Close</button>
+        <button type="button" id="report-save" class="btn">Save to Desktop</button>
+        <button type="button" id="report-copy" class="btn primary">Copy</button>
+      </div>
+    </form>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
+  <script>window.THYMIO_VERSION = "0.2";</script>
   <script src="tdm.js"></script>
   <script src="modes.js"></script>
   <script src="app.js"></script>
