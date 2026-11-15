@@ -11,7 +11,7 @@
     <div class="brand">
       <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="20" rx="8" fill="#5A2FC2"/><circle cx="11" cy="16" r="3" fill="#fff"/><circle cx="21" cy="16" r="3" fill="#fff"/></svg>
       <span class="brand-name">Thymio Suite</span>
-      <span class="pill">Test version 0.5</span>
+      <span class="pill">Test version 0.6</span>
     </div>
     <nav class="topnav" aria-label="Main">
       <button type="button" class="btn" id="pair-btn">Pair wireless robots</button>
@@ -19,7 +19,7 @@
     </nav>
   </header>
 
-  <main class="layout">
+  <main class="layout" id="home-view">
     <section class="panel robots" aria-labelledby="robots-title">
       <div class="panel-head">
         <h2 id="robots-title">1. Choose your robot</h2>
@@ -44,6 +44,48 @@
         <p class="muted">Everything runs on this computer. No internet needed.</p>
       </div>
       <div id="mode-grid" class="mode-grid"></div>
+    </section>
+  </main>
+
+  <main class="layout pairing" id="pairing-view" hidden>
+    <section class="panel pair-modes" aria-labelledby="pair-mode-title">
+      <button type="button" class="btn" id="pair-back">← Back</button>
+      <h2 id="pair-mode-title">What do you want to do?</h2>
+      <div role="radiogroup" aria-labelledby="pair-mode-title" class="pair-mode-list">
+        <label class="pair-mode"><input type="radio" name="pair-mode" value="single" checked>
+          <span><b>One robot with one dongle</b><small>A private pair: this dongle only talks to this robot.</small></span></label>
+        <label class="pair-mode"><input type="radio" name="pair-mode" value="case">
+          <span><b>A classroom case: each robot with its own dongle</b><small>Pair robot 1 with dongle 1, robot 2 with dongle 2… Each pair gets its own network.</small></span></label>
+        <label class="pair-mode"><input type="radio" name="pair-mode" value="shared">
+          <span><b>Several robots on one dongle</b><small>All robots join the dongle's network, so one computer sees them all (Aseba, Python).</small></span></label>
+      </div>
+      <p class="note">Tip: put a sticker of the same colour on each robot and its dongle.</p>
+    </section>
+
+    <section class="panel pair-main" aria-labelledby="pair-title">
+      <h2 id="pair-title">Pair a wireless robot</h2>
+      <ol class="checklist pair-checks">
+        <li id="pc-dongle"><span class="dot"></span><span></span></li>
+        <li id="pc-robot"><span class="dot"></span><span></span></li>
+        <li id="pc-fw"><span class="dot"></span><span></span></li>
+      </ol>
+      <details id="pair-advanced">
+        <summary>Advanced: choose channel and network yourself</summary>
+        <div class="adv-row">
+          <label>Channel
+            <select id="adv-channel"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select>
+          </label>
+          <label>Network (4 characters, 0–9 and A–F)
+            <input id="adv-network" maxlength="4" pattern="[0-9A-Fa-f]{4}" placeholder="e.g. 7C2A">
+          </label>
+        </div>
+      </details>
+      <div class="pair-actions">
+        <button type="button" class="btn primary" id="pair-go" disabled>Pair</button>
+        <span id="pair-status" class="muted" role="status" aria-live="polite"></span>
+      </div>
+      <div id="pair-done" class="paired-list" hidden></div>
+      <p class="muted small">While this screen is open, wireless robots are disconnected from the programming apps.</p>
     </section>
   </main>
 
@@ -83,13 +125,29 @@
     </form>
   </dialog>
 
+  <dialog id="fw-dialog" aria-labelledby="fw-title">
+    <form method="dialog" class="details">
+      <h2 id="fw-title">Update firmware</h2>
+      <p id="fw-text"></p>
+      <div id="fw-progress-wrap" hidden>
+        <div class="progress" role="progressbar" aria-label="Firmware update progress" aria-valuemin="0" aria-valuemax="100"><div id="fw-bar"></div></div>
+        <p class="note warn">Do not unplug the robot. This takes about a minute.</p>
+      </div>
+      <div class="details-actions">
+        <button type="submit" value="close" class="btn" id="fw-close">Close</button>
+        <button type="button" class="btn primary" id="fw-start">Update</button>
+      </div>
+    </form>
+  </dialog>
+
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
-  <script>window.THYMIO_VERSION = "0.5";</script>
+  <script>window.THYMIO_VERSION = "0.6";</script>
   <script src="tdm.js"></script>
   <script src="modes.js"></script>
   <script src="app.js"></script>
+  <script src="pairing.js"></script>
 </body>
 </html>

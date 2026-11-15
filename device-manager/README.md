@@ -29,6 +29,8 @@ Patches:
   `--allow-remote-connections`, ports 8596/8597 listen on 127.0.0.1 only, so Windows shows no
   firewall prompt; a connection that drops before it is accepted no longer crashes the device
   manager (it called `remote_endpoint()` without an error code). Tested with 300 reset connections.
+- `0004-calmer-log-messages.patch`: unplugging a robot or dongle is logged as information, not
+  as an error; the once-per-second "Requesting list nodes" message is debug-only.
 
 ## Build locally
 

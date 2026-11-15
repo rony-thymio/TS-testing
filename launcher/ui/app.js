@@ -93,11 +93,41 @@
       input.checked = r.id === state.selected; input.disabled = !usable(r);
       input.addEventListener('change', () => { state.selected = r.id; renderRobots(); });
       const main = document.createElement('div'); main.className = 'robot-main';
-      const name = document.createElement('div'); name.className = 'robot-name'; name.textContent = r.name || 'Thymio';
+      let name;
+      if (state.renaming === r.id) {
+        name = document.createElement('input'); name.className = 'rename-input'; name.value = r.name || '';
+        name.maxLength = 20; name.setAttribute('aria-label', 'New robot name');
+        const finish = (save) => {
+          const value = name.value.trim(); state.renaming = null;
+          if (save && value && value !== r.name && state.client) {
+            state.client.rename(r.id, value).then(() => toast(`Renamed to ${value}`)).catch(() => toast('Could not rename this robot.'));
+          }
+          renderRobots();
+        };
+        name.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); finish(true); } if (e.key === 'Escape') finish(false); });
+        name.addEventListener('blur', () => finish(true));
+        name.addEventListener('click', (e) => e.preventDefault());
+        setTimeout(() => { name.focus(); name.select(); }, 0);
+      } else {
+        name = document.createElement('div'); name.className = 'robot-name'; name.textContent = r.name || 'Thymio';
+      }
       const sub = document.createElement('div'); sub.className = 'robot-sub';
       sub.textContent = (r.type === 'Thymio2Wireless' ? 'Wireless' : r.type === 'SimulatedThymio2' ? 'Simulated' : 'USB cable')
         + (r.fwVersion ? ` · firmware ${r.fwVersion}` : '');
       main.append(name, sub);
+      const actions = document.createElement('div'); actions.className = 'robot-actions';
+      const canRename = (r.capabilities & 1) && usable(r);
+      const outdated = r.latestFwVersion && fwNum(r.fwVersion) < fwNum(r.latestFwVersion);
+      const canUpdate = (r.capabilities & 4) && r.status === 'available';
+      const addAction = (label, fn) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'mini'; b.textContent = label;
+        b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); fn(); });
+        actions.append(b);
+      };
+      if (canRename && state.renaming !== r.id) addAction('Rename', () => { state.renaming = r.id; renderRobots(); });
+      if (canUpdate && outdated) addAction(`Update firmware to ${r.latestFwVersion}`, () => showFirmware(r));
+      else if (canUpdate) addAction('Reinstall firmware', () => showFirmware(r));
+      if (actions.childElementCount) main.append(actions);
       const badge = document.createElement('span'); badge.className = 'badge ' + tone; badge.textContent = label;
       el.append(input, main, badge);
       list.append(el);
@@ -113,8 +143,9 @@
     $('fw-note').hidden = outdated.length === 0;
     if (outdated.length) {
       $('fw-note').textContent = `${outdated.map((r) => r.name).join(', ')}: firmware ${outdated[0].latestFwVersion} is available. `
-        + 'Updating from this launcher comes in the next test version; Thymio Suite 2.4.0 can update it meanwhile.';
+        + 'Wireless robots must be plugged in with the USB cable to update.';
     }
+    if (window.ThymioPairing) window.ThymioPairing.refresh();
     renderStatus();
   }
 
@@ -148,16 +179,21 @@
     const robot = state.robots.find((r) => r.id === state.selected);
     let warning = '';
     if (!m.available) warning = `${m.name} is not in this test version yet.`;
-    else if (!robot) warning = 'Choose a robot first (step 1).';
+    else if (!robot && m.needsRobot !== false) warning = 'Choose a robot first (step 1).';
     $('details-warning').hidden = !warning;
     $('details-warning').textContent = warning;
     $('details-open').disabled = !!warning;
-    $('details-open').textContent = robot ? `Open with ${robot.name || 'Thymio'}` : 'Open';
+    $('details-open').textContent = m.launch === 'thonny' ? 'Open Thonny' : robot ? `Open with ${robot.name || 'Thymio'}` : 'Open';
     $('details').showModal();
   }
 
   $('details-open').addEventListener('click', () => {
     const robot = state.robots.find((r) => r.id === state.selected);
+    if (current && current.launch === 'thonny') {
+      invoke('open_thonny').then(() => { $('details').close(); toast('Thonny is starting… (the first start can take a few seconds)'); })
+        .catch((e) => toast(String(e)));
+      return;
+    }
     if (!current || !robot) return;
     const path = current.url(robot, { ws: TDM_URL, pass: state.pass });
     invoke('open_app', { path, title: `${current.name} – ${robot.name || 'Thymio'}` })
@@ -197,8 +233,30 @@
     try { const path = await invoke('save_report', { text: $('report-text').value }); toast(`Saved: ${path}`); }
     catch (e) { toast(`Could not save the report: ${e}`); }
   });
-  $('pair-btn').addEventListener('click', () => toast('Pairing comes in the next test version. Thymio Suite 2.4.0 can pair meanwhile.'));
   $('help-btn').addEventListener('click', () => toast('Help: www.thymio.org/support'));
+
+  // ---------- firmware update ------------------------------------------------------------
+  let fwRobot = null;
+  function showFirmware(r) {
+    fwRobot = r;
+    $('fw-text').textContent = `Install firmware ${r.latestFwVersion || ''} on ${r.name || 'Thymio'} (currently ${r.fwVersion || 'unknown'})?`;
+    $('fw-progress-wrap').hidden = true; $('fw-bar').style.width = '0';
+    $('fw-start').hidden = false; $('fw-start').disabled = false; $('fw-close').disabled = false;
+    $('fw-dialog').showModal();
+  }
+  $('fw-start').addEventListener('click', () => {
+    if (!fwRobot || !state.client) return;
+    $('fw-start').disabled = true; $('fw-close').disabled = true; $('fw-progress-wrap').hidden = false;
+    $('fw-text').textContent = `Installing firmware on ${fwRobot.name || 'Thymio'}…`;
+    state.client.upgradeFirmware(fwRobot.id, (p) => { $('fw-bar').style.width = `${Math.round(p * 100)}%`; })
+      .then(() => { $('fw-bar').style.width = '100%'; $('fw-text').textContent = 'Done. The robot restarts and appears again in a few seconds.'; })
+      .catch(() => { $('fw-text').textContent = 'The update failed. Check the USB cable and try again; the robot keeps working meanwhile.'; })
+      .finally(() => { $('fw-start').hidden = true; $('fw-close').disabled = false; $('fw-progress-wrap').hidden = true; });
+  });
+  $('fw-dialog').addEventListener('cancel', (e) => { if ($('fw-close').disabled) e.preventDefault(); });
+
+  // Shared with pairing.js
+  window.ThymioApp = { state, toast, fwNum, showFirmware };
 
   // Result of "Save" in a programming window (see handle_download in main.rs).
   if (tauri && tauri.event) tauri.event.listen('save-result', (e) => toast(String(e.payload)));

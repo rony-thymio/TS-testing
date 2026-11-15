@@ -54,6 +54,19 @@ jobs:
       - name: Download the web apps (VPL3, Blockly, Scratch)
         run: ./fetch-webapps.sh
 
+      - name: Bundle Thonny with the Thymio plug-in (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ver = "5.0.1"
+          Invoke-WebRequest "https://github.com/thonny/thonny/releases/download/v$ver/thonny-$ver-x64.exe" -OutFile thonny-setup.exe
+          $dest = Join-Path $PWD "thonny"
+          Start-Process -Wait -FilePath .\thonny-setup.exe -ArgumentList "/SP-","/VERYSILENT","/SUPPRESSMSGBOXES","/NORESTART","/CURRENTUSER","/NOICONS","/DIR=`"$dest`""
+          & "$dest\python.exe" -m pip install --no-warn-script-location --disable-pip-version-check tdmclient_ty
+          & "$dest\python.exe" -c "import thonnycontrib.tdmclient_ty, tdmclient; print('plug-in OK')"
+          Remove-Item thonny-setup.exe
+          Get-ChildItem $dest | Select-Object -First 15 Name
+
       - uses: actions/setup-node@v4
         with: { node-version: 20 }
 

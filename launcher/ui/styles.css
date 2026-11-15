@@ -1,3 +1,4 @@
+[hidden] { display: none !important; }
 :root {
   --ground: #F6F5FA; --surface: #FFFFFF; --line: #E4E1EE; --line-strong: #D6D1E6;
   --ink: #1C1A29; --muted: #5E5A72; --accent: #5A2FC2; --accent-ink: #4A23B0; --accent-soft: #F7F4FE;
@@ -66,3 +67,27 @@ dialog::backdrop { background: rgba(28, 26, 41, .45); }
 .details-body ul { margin: 0 0 10px; padding-left: 20px; }
 .details-actions { display: flex; justify-content: flex-end; gap: 10px; }
 .toast { position: fixed; left: 50%; bottom: 56px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 14px; max-width: 80vw; }
+
+.robot-actions { display: flex; gap: 6px; margin-top: 6px; flex-wrap: wrap; }
+.mini { min-height: 32px; padding: 0 10px; font-size: 12px; border-radius: 8px; border: 1px solid var(--line-strong); background: var(--surface); cursor: pointer; font: inherit; font-size: 12px; }
+.mini:hover { border-color: var(--accent); }
+.rename-input { font: inherit; font-size: 15px; padding: 4px 8px; border: 1px solid var(--accent); border-radius: 8px; width: 100%; }
+.pairing { align-items: stretch; }
+.pair-modes { flex: 1 1 300px; max-width: 380px; display: flex; flex-direction: column; gap: 12px; align-self: flex-start; }
+.pair-modes .btn { align-self: flex-start; }
+.pair-mode-list { display: flex; flex-direction: column; gap: 10px; }
+.pair-mode { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--line); border-radius: 12px; cursor: pointer; }
+.pair-mode:has(input:checked) { border: 2px solid var(--accent); background: var(--accent-soft); padding: 11px; }
+.pair-mode input { margin-top: 3px; accent-color: var(--accent); width: 18px; height: 18px; }
+.pair-mode small { display: block; color: var(--muted); font-size: 13px; margin-top: 2px; line-height: 1.4; }
+.pair-main { flex: 999 1 480px; display: flex; flex-direction: column; gap: 16px; align-self: flex-start; }
+.pair-checks { font-size: 14px; }
+.adv-row { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 10px; font-size: 14px; }
+.adv-row label { display: flex; flex-direction: column; gap: 4px; }
+.adv-row select, .adv-row input { font: inherit; min-height: 40px; padding: 0 10px; border: 1px solid var(--line-strong); border-radius: 10px; }
+.pair-actions { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.paired-list { display: flex; gap: 8px; flex-wrap: wrap; }
+.paired-list span { font-size: 13px; padding: 6px 12px; border-radius: 999px; background: var(--ok-soft); color: var(--ok); }
+.small { font-size: 12px; }
+.progress { height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; }
+.progress div { height: 10px; width: 0; background: var(--accent); transition: width .3s; }

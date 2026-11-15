@@ -1,0 +1,74 @@
+diff --git a/aseba/thymio-device-manager/aseba_endpoint.cpp b/aseba/thymio-device-manager/aseba_endpoint.cpp
+index 3e6b2fc..971b9c2 100644
+--- a/aseba/thymio-device-manager/aseba_endpoint.cpp
++++ b/aseba/thymio-device-manager/aseba_endpoint.cpp
+@@ -173,7 +173,11 @@ void aseba_endpoint::handle_read(boost::system::error_code ec, std::shared_ptr<A
+         if(!ec && !msg && !m_upgrading_firmware)
+             read_aseba_message();
+ 
+-        mLogError("Error while reading aseba message {}", ec ? ec.message() : "Message corrupted");
++        // A robot or dongle being unplugged aborts the pending read: that is normal, not an error.
++        if(ec == boost::asio::error::operation_aborted || ec == boost::asio::error::eof)
++            mLogInfo("Connection to the robot closed ({})", ec.message());
++        else
++            mLogError("Error while reading aseba message {}", ec ? ec.message() : "Message corrupted");
+         return;
+     }
+     mLogTrace("Message received : '{}' {}", msg->message_name(), ec.message());
+@@ -258,7 +262,7 @@ void aseba_endpoint::schedule_send_ping(boost::posix_time::time_duration delay)
+         auto that = ptr.lock();
+         if(!that || ec)
+             return;
+-        mLogInfo("Requesting list nodes( ec : {} )", ec.message());
++        mLogDebug("Requesting list nodes( ec : {} )", ec.message());  // every second: debug only
+         if(that->m_upgrading_firmware)
+             return;
+ 
+diff --git a/aseba/thymio-device-manager/serialacceptor_osx.cpp b/aseba/thymio-device-manager/serialacceptor_osx.cpp
+index ab7c9be..efc989e 100644
+--- a/aseba/thymio-device-manager/serialacceptor_osx.cpp
++++ b/aseba/thymio-device-manager/serialacceptor_osx.cpp
+@@ -182,7 +182,7 @@ void serial_acceptor_service::handle_request_by_active_enumeration() {
+     }
+     for(auto&& e : m_known_devices) {
+         if(std::find(known_devices.begin(), known_devices.end(), e) == known_devices.end()) {
+-            mLogError("Removed {}", e);
++            mLogInfo("Device unplugged: {}", e);
+             remove_connected_device(e);
+             device_unplugged(e);
+         }
+diff --git a/aseba/thymio-device-manager/serialacceptor_win32.cpp b/aseba/thymio-device-manager/serialacceptor_win32.cpp
+index f32b017..3c4f6ea 100644
+--- a/aseba/thymio-device-manager/serialacceptor_win32.cpp
++++ b/aseba/thymio-device-manager/serialacceptor_win32.cpp
+@@ -33,7 +33,7 @@ void serial_acceptor_service::shutdown() {
+ void serial_acceptor_service::free_device(const std::string& s) {
+     const auto it = std::find(m_known_devices.begin(), m_known_devices.end(), s);
+     if(it != m_known_devices.end()) {
+-        mLogError("Removed {}", s);
++        mLogInfo("Device unplugged: {}", s);
+         m_known_devices.erase(it);
+     }
+     remove_connected_device(s);
+@@ -203,7 +203,7 @@ void serial_acceptor_service::handle_request_by_active_enumeration() {
+     }
+     for(auto&& e : m_known_devices) {
+         if(std::find(known_devices.begin(), known_devices.end(), e) == known_devices.end()) {
+-            mLogError("Removed {}", e);
++            mLogInfo("Device unplugged: {}", e);
+             remove_connected_device(e);
+             device_unplugged(e);
+         }
+diff --git a/aseba/thymio-device-manager/serialserver.cpp b/aseba/thymio-device-manager/serialserver.cpp
+index c745980..d432d15 100644
+--- a/aseba/thymio-device-manager/serialserver.cpp
++++ b/aseba/thymio-device-manager/serialserver.cpp
+@@ -46,7 +46,7 @@ void serial_server::accept() {
+     auto session = aseba_endpoint::create_for_serial(m_io_ctx);
+     m_acceptor.accept_async(session->serial(), [session, this](boost::system::error_code ec) {
+         if(ec) {
+-            mLogError("system_error: %s", ec.message());
++            mLogError("system_error: {}", ec.message());
+         }
+         mLogInfo("New Aseba endpoint over USB device connected");
+         usb_serial_port& d = session->serial();

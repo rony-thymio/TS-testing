@@ -56,11 +56,13 @@ window.THYMIO_MODES = [
   {
     id: 'thonny', name: 'Python (Thonny)', mark: 'Py', tint: '#E5F3F6', ink: '#145868', level: 'Advanced',
     short: 'Write Python in the Thonny editor and run it on Thymio.',
-    available: false, groups: true,
+    available: true, groups: true, launch: 'thonny', needsRobot: false,
     details: `<p><b>Thonny is a Python editor meant for learning programming.</b></p>
       <ul><li>Program Thymio with Python using the Thymio plug-in in Thonny</li>
       <li>Python code is translated to Aseba</li><li>Load code directly to the robot</li>
       <li>Several robots on one dongle can be programmed together</li></ul>
+      <p><b>How to use:</b> write your program, then choose <b>Thymio › Run on Thymio</b> (or Ctrl+Shift+R).
+      To choose the robot, open <b>View › Thymio Robots</b>.</p>
       <p>Thonny is developed by Aivar Annamaa under the MIT licence.</p>`
   }
 ];

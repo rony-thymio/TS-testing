@@ -294,6 +294,27 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
     Ok(())
 }
 
+/// Starts Thonny (bundled on Windows, with the Thymio plug-in tdmclient_ty preinstalled).
+/// The plug-in connects to the device manager on localhost:8596 by itself.
+#[tauri::command]
+async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
+    require_main(&window)?;
+    let exe_name = if cfg!(windows) { "thonny.exe" } else { "thonny" };
+    let mut candidates = Vec::new();
+    if let Ok(res) = app.path().resource_dir() {
+        candidates.push(res.join("thonny").join(exe_name));
+    }
+    if let Ok(exe) = std::env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            candidates.push(dir.join("thonny").join(exe_name));
+        }
+    }
+    let Some(thonny) = candidates.into_iter().find(|p| p.exists()) else {
+        return Err("Thonny is not included in this version for this system yet.".into());
+    };
+    Command::new(&thonny).spawn().map(|_| ()).map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 fn device_manager_status(app: tauri::AppHandle) -> DeviceManagerStatus {
     let state = app.state::<DeviceManager>();
@@ -353,7 +374,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(DeviceManager::default())
         .manage(WebApps::default())
-        .invoke_handler(tauri::generate_handler![open_app, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();
