@@ -142,15 +142,10 @@ fn device_manager_status(app: tauri::AppHandle) -> DeviceManagerStatus {
             None => (port_open, None),
         }
     };
-    DeviceManagerStatus {
-        started_by_us: *state.started_by_us.lock().unwrap(),
-        running,
-        exe_found: tdm_executable().is_some(),
-        port_open,
-        exit_code,
-        error: state.error.lock().unwrap().clone(),
-        log_path: state.log_path.lock().unwrap().as_ref().map(|p| p.display().to_string()),
-    }
+    let started_by_us = *state.started_by_us.lock().unwrap();
+    let error = state.error.lock().unwrap().clone();
+    let log_path = state.log_path.lock().unwrap().as_ref().map(|p| p.display().to_string());
+    DeviceManagerStatus { started_by_us, running, exe_found: tdm_executable().is_some(), port_open, exit_code, error, log_path }
 }
 
 /// Saves the support report on the Desktop (or in Documents) and returns the file path.
