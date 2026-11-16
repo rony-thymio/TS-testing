@@ -330,6 +330,15 @@ onevent button.backward
     reader.readAsText(file);
   }
 
+  // Library activities: the launcher adds "activity=activities/aseba/<id>/solution.aesl" to the address.
+  (function openActivityFromAddress() {
+    const path = hash.get('activity');
+    if (!path || !/^activities\/[\w\-\/]+\.aesl$/.test(path)) return;
+    fetch('../' + path).then((r) => (r.ok ? r.text() : Promise.reject(new Error(r.statusText))))
+      .then((text) => open(new File([text], path.split('/').slice(-2).join('-'))))
+      .catch(() => message('Could not open the activity file.', 'err'));
+  })();
+
   // ---------- wiring -----------------------------------------------------------------------
   editor.onChange = () => { setDirty(true); if (editor.errorLine) editor.setErrorLine(null); };
   $('btn-new').addEventListener('click', newProgram);

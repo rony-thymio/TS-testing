@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Challenge</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="challenge.css">
+</head>
+<body class="challenge-body">
+  <header class="cw-head">
+    <div class="cw-top">
+      <span class="cw-lang"><img id="cw-icon" alt=""><span id="cw-lang"></span></span>
+      <button type="button" class="icon-btn cw-collapse" id="cw-collapse" aria-label="Collapse" aria-expanded="true">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path id="cw-collapse-path" d="M6 15l6-6 6 6"/></svg></button>
+    </div>
+    <h1 id="cw-title">…</h1>
+    <div class="cw-tags" id="cw-tags"></div>
+  </header>
+  <main class="cw-main" id="cw-main">
+    <section id="sec-story" hidden><h2>The story</h2><div id="cw-story"></div></section>
+    <section id="sec-goal" hidden><h2>Your goal</h2><div id="cw-goal"></div></section>
+    <section id="sec-steps" hidden><h2>Step by step</h2><div id="cw-steps"></div></section>
+    <section id="sec-hints" class="cw-hints" hidden>
+      <h2 id="cw-hints-title">Hints</h2>
+      <ol id="cw-hints"></ol>
+      <button type="button" class="btn" id="cw-next-hint">Show a hint</button>
+    </section>
+    <section id="sec-further" hidden><h2>To go further</h2><div id="cw-further"></div></section>
+  </main>
+  <footer class="cw-foot" id="cw-foot">
+    <span class="cw-author" id="cw-author"></span>
+    <button type="button" class="btn" id="cw-solution">Show the solution</button>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <script src="modes.js"></script>
+  <script src="activity-md.js"></script>
+  <script src="challenge.js"></script>
+</body>
+</html>

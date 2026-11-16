@@ -1,0 +1,27 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># Proportional line follower: follows the edge of a black line
+var base = 100
+var difference
+
+onevent prox
+    difference = prox.ground.delta[0] - prox.ground.delta[1]
+    motor.left.target = base + difference / 4
+    motor.right.target = base - difference / 4
+</node>
+
+
+</network>

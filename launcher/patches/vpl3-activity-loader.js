@@ -11,7 +11,7 @@
       fetch("../" + path).then(function (r) { return r.text(); }).then(function (text) {
         var base = JSON.parse(defaults), activity = JSON.parse(text);
         base["program"] = activity["program"];
-        load(JSON.stringify(base), { filename: path.split("/").pop() });
+        var parts = path.split("/"); load(JSON.stringify(base), { filename: parts[parts.length - 2] + ".vpl3" });
       }).catch(function () { load(defaults); });
     });
   };

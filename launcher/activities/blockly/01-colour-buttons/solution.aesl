@@ -1,0 +1,50 @@
+<!DOCTYPE aesl-source>
+<network>
+
+<!--list of global events-->
+
+<!--list of constants-->
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+<!--node thymio-II-->
+<node nodeId="51938" name="thymio-II">
+
+onevent button.forward
+	when button.forward == 1 do
+		call leds.top(32,0,0)
+	end
+
+
+onevent button.backward
+	when button.backward == 1 do
+		call leds.top(0,32,0)
+	end
+
+
+onevent button.left
+	when button.left == 1 do
+		call leds.top(0,0,32)
+	end
+
+
+onevent button.right
+	when button.right == 1 do
+		call leds.top(32,32,0)
+	end
+
+
+onevent button.center
+	when button.center == 1 do
+		call leds.top(0,0,0)
+	end
+
+<toolsPlugins>
+<ThymioBlockly>
+<xml xmlns="http://www.w3.org/1999/xhtml"><block type="thymio_event_button" x="40" y="40"><field name="BUTTON">button.forward</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#ff0000</field></block></statement></block><block type="thymio_event_button" x="420" y="40"><field name="BUTTON">button.backward</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#00ff00</field></block></statement></block><block type="thymio_event_button" x="40" y="260"><field name="BUTTON">button.left</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#0000ff</field></block></statement></block><block type="thymio_event_button" x="420" y="260"><field name="BUTTON">button.right</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#ffff00</field></block></statement></block><block type="thymio_event_button" x="40" y="480"><field name="BUTTON">button.center</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_led_off"><field name="LED">leds.top</field></block></statement></block></xml>
+</ThymioBlockly>
+</toolsPlugins>
+</node>
+
+</network>

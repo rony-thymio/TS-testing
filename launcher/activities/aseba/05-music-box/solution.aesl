@@ -1,0 +1,35 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># Plays the first notes of "Ode to Joy" (Beethoven)
+var notes[8] = [330, 330, 349, 392, 392, 349, 330, 294]
+var durations[8] = [20, 20, 20, 20, 20, 20, 20, 40]
+var index = 8
+
+onevent button.center
+    if button.center == 1 then
+        index = 0
+        call sound.freq(notes[index], durations[index])
+    end
+
+onevent sound.finished
+    index = index + 1
+    if index &lt; 8 then
+        call sound.freq(notes[index], durations[index])
+    end
+</node>
+
+
+</network>

@@ -311,7 +311,12 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
         None => return Err(webapps.error.lock().unwrap().clone().unwrap_or_else(|| "web apps not available".into())),
     };
     let url = tauri::Url::parse(&format!("http://127.0.0.1:{port}/{path}")).map_err(|e| e.to_string())?;
-    let label = format!("app-{}", std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0));
+    static NEXT_WINDOW: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
+    let label = format!(
+        "app-{}-{}",
+        std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0),
+        NEXT_WINDOW.fetch_add(1, std::sync::atomic::Ordering::Relaxed)
+    );
     let dl_app = app.clone();
     let kind = file_kind(&path);
     WebviewWindowBuilder::new(&app, label, WebviewUrl::External(url))
@@ -354,36 +359,165 @@ async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(),
     Command::new(&thonny).spawn().map(|_| ()).map_err(|e| e.to_string())
 }
 
-/// Opens a Python activity of the library in Thonny. The file is copied to
-/// Documents/Thymio Suite/Activities first, so students can change and save it:
+/// Opens a Python activity of the library in Thonny. Files are copied to
+/// Documents/Thymio Suite/Activities first, so students can change and save them:
 /// - "challenge": <id>.py, copied only once, so a student's work is never overwritten;
-/// - "solution": <id>-solution.py, always a fresh copy.
+/// - "solution": <id>-solution.py (and <id>-solution-<name>.py when several robots need
+///   different programs), always fresh copies.
 #[tauri::command]
 async fn open_python_activity(app: tauri::AppHandle, window: WebviewWindow, id: String, kind: String) -> Result<String, String> {
     require_main(&window)?;
-    if id.is_empty() || !id.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-') {
+    if !safe_name(&id) {
         return Err("unknown activity".into());
     }
-    let (source_name, target_name, overwrite) = match kind.as_str() {
-        "challenge" => ("challenge.py", format!("{id}.py"), false),
-        "solution" => ("solution.py", format!("{id}-solution.py"), true),
-        _ => return Err("unknown activity file".into()),
-    };
-    let source = webapps_dir(&app)
+    let dir = webapps_dir(&app)
         .ok_or("web apps folder missing from the installation")?
-        .join("activities").join("python").join(&id).join(source_name);
-    if !source.is_file() {
-        return Err("This activity is missing from the installation.".into());
-    }
+        .join("activities").join("python").join(&id);
     let folder = app.path().document_dir().map_err(|e| e.to_string())?.join("Thymio Suite").join("Activities");
     fs::create_dir_all(&folder).map_err(|e| format!("Could not create {}: {e}", folder.display()))?;
-    let target = folder.join(target_name);
-    if overwrite || !target.exists() {
-        fs::copy(&source, &target).map_err(|e| format!("Could not copy the activity: {e}"))?;
+    let mut targets = Vec::new();
+    match kind.as_str() {
+        "challenge" => {
+            let source = dir.join("challenge.py");
+            if !source.is_file() {
+                return Err("This activity is missing from the installation.".into());
+            }
+            let target = folder.join(format!("{id}.py"));
+            if !target.exists() {
+                fs::copy(&source, &target).map_err(|e| format!("Could not copy the activity: {e}"))?;
+            }
+            targets.push(target);
+        }
+        "solution" => {
+            let mut names: Vec<String> = fs::read_dir(&dir)
+                .map_err(|e| e.to_string())?
+                .flatten()
+                .map(|f| f.file_name().to_string_lossy().to_string())
+                .filter(|n| n.starts_with("solution") && n.ends_with(".py"))
+                .collect();
+            names.sort();
+            for name in names {
+                let target = folder.join(format!("{id}-{name}"));
+                fs::copy(dir.join(&name), &target).map_err(|e| format!("Could not copy the solution: {e}"))?;
+                targets.push(target);
+            }
+            if targets.is_empty() {
+                return Err("This activity has no solution file.".into());
+            }
+        }
+        _ => return Err("unknown activity file".into()),
     }
     let thonny = thonny_path(&app)?;
-    Command::new(&thonny).arg(&target).spawn().map_err(|e| e.to_string())?;
-    Ok(target.display().to_string())
+    Command::new(&thonny).args(&targets).spawn().map_err(|e| e.to_string())?;
+    Ok(targets[0].display().to_string())
+}
+
+// ---------------------------------------------------------------------------------------------
+// Activity library. Each activity is a folder webapps/activities/<language>/<id>/ holding
+// activity.md (texts: front matter + sections) and its files (challenge.*, solution.*).
+// The texts are read when the library opens, so activities can be edited without rebuilding.
+
+#[derive(Serialize)]
+struct ActivityEntry {
+    lang: String,
+    id: String,
+    md: String,
+    files: Vec<String>,
+}
+
+fn safe_name(s: &str) -> bool {
+    !s.is_empty() && s.chars().all(|c| c.is_ascii_alphanumeric() || c == '-' || c == '_')
+}
+
+#[tauri::command]
+fn list_activities(app: tauri::AppHandle, window: WebviewWindow) -> Result<Vec<ActivityEntry>, String> {
+    if window.label() != "main" && window.label() != "challenge" {
+        return Err("not allowed from this window".into());
+    }
+    let root = webapps_dir(&app).ok_or("web apps folder missing from the installation")?.join("activities");
+    let mut out = Vec::new();
+    let Ok(langs) = fs::read_dir(&root) else { return Ok(out) };
+    for lang in langs.flatten() {
+        let lang_name = lang.file_name().to_string_lossy().to_string();
+        if !safe_name(&lang_name) || !lang.path().is_dir() {
+            continue;
+        }
+        let Ok(dirs) = fs::read_dir(lang.path()) else { continue };
+        for dir in dirs.flatten() {
+            let id = dir.file_name().to_string_lossy().to_string();
+            let md_path = dir.path().join("activity.md");
+            if !safe_name(&id) || !md_path.is_file() {
+                continue;
+            }
+            let md = fs::read_to_string(&md_path).unwrap_or_default();
+            let mut files: Vec<String> = fs::read_dir(dir.path())
+                .map(|it| it.flatten().map(|f| f.file_name().to_string_lossy().to_string()).collect())
+                .unwrap_or_default();
+            files.sort();
+            out.push(ActivityEntry { lang: lang_name.clone(), id, md, files });
+        }
+    }
+    out.sort_by(|a, b| (a.lang.as_str(), a.id.as_str()).cmp(&(b.lang.as_str(), b.id.as_str())));
+    Ok(out)
+}
+
+const CHALLENGE_WIDTH: f64 = 400.0;
+const CHALLENGE_COLLAPSED_HEIGHT: f64 = 96.0;
+
+/// Opens (or replaces) the challenge window: a small window that stays on top of the editor,
+/// on the right side of the screen, with the challenge, the hints and the solution button.
+#[tauri::command]
+async fn open_challenge(app: tauri::AppHandle, window: WebviewWindow, lang: String, id: String) -> Result<(), String> {
+    require_main(&window)?;
+    if !safe_name(&lang) || !safe_name(&id) {
+        return Err("unknown activity".into());
+    }
+    if let Some(old) = app.get_webview_window("challenge") {
+        let _ = old.destroy();
+    }
+    let (mut x, mut y, mut height) = (40.0, 40.0, 700.0);
+    if let Ok(Some(monitor)) = window.current_monitor() {
+        let scale = monitor.scale_factor();
+        let size = monitor.size().to_logical::<f64>(scale);
+        let pos = monitor.position().to_logical::<f64>(scale);
+        height = (size.height - 120.0).clamp(400.0, 900.0);
+        x = pos.x + size.width - CHALLENGE_WIDTH - 16.0;
+        y = pos.y + 40.0;
+    }
+    let url = format!("challenge.html?lang={lang}&id={id}");
+    WebviewWindowBuilder::new(&app, "challenge", WebviewUrl::App(url.into()))
+        .title("Challenge")
+        .inner_size(CHALLENGE_WIDTH, height)
+        .min_inner_size(300.0, CHALLENGE_COLLAPSED_HEIGHT)
+        .position(x, y)
+        .always_on_top(true)
+        .additional_browser_args(BROWSER_ARGS)
+        .build()
+        .map_err(|e| e.to_string())?;
+    Ok(())
+}
+
+/// Collapse button of the challenge window: shrinks it to a small bar, or opens it again.
+#[tauri::command]
+fn set_challenge_collapsed(window: WebviewWindow, collapsed: bool, height: f64) -> Result<(), String> {
+    if window.label() != "challenge" {
+        return Err("not allowed from this window".into());
+    }
+    let h = if collapsed { CHALLENGE_COLLAPSED_HEIGHT } else { height.clamp(300.0, 1200.0) };
+    let w = window.inner_size().map_err(|e| e.to_string())?.to_logical::<f64>(window.scale_factor().unwrap_or(1.0)).width;
+    window.set_size(tauri::LogicalSize::new(w, h)).map_err(|e| e.to_string())
+}
+
+/// "Show the solution" in the challenge window: the main window opens it (it knows the robot).
+#[tauri::command]
+fn request_solution(app: tauri::AppHandle, window: WebviewWindow, lang: String, id: String) -> Result<(), String> {
+    if window.label() != "challenge" {
+        return Err("not allowed from this window".into());
+    }
+    if !safe_name(&lang) || !safe_name(&id) {
+        return Err("unknown activity".into());
+    }
+    app.emit_to("main", "open-solution", serde_json::json!({ "lang": lang, "id": id })).map_err(|e| e.to_string())
 }
 
 /// Opens Thymio Lab (Mobsya's online platform) in the system's default web browser.
@@ -475,7 +609,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(DeviceManager::default())
         .manage(WebApps::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, request_solution, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();

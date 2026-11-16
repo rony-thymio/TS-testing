@@ -178,22 +178,6 @@
     </form>
   </dialog>
 
-  <dialog id="hints-dialog" aria-labelledby="hints-title">
-    <form method="dialog" class="dialog-body">
-      <div class="dialog-head">
-        <div class="dialog-title"><span class="muted">Hints</span><h2 id="hints-title"></h2></div>
-        <button type="submit" value="close" class="icon-btn" aria-label="Close">
-          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-      </div>
-      <p class="lead" id="hints-challenge"></p>
-      <ol class="hints-list" id="hints-list"></ol>
-      <div class="dialog-actions">
-        <button type="button" class="btn" id="hints-solution">Show the solution</button>
-        <button type="submit" value="close" class="btn primary">Back to my program</button>
-      </div>
-    </form>
-  </dialog>
-
   <dialog id="report" aria-labelledby="report-title">
     <form method="dialog" class="dialog-body">
       <h2 id="report-title">Report for support</h2>
@@ -226,11 +210,11 @@
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
-  <script>window.THYMIO_VERSION = "0.11";</script>
+  <script>window.THYMIO_VERSION = "0.12";</script>
   <script src="flexbuffers.js"></script>
   <script src="tdm.js"></script>
   <script src="modes.js"></script>
-  <script src="activities.js"></script>
+  <script src="activity-md.js"></script>
   <script src="app.js"></script>
   <script src="pairing.js"></script>
 </body>

@@ -1,0 +1,92 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+<event size="1" name="order"/>
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># LEADER: sends an order to all the robots of the group
+var command = 0
+
+sub apply
+    if command == 1 then
+        motor.left.target = 150
+        motor.right.target = 150
+        call leds.top(0, 32, 0)
+    elseif command == 2 then
+        motor.left.target = -100
+        motor.right.target = 100
+        call leds.top(0, 0, 32)
+    elseif command == 3 then
+        motor.left.target = 100
+        motor.right.target = -100
+        call leds.top(32, 32, 0)
+    else
+        motor.left.target = 0
+        motor.right.target = 0
+        call leds.top(32, 0, 0)
+    end
+
+onevent button.forward
+    if button.forward == 1 then
+        command = 1
+        emit order [command]
+        callsub apply
+    end
+
+onevent button.left
+    if button.left == 1 then
+        command = 2
+        emit order [command]
+        callsub apply
+    end
+
+onevent button.right
+    if button.right == 1 then
+        command = 3
+        emit order [command]
+        callsub apply
+    end
+
+onevent button.center
+    if button.center == 1 then
+        command = 0
+        emit order [command]
+        callsub apply
+    end
+</node>
+
+
+<!--node thymio-II-->
+<node nodeId="2" name="thymio-II"># FOLLOWER: obeys the orders of the leader
+onevent order
+    if event.args[0] == 1 then
+        motor.left.target = 150
+        motor.right.target = 150
+        call leds.top(0, 32, 0)
+    elseif event.args[0] == 2 then
+        motor.left.target = -100
+        motor.right.target = 100
+        call leds.top(0, 0, 32)
+    elseif event.args[0] == 3 then
+        motor.left.target = 100
+        motor.right.target = -100
+        call leds.top(32, 32, 0)
+    else
+        motor.left.target = 0
+        motor.right.target = 0
+        call leds.top(32, 0, 0)
+    end
+</node>
+
+
+</network>

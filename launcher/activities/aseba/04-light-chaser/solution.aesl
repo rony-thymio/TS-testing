@@ -1,0 +1,43 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># A light running round the circle of 8 LEDs
+var pos = 0
+var period = 150
+var circle[8] = [32, 0, 0, 0, 0, 0, 0, 0]
+
+timer.period[0] = period
+
+onevent timer0
+    circle[pos] = 0
+    pos = (pos + 1) % 8
+    circle[pos] = 32
+    call leds.circle(circle[0], circle[1], circle[2], circle[3], circle[4], circle[5], circle[6], circle[7])
+
+onevent button.forward
+    if button.forward == 1 and period &gt; 40 then
+        period = period - 20         # faster
+        timer.period[0] = period
+    end
+
+onevent button.backward
+    if button.backward == 1 and period &lt; 1000 then
+        period = period + 20         # slower
+        timer.period[0] = period
+    end
+</node>
+
+
+</network>

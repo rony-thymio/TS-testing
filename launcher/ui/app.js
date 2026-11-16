@@ -224,9 +224,16 @@
   }
 
   let libraryMode = 'vpl3';
+  let activities = null; // parsed activity.md files, loaded from the installation
+  function loadActivities() {
+    return invoke('list_activities').then((list) => {
+      activities = list.map((entry) => window.ActivityMd.parse(entry));
+    }).catch((e) => { activities = []; toast(`Could not read the activities: ${e}`); });
+  }
   function renderLibraryTabs() {
     const tabs = $('library-tabs');
     for (const m of window.THYMIO_MODES) {
+      if (m.id === 'vpl') continue; // VPL classic is not in this version
       const t = document.createElement('button');
       t.type = 'button'; t.className = 'tab'; t.setAttribute('role', 'tab'); t.dataset.mode = m.id;
       const img = document.createElement('img'); img.src = m.icon; img.alt = '';
@@ -238,53 +245,64 @@
   }
   function renderLibrary() {
     document.querySelectorAll('#library-tabs .tab').forEach((t) => t.setAttribute('aria-selected', t.dataset.mode === libraryMode ? 'true' : 'false'));
-    const mode = window.THYMIO_MODES.find((m) => m.id === libraryMode);
-    const list = window.THYMIO_ACTIVITIES.filter((a) => a.mode === libraryMode);
     const grid = $('activity-grid'); grid.textContent = '';
+    if (!activities) { loadActivities().then(renderLibrary); return; }
+    const mode = window.THYMIO_MODES.find((m) => m.id === libraryMode);
+    const list = activities.filter((a) => a.mode === libraryMode).sort((x, y) => x.level - y.level || x.id.localeCompare(y.id));
     for (const a of list) {
       const card = document.createElement('div'); card.className = 'activity';
       card.innerHTML = `<span class="activity-tags"><span class="age"></span><span class="level-tag"></span></span>
         <span class="activity-title"></span><span class="activity-desc"></span><span class="activity-needs"></span>
         <span class="activity-actions"><button type="button" class="btn primary" data-k="challenge">Start</button>
-        <button type="button" class="btn" data-k="hints">Hints</button><button type="button" class="btn" data-k="solution">Solution</button></span>`;
-      const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add(a.tone);
-      const lvl = card.querySelector('.level-tag'); lvl.textContent = a.level || ''; lvl.hidden = !a.level;
+        <button type="button" class="btn" data-k="read">Challenge</button><button type="button" class="btn" data-k="solution">Solution</button></span>`;
+      const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add(['green', 'orange', 'purple'][a.level - 1]); age.hidden = !a.age;
+      card.querySelector('.level-tag').textContent = a.levelText;
       card.querySelector('.activity-title').textContent = a.title;
-      card.querySelector('.activity-desc').textContent = a.challenge;
+      card.querySelector('.activity-desc').textContent = plain(a.goal);
       card.querySelector('.activity-needs').textContent = a.needs;
+      card.querySelector('[data-k=solution]').hidden = !a.solution;
       card.querySelectorAll('.activity-actions button').forEach((b) => b.addEventListener('click', () => {
-        if (b.dataset.k === 'hints') showHints(mode, a); else openActivity(mode, a, b.dataset.k);
+        if (b.dataset.k === 'read') openChallenge(a); else openActivity(mode, a, b.dataset.k);
       }));
       grid.append(card);
     }
     $('activity-empty').hidden = list.length > 0;
-    $('activity-source').textContent = [...new Set(list.map((a) => a.source))].join(' ');
+    $('activity-source').textContent = [...new Set(list.map((a) => a.author).filter(Boolean))].join(' · ');
   }
-  let hintActivity = null;
-  function showHints(mode, a) {
-    hintActivity = { mode, a };
-    $('hints-title').textContent = a.title;
-    $('hints-challenge').textContent = a.challenge;
-    const ol = $('hints-list'); ol.textContent = '';
-    for (const h of a.hints) { const li = document.createElement('li'); li.textContent = h; ol.append(li); }
-    $('hints-dialog').showModal();
+  const plain = (md) => String(md).replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
+  function openChallenge(a) {
+    return invoke('open_challenge', { lang: a.lang, id: a.id }).catch((e) => toast(`Could not open the challenge: ${e}`));
   }
-  $('hints-solution').addEventListener('click', () => { if (hintActivity) { $('hints-dialog').close(); openActivity(hintActivity.mode, hintActivity.a, 'solution'); } });
   function openActivity(mode, a, kind) {
     if (mode.launch === 'thonny') {
       invoke('open_python_activity', { id: a.id, kind })
-        .then((path) => toast(`Thonny is opening ${path.split(/[\\/]/).pop()} (saved in Documents › Thymio Suite › Activities)`))
+        .then((path) => { if (kind === 'challenge') openChallenge(a); toast(`Thonny is opening ${path.split(/[\\/]/).pop()} (in Documents › Thymio Suite › Activities)`); })
         .catch((e) => toast(String(e)));
       return;
     }
     const robot = state.robots.find((r) => r.id === state.selected);
     if (!robot) { toast('Choose a robot first, on the Home page.'); return; }
-    let path = mode.url(robot, { ws: TDM_URL, pass: state.pass });
-    if (kind === 'solution') path += '&activity=' + encodeURIComponent(a.solution);
-    const what = kind === 'solution' ? `${a.title} (solution)` : a.title;
-    invoke('open_app', { path, title: `${what} – ${mode.name} – ${robot.name || 'Thymio'}` })
+    const base = mode.url(robot, { ws: TDM_URL, pass: state.pass });
+    if (kind === 'solution') {
+      // One window per solution file (some activities need a different program per robot).
+      a.solutions.forEach((file, i) => {
+        const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
+        invoke('open_app', { path: `${base}&activity=${encodeURIComponent(file)}`, title: `${a.title} (solution${part}) – ${mode.name} – ${robot.name || 'Thymio'}` })
+          .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
+      });
+      return;
+    }
+    invoke('open_app', { path: base, title: `${a.title} – ${mode.name} – ${robot.name || 'Thymio'}` })
+      .then(() => openChallenge(a))
       .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
   }
+  // "Show the solution" in the challenge window.
+  if (tauri && tauri.event) tauri.event.listen('open-solution', (e) => {
+    const { lang, id } = e.payload || {};
+    const a = (activities || []).find((x) => x.lang === lang && x.id === id);
+    const mode = a && window.THYMIO_MODES.find((m) => m.id === a.mode);
+    if (a && mode) openActivity(mode, a, 'solution');
+  });
 
   // ---------- views (sidebar) ------------------------------------------------------------
   let view = 'home';

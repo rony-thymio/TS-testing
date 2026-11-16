@@ -1,0 +1,44 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># Traffic light controlled with the buttons
+onevent button.forward
+    if button.forward == 1 then
+        call leds.top(0, 32, 0)      # green
+    end
+
+onevent button.center
+    if button.center == 1 then
+        call leds.top(32, 12, 0)     # orange
+    end
+
+onevent button.backward
+    if button.backward == 1 then
+        call leds.top(32, 0, 0)      # red
+    end
+
+onevent button.left
+    if button.left == 1 then
+        call leds.top(0, 0, 0)       # off
+    end
+
+onevent button.right
+    if button.right == 1 then
+        call leds.top(0, 0, 0)       # off
+    end
+</node>
+
+
+</network>

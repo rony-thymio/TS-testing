@@ -1,0 +1,22 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># The closer the hand, the brighter the red light
+onevent prox
+    call leds.top(prox.horizontal[2] / 150, 0, 0)
+</node>
+
+
+</network>

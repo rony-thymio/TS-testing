@@ -1,0 +1,31 @@
+<!DOCTYPE aesl-source>
+<network>
+
+
+<!--list of global events-->
+
+
+<!--list of constants-->
+
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+
+<!--node thymio-II-->
+<node nodeId="1" name="thymio-II"># Keeps a fixed distance from your hand (proportional controller)
+var target = 2500
+var speed
+
+onevent prox
+    if prox.horizontal[2] == 0 then
+        speed = 0                                # no hand: wait
+    else
+        speed = (target - prox.horizontal[2]) / 8
+    end
+    motor.left.target = speed
+    motor.right.target = speed
+</node>
+
+
+</network>

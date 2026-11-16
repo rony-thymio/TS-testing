@@ -1,0 +1,31 @@
+<!DOCTYPE aesl-source>
+<network>
+
+<!--list of global events-->
+
+<!--list of constants-->
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+<!--node thymio-II-->
+<node nodeId="51938" name="thymio-II">
+
+onevent prox
+	when prox.horizontal[2] &gt; 2000 do
+		call leds.top(0,32,0)
+		call sound.system(6)
+	end
+
+	when prox.horizontal[2] &lt; 1000 do
+		call leds.top(0,0,0)
+	end
+
+<toolsPlugins>
+<ThymioBlockly>
+<xml xmlns="http://www.w3.org/1999/xhtml"><block type="thymio_event_prox" x="40" y="40"><field name="SENSOR">prox.horizontal[2]</field><field name="MODE">PROX</field><statement name="HANDLER"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#00ff00</field><next><block type="thymio_sound_system"><field name="SOUND">6</field></block></next></block></statement></block><block type="thymio_event_prox" x="420" y="40"><field name="SENSOR">prox.horizontal[2]</field><field name="MODE">NOPROX</field><statement name="HANDLER"><block type="thymio_led_off"><field name="LED">leds.top</field></block></statement></block></xml>
+</ThymioBlockly>
+</toolsPlugins>
+</node>
+
+</network>

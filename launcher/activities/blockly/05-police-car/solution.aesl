@@ -1,0 +1,53 @@
+<!DOCTYPE aesl-source>
+<network>
+
+<!--list of global events-->
+
+<!--list of constants-->
+
+<!--show keywords state-->
+<keywords flag="true"/>
+
+<!--node thymio-II-->
+<node nodeId="51938" name="thymio-II">
+
+var flash
+
+
+onevent button.forward
+	when button.forward == 1 do
+		flash = 0
+		timer.period[0] = 500
+		motor.left.target = 150
+		motor.right.target = 150
+	end
+
+
+onevent timer0
+	if flash == 0 then
+		call leds.top(32,0,0)
+		call sound.freq(880,25)
+		flash = 1
+	else
+		call leds.top(0,0,32)
+		call sound.freq(660,25)
+		flash = 0
+	end
+
+
+onevent button.center
+	when button.center == 1 do
+		motor.left.target = 0
+		motor.right.target = 0
+		timer.period[0] = 0
+		call leds.top(0,0,0)
+	end
+
+<toolsPlugins>
+<ThymioBlockly>
+<xml xmlns="http://www.w3.org/1999/xhtml"><block type="thymio_event_button" x="40" y="40"><field name="BUTTON">button.forward</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_variable_set"><field name="VAR">flash</field><value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value><next><block type="thymio_actuator_timer"><field name="VARIABLE">timer.period[0]</field><value name="VALUE"><shadow type="math_number"><field name="NUM">500</field></shadow></value><next><block type="thymio_motors_start"><field name="COMMAND">FORWARD</field><value name="SPEED"><shadow type="math_number"><field name="NUM">150</field></shadow></value></block></next></block></next></block></statement></block><block type="thymio_event_timer" x="420" y="40"><field name="EVENT">timer0</field><statement name="HANDLER"><block type="controls_if"><mutation else="1"></mutation><value name="IF0"><block type="thymio_compare"><field name="OP">EQ</field><value name="A"><block type="thymio_variable_get"><field name="VAR">flash</field></block></value><value name="B"><shadow type="math_number"><field name="NUM">0</field></shadow></value></block></value><statement name="DO0"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#ff0000</field><next><block type="thymio_sound_note"><value name="FREQ"><shadow type="math_number"><field name="NUM">880</field></shadow></value><value name="DURATION"><shadow type="math_number"><field name="NUM">25</field></shadow></value><next><block type="thymio_variable_set"><field name="VAR">flash</field><value name="VALUE"><shadow type="math_number"><field name="NUM">1</field></shadow></value></block></next></block></next></block></statement><statement name="ELSE"><block type="thymio_led"><field name="LED">leds.top</field><field name="COLOR">#0000ff</field><next><block type="thymio_sound_note"><value name="FREQ"><shadow type="math_number"><field name="NUM">660</field></shadow></value><value name="DURATION"><shadow type="math_number"><field name="NUM">25</field></shadow></value><next><block type="thymio_variable_set"><field name="VAR">flash</field><value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value></block></next></block></next></block></statement></block></statement></block><block type="thymio_event_button" x="40" y="260"><field name="BUTTON">button.center</field><field name="MODE">PRESS</field><statement name="HANDLER"><block type="thymio_motors_stop"><next><block type="thymio_actuator_timer"><field name="VARIABLE">timer.period[0]</field><value name="VALUE"><shadow type="math_number"><field name="NUM">0</field></shadow></value><next><block type="thymio_led_off"><field name="LED">leds.top</field></block></next></block></next></block></statement></block></xml>
+</ThymioBlockly>
+</toolsPlugins>
+</node>
+
+</network>
