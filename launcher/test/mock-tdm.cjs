@@ -14,8 +14,8 @@ const uuidBytes = (s) => Uint8Array.from(s.replace(/-/g, '').match(/../g).map((h
 const uuidStr = (b) => { const h = Array.from(b, (x) => x.toString(16).padStart(2, '0')).join(''); return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`; };
 const GROUP = '99999999-0000-4000-8000-000000000001';
 const robots = [
-  { id: '11111111-2222-4333-8444-555555555555', name: 'Mock-A', status: 2, locked: null, vars: { 'button.center': 0, 'leds.top': [0, 0, 0], 'prox.horizontal': [0, 0, 0, 0, 0, 0, 0], counter: 0 } },
-  { id: '66666666-7777-4888-8999-aaaaaaaaaaaa', name: 'Mock-B', status: 2, locked: null, vars: { 'button.center': 0, 'leds.top': [0, 0, 0], counter: 0 } }
+  { id: '11111111-2222-4333-8444-555555555555', name: 'Mock-A', status: 2, locked: null, vars: { 'button.center': 0, 'leds.top': [0, 0, 0], 'prox.horizontal': [0, 0, 0, 0, 0, 0, 0], _vbat: [784, 783], counter: 0 } },
+  { id: '66666666-7777-4888-8999-aaaaaaaaaaaa', name: 'Mock-B', status: 2, locked: null, vars: { 'button.center': 0, 'leds.top': [0, 0, 0], _vbat: [930, 925], counter: 0 } }
 ];
 const clients = new Set();
 

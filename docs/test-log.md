@@ -56,3 +56,11 @@ dialog with Copy and Save to Desktop, device manager on loopback only, accept er
 - VPL3 save: file gets the .vpl3 extension automatically (fix from 0.8 confirmed).
 - Aseba editor: Run works with the buttons, the compile error ("blah") is shown on the right line, Save/Open .aesl works.
 - Change after testing: New now gives an empty program instead of the example (in next build).
+
+### Findings after 0.9 (16 Nov)
+- Battery: the robot reports `_vbat` (2 readings). On battery 784/783 → 3.94 V (full); on the cable ≈ 930 → 4.66 V (charging).
+  Conversion from the firmware (aseba-target-thymio2 behavior.c): volts×100 = (vbat0+vbat1)×1000/3978; robot lights use 3.90/3.60/3.40 V.
+- Blockly: the user's laptop reports `navigator.maxTouchPoints = 10`. In current Chromium (also Chrome on the same PC) the mousedown on a
+  flyout block is delivered to the block canvas (an ancestor), so the 2021 Blockly never starts a drag. Reproduced locally in Chrome,
+  with and without touch. Fix: patches/blockly-mousedown-fix.js forwards the press to the element under the pointer (tested: drag from
+  the toolbox, dropdowns, generated code).

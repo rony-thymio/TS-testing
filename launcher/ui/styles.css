@@ -161,3 +161,15 @@ dialog::backdrop { background: rgba(28, 26, 41, .4); }
 .progress { height: 10px; border-radius: 999px; background: var(--line); overflow: hidden; }
 .progress div { height: 10px; width: 0; background: var(--accent); transition: width .3s; }
 .toast { position: fixed; left: calc(50% + 120px); bottom: 56px; transform: translateX(-50%); background: var(--ink); color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 14px; max-width: 70vw; z-index: 10; }
+
+/* battery: same levels as the robot's own three green lights */
+.battery { display: flex; align-items: center; gap: 5px; white-space: nowrap; font-size: 12px; margin-top: 2px; }
+.battery-icon { display: inline-flex; gap: 1.5px; padding: 1.5px; border: 1.5px solid currentColor; border-radius: 3px; height: 11px; position: relative; margin-right: 3px; }
+.battery-icon::after { content: ""; position: absolute; right: -4px; top: 3px; width: 2px; height: 4px; background: currentColor; border-radius: 0 1px 1px 0; }
+.battery-icon i { width: 4px; background: currentColor; border-radius: 1px; opacity: .18; }
+.battery.full .battery-icon i, .battery.charging .battery-icon i { opacity: 1; }
+.battery.good .battery-icon i:nth-child(-n+2) { opacity: 1; }
+.battery.low .battery-icon i:first-child, .battery.empty .battery-icon i:first-child { opacity: 1; }
+.battery.full, .battery.good, .battery.charging { color: var(--ok); }
+.battery.low { color: var(--warn); }
+.battery.empty { color: #B3261E; font-weight: 600; }

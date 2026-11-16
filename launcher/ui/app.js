@@ -21,7 +21,8 @@
     if (connecting || state.client) return;
     connecting = true;
     const c = new window.TdmClient(TDM_URL);
-    c.onNodesChanged = (nodes) => { state.robots = nodes.filter((n) => n.type !== 'DummyNode'); renderRobots(); };
+    c.onNodesChanged = (nodes) => { state.robots = nodes.filter((n) => n.type !== 'DummyNode'); renderRobots(); setTimeout(pollBattery, 1500); };
+    c.onVariablesChanged = onRobotVariables;
     c.onConnectionChanged = (up) => {
       state.connected = up;
       if (!up) {
@@ -70,6 +71,48 @@
     check.lastElementChild.textContent = state.connected ? 'Device manager is running.' : problem || 'Connecting to the device manager…';
   }
 
+
+  // ---------- battery ------------------------------------------------------------------------
+  // The robot reports its battery as _vbat (two readings). The firmware's own formula
+  // (aseba-target-thymio2, behavior.c) gives volts x 100 = (vbat[0] + vbat[1]) * 1000 / 3978,
+  // and the robot's three green lights use 3.90 / 3.60 / 3.40 V. We show the same levels.
+  // Reading is a short "watch" every minute: it needs no lock, so it also works while
+  // another app (Scratch, VPL3…) uses the robot, and it adds almost no radio traffic.
+  const battery = {};          // id -> { level, at }
+  const batteryPending = {};   // id -> { started, vbat }
+  function batteryLevel(vbat) {
+    const centivolts = (vbat[0] + vbat[1]) * 1000 / 3978;
+    if (centivolts > 430) return 'charging';
+    if (centivolts >= 390) return 'full';
+    if (centivolts > 360) return 'good';
+    if (centivolts > 340) return 'low';
+    return 'empty';
+  }
+  const BATTERY_TEXT = { charging: 'Charging', full: 'Battery full', good: 'Battery good', low: 'Battery low', empty: 'Battery empty: charge it' };
+  function pollBattery() {
+    const c = state.client;
+    if (!c) return;
+    const now = Date.now();
+    for (const r of state.robots) {
+      if (r.type === 'SimulatedThymio2' || batteryPending[r.id]) continue;
+      const known = battery[r.id];
+      if (known && now - known.at < 60000) continue;
+      batteryPending[r.id] = { started: now, vbat: null };
+      c.watch(r.id, 1).catch(() => {});
+      setTimeout(() => {
+        const p = batteryPending[r.id]; delete batteryPending[r.id];
+        if (state.client === c) c.watch(r.id, 0).catch(() => {});
+        if (p && p.vbat) { battery[r.id] = { level: batteryLevel(p.vbat), at: Date.now() }; renderRobots(); }
+      }, 2500);
+    }
+  }
+  function onRobotVariables(id, vars) {
+    const p = batteryPending[id];
+    const v = vars && vars._vbat;
+    if (p && Array.isArray(v) && v.length >= 2 && v[0] > 0) p.vbat = v;
+  }
+  setInterval(pollBattery, 5000);
+
   // ---------- robots ---------------------------------------------------------------------
   const STATUS_BADGE = {
     available: ['Ready', 'ok'], ready: ['In use here', 'ok'], busy: ['Busy', 'warn'],
@@ -114,7 +157,14 @@
       const sub = document.createElement('div'); sub.className = 'robot-sub';
       sub.textContent = (r.type === 'Thymio2Wireless' ? 'Wireless' : r.type === 'SimulatedThymio2' ? 'Simulated' : 'USB cable')
         + (r.fwVersion ? ` · firmware ${r.fwVersion}` : '');
-      main.append(name, sub);
+      const bat = battery[r.id];
+      if (bat) {
+        const b = document.createElement('span'); b.className = 'battery ' + bat.level;
+        b.title = BATTERY_TEXT[bat.level];
+        b.innerHTML = '<span class="battery-icon" aria-hidden="true"><i></i><i></i><i></i></span>';
+        b.append(document.createTextNode(BATTERY_TEXT[bat.level]));
+        main.append(name, sub, b);
+      } else main.append(name, sub);
       const actions = document.createElement('div'); actions.className = 'robot-actions';
       const canRename = (r.capabilities & 1) && usable(r);
       const outdated = r.latestFwVersion && fwNum(r.fwVersion) < fwNum(r.latestFwVersion);
