@@ -71,3 +71,9 @@ dialog with Copy and Save to Desktop, device manager on loopback only, accept er
   Python files are copied to Documents\Thymio Suite\Activities and opened in Thonny; all files pass the tdmclient transpiler.
 - Noted in the teacher's source files: 5-2b_app-choc.py has "moter_left_target" (motors never start);
   4-3_exercice-32000_couleurs.py button_right does not ignore the release event.
+
+### 0.13 (16 Nov)
+- "Show the solution" loads into the editor opened by Start (asks first); challenge window folds into a vertical strip.
+- Classic VPL: postponed. Next step: study converting existing VPL 1.6 resources (books, activity files) to VPL3;
+  VPL3 has an importer for VPL 1 .aesl files (src/vpl-aeslfile.js) to be tested with real teacher files.
+  Then decide: VPL3 only (option A) or a new web classic VPL (option D).
