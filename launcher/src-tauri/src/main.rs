@@ -328,11 +328,8 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
     Ok(())
 }
 
-/// Starts Thonny (bundled on Windows, with the Thymio plug-in tdmclient_ty preinstalled).
-/// The plug-in connects to the device manager on localhost:8596 by itself.
-#[tauri::command]
-async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
-    require_main(&window)?;
+/// Finds Thonny (bundled on Windows, with the Thymio plug-in tdmclient_ty preinstalled).
+fn thonny_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
     let exe_name = if cfg!(windows) { "thonny.exe" } else { "thonny" };
     let mut candidates = Vec::new();
     if let Ok(res) = app.path().resource_dir() {
@@ -343,10 +340,50 @@ async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(),
             candidates.push(dir.join("thonny").join(exe_name));
         }
     }
-    let Some(thonny) = candidates.into_iter().find(|p| p.exists()) else {
-        return Err("Thonny is not included in this version for this system yet.".into());
-    };
+    candidates
+        .into_iter()
+        .find(|p| p.exists())
+        .ok_or_else(|| "Thonny is not included in this version for this system yet.".to_string())
+}
+
+/// Starts Thonny. The plug-in connects to the device manager on localhost:8596 by itself.
+#[tauri::command]
+async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
+    require_main(&window)?;
+    let thonny = thonny_path(&app)?;
     Command::new(&thonny).spawn().map(|_| ()).map_err(|e| e.to_string())
+}
+
+/// Opens a Python activity of the library in Thonny. The file is copied to
+/// Documents/Thymio Suite/Activities first, so students can change and save it:
+/// - "challenge": <id>.py, copied only once, so a student's work is never overwritten;
+/// - "solution": <id>-solution.py, always a fresh copy.
+#[tauri::command]
+async fn open_python_activity(app: tauri::AppHandle, window: WebviewWindow, id: String, kind: String) -> Result<String, String> {
+    require_main(&window)?;
+    if id.is_empty() || !id.chars().all(|c| c.is_ascii_lowercase() || c.is_ascii_digit() || c == '-') {
+        return Err("unknown activity".into());
+    }
+    let (source_name, target_name, overwrite) = match kind.as_str() {
+        "challenge" => ("challenge.py", format!("{id}.py"), false),
+        "solution" => ("solution.py", format!("{id}-solution.py"), true),
+        _ => return Err("unknown activity file".into()),
+    };
+    let source = webapps_dir(&app)
+        .ok_or("web apps folder missing from the installation")?
+        .join("activities").join("python").join(&id).join(source_name);
+    if !source.is_file() {
+        return Err("This activity is missing from the installation.".into());
+    }
+    let folder = app.path().document_dir().map_err(|e| e.to_string())?.join("Thymio Suite").join("Activities");
+    fs::create_dir_all(&folder).map_err(|e| format!("Could not create {}: {e}", folder.display()))?;
+    let target = folder.join(target_name);
+    if overwrite || !target.exists() {
+        fs::copy(&source, &target).map_err(|e| format!("Could not copy the activity: {e}"))?;
+    }
+    let thonny = thonny_path(&app)?;
+    Command::new(&thonny).arg(&target).spawn().map_err(|e| e.to_string())?;
+    Ok(target.display().to_string())
 }
 
 /// Opens Thymio Lab (Mobsya's online platform) in the system's default web browser.
@@ -438,7 +475,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(DeviceManager::default())
         .manage(WebApps::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();

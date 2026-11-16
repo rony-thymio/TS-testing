@@ -64,3 +64,10 @@ dialog with Copy and Save to Desktop, device manager on loopback only, accept er
   flyout block is delivered to the block canvas (an ancestor), so the 2021 Blockly never starts a drag. Reproduced locally in Chrome,
   with and without touch. Fix: patches/blockly-mousedown-fix.js forwards the press to the element under the pointer (tested: drag from
   the toolbox, dropdowns, generated code).
+
+### 0.11 (prepared 16 Nov)
+- Activity library: 5 VPL3 activities (VPL3 teacher guide, EPFL/HEP-Vaud) and 5 Python challenges (Joël Rivet, CC BY-NC,
+  adapted into English). Each card: Start / Hints / Solution. VPL3 solutions load in VPL3 (checked by round trip);
+  Python files are copied to Documents\Thymio Suite\Activities and opened in Thonny; all files pass the tdmclient transpiler.
+- Noted in the teacher's source files: 5-2b_app-choc.py has "moter_left_target" (motors never start);
+  4-3_exercice-32000_couleurs.py button_right does not ignore the release event.

@@ -243,25 +243,46 @@
     const grid = $('activity-grid'); grid.textContent = '';
     for (const a of list) {
       const card = document.createElement('div'); card.className = 'activity';
-      card.innerHTML = `<span class="age"></span><span class="activity-title"></span><span class="activity-desc"></span>
-        <span class="activity-needs"></span><button type="button" class="btn primary activity-open"></button>`;
+      card.innerHTML = `<span class="activity-tags"><span class="age"></span><span class="level-tag"></span></span>
+        <span class="activity-title"></span><span class="activity-desc"></span><span class="activity-needs"></span>
+        <span class="activity-actions"><button type="button" class="btn primary" data-k="challenge">Start</button>
+        <button type="button" class="btn" data-k="hints">Hints</button><button type="button" class="btn" data-k="solution">Solution</button></span>`;
       const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add(a.tone);
+      const lvl = card.querySelector('.level-tag'); lvl.textContent = a.level || ''; lvl.hidden = !a.level;
       card.querySelector('.activity-title').textContent = a.title;
-      card.querySelector('.activity-desc').textContent = a.desc;
+      card.querySelector('.activity-desc').textContent = a.challenge;
       card.querySelector('.activity-needs').textContent = a.needs;
-      const open = card.querySelector('.activity-open'); open.textContent = `Open in ${mode.name}`;
-      open.addEventListener('click', () => openActivity(mode, a));
+      card.querySelectorAll('.activity-actions button').forEach((b) => b.addEventListener('click', () => {
+        if (b.dataset.k === 'hints') showHints(mode, a); else openActivity(mode, a, b.dataset.k);
+      }));
       grid.append(card);
     }
     $('activity-empty').hidden = list.length > 0;
-    const sources = [...new Set(list.map((a) => a.source))];
-    $('activity-source').textContent = sources.join(' ');
+    $('activity-source').textContent = [...new Set(list.map((a) => a.source))].join(' ');
   }
-  function openActivity(mode, a) {
+  let hintActivity = null;
+  function showHints(mode, a) {
+    hintActivity = { mode, a };
+    $('hints-title').textContent = a.title;
+    $('hints-challenge').textContent = a.challenge;
+    const ol = $('hints-list'); ol.textContent = '';
+    for (const h of a.hints) { const li = document.createElement('li'); li.textContent = h; ol.append(li); }
+    $('hints-dialog').showModal();
+  }
+  $('hints-solution').addEventListener('click', () => { if (hintActivity) { $('hints-dialog').close(); openActivity(hintActivity.mode, hintActivity.a, 'solution'); } });
+  function openActivity(mode, a, kind) {
+    if (mode.launch === 'thonny') {
+      invoke('open_python_activity', { id: a.id, kind })
+        .then((path) => toast(`Thonny is opening ${path.split(/[\\/]/).pop()} (saved in Documents › Thymio Suite › Activities)`))
+        .catch((e) => toast(String(e)));
+      return;
+    }
     const robot = state.robots.find((r) => r.id === state.selected);
     if (!robot) { toast('Choose a robot first, on the Home page.'); return; }
-    const path = mode.url(robot, { ws: TDM_URL, pass: state.pass }) + '&activity=' + encodeURIComponent(a.file);
-    invoke('open_app', { path, title: `${a.title} – ${mode.name} – ${robot.name || 'Thymio'}` })
+    let path = mode.url(robot, { ws: TDM_URL, pass: state.pass });
+    if (kind === 'solution') path += '&activity=' + encodeURIComponent(a.solution);
+    const what = kind === 'solution' ? `${a.title} (solution)` : a.title;
+    invoke('open_app', { path, title: `${what} – ${mode.name} – ${robot.name || 'Thymio'}` })
       .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
   }
 
