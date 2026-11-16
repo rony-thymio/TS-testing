@@ -223,17 +223,46 @@
     }
   }
 
+  let libraryMode = 'vpl3';
   function renderLibraryTabs() {
     const tabs = $('library-tabs');
-    window.THYMIO_MODES.forEach((m, i) => {
+    for (const m of window.THYMIO_MODES) {
       const t = document.createElement('button');
-      t.type = 'button'; t.className = 'tab'; t.setAttribute('role', 'tab');
-      t.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      t.type = 'button'; t.className = 'tab'; t.setAttribute('role', 'tab'); t.dataset.mode = m.id;
       const img = document.createElement('img'); img.src = m.icon; img.alt = '';
       t.append(img, document.createTextNode(m.name));
-      t.addEventListener('click', () => tabs.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', x === t ? 'true' : 'false')));
+      t.addEventListener('click', () => { libraryMode = m.id; renderLibrary(); });
       tabs.append(t);
-    });
+    }
+    renderLibrary();
+  }
+  function renderLibrary() {
+    document.querySelectorAll('#library-tabs .tab').forEach((t) => t.setAttribute('aria-selected', t.dataset.mode === libraryMode ? 'true' : 'false'));
+    const mode = window.THYMIO_MODES.find((m) => m.id === libraryMode);
+    const list = window.THYMIO_ACTIVITIES.filter((a) => a.mode === libraryMode);
+    const grid = $('activity-grid'); grid.textContent = '';
+    for (const a of list) {
+      const card = document.createElement('div'); card.className = 'activity';
+      card.innerHTML = `<span class="age"></span><span class="activity-title"></span><span class="activity-desc"></span>
+        <span class="activity-needs"></span><button type="button" class="btn primary activity-open"></button>`;
+      const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add(a.tone);
+      card.querySelector('.activity-title').textContent = a.title;
+      card.querySelector('.activity-desc').textContent = a.desc;
+      card.querySelector('.activity-needs').textContent = a.needs;
+      const open = card.querySelector('.activity-open'); open.textContent = `Open in ${mode.name}`;
+      open.addEventListener('click', () => openActivity(mode, a));
+      grid.append(card);
+    }
+    $('activity-empty').hidden = list.length > 0;
+    const sources = [...new Set(list.map((a) => a.source))];
+    $('activity-source').textContent = sources.join(' ');
+  }
+  function openActivity(mode, a) {
+    const robot = state.robots.find((r) => r.id === state.selected);
+    if (!robot) { toast('Choose a robot first, on the Home page.'); return; }
+    const path = mode.url(robot, { ws: TDM_URL, pass: state.pass }) + '&activity=' + encodeURIComponent(a.file);
+    invoke('open_app', { path, title: `${a.title} – ${mode.name} – ${robot.name || 'Thymio'}` })
+      .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
   }
 
   // ---------- views (sidebar) ------------------------------------------------------------

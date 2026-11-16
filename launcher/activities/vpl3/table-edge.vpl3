@@ -1,0 +1,72 @@
+{
+ "basicBlocks": [
+  "init",
+  "button 1",
+  "acc side",
+  "acc upside down",
+  "tap",
+  "ground mean",
+  "ground",
+  "horiz prox",
+  "color 8 state",
+  "bottom color 8 state",
+  "state 256",
+  "move",
+  "top color 8",
+  "bottom color 8",
+  "set state 256",
+  "notes"
+ ],
+ "basicMultiEvent": true,
+ "disabledUI": [
+  "src:language",
+  "vpl:exportToHTML",
+  "vpl:flash"
+ ],
+ "program": [
+  {
+   "blocks": [
+    {
+     "name": "init",
+     "disabled": false,
+     "locked": false,
+     "param": []
+    },
+    {
+     "name": "move",
+     "disabled": false,
+     "locked": false,
+     "param": [
+      1
+     ]
+    }
+   ],
+   "disabled": false,
+   "locked": false
+  },
+  {
+   "blocks": [
+    {
+     "name": "ground",
+     "disabled": false,
+     "locked": false,
+     "param": [
+      -1,
+      -1
+     ]
+    },
+    {
+     "name": "move",
+     "disabled": false,
+     "locked": false,
+     "param": [
+      0
+     ]
+    }
+   ],
+   "disabled": false,
+   "locked": false
+  }
+ ],
+ "code": null
+}

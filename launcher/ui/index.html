@@ -69,10 +69,12 @@
         <p>Ready-made programs to start from. Open one, run it, then change it.</p>
       </header>
       <div class="tabs" role="tablist" aria-label="Language" id="library-tabs"></div>
-      <div class="empty">
+      <div id="activity-grid" class="activity-grid"></div>
+      <div class="empty" id="activity-empty" hidden>
         <p class="empty-title">Activities are on their way</p>
-        <p class="muted">The first activities from Mobsya arrive in a coming version. Meanwhile, each editor opens with a small example program.</p>
+        <p class="muted">Activities for this language arrive in a coming version. Meanwhile, the editor opens with a small example program.</p>
       </div>
+      <p class="muted small" id="activity-source"></p>
     </main>
 
     <main class="view pairing" id="pairing-view" hidden>
@@ -208,10 +210,11 @@
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
-  <script>window.THYMIO_VERSION = "0.10";</script>
+  <script>window.THYMIO_VERSION = "0.11";</script>
   <script src="flexbuffers.js"></script>
   <script src="tdm.js"></script>
   <script src="modes.js"></script>
+  <script src="activities.js"></script>
   <script src="app.js"></script>
   <script src="pairing.js"></script>
 </body>

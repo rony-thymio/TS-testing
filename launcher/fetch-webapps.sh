@@ -17,6 +17,13 @@ for page in "$dest"/thymio_blockly/thymio_blockly.*.html; do
   rm -f "$page.bak"
   grep -q blockly-mousedown-fix "$page" || { echo "Blockly fix not inserted in $page" >&2; exit 1; }
 done
+# VPL3: open library activities (see patches/vpl3-activity-loader.js), placed after VPL3's own settings.
+cp patches/vpl3-activity-loader.js "$dest/vpl3-thymio-suite/"
+sed -i.bak 's#<!-- main definition of the user interface and blocks -->#<script src="vpl3-activity-loader.js"></script>\n&#' "$dest/vpl3-thymio-suite/index.html"
+rm -f "$dest/vpl3-thymio-suite/index.html.bak"
+grep -q vpl3-activity-loader "$dest/vpl3-thymio-suite/index.html" || { echo "VPL3 activity loader not inserted" >&2; exit 1; }
+# Activity library (programs opened from the launcher)
+cp -R activities "$dest/"
 # Our own apps (Aseba editor), with the shared protocol code from ui/.
 mkdir -p "$dest/aseba/lib"
 cp apps/aseba/*.html apps/aseba/*.css apps/aseba/*.js "$dest/aseba/"
