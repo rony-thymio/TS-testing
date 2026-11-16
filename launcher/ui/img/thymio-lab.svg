@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80" width="160" height="160">
+<path d="M25 12 H62 a6 6 0 0 1 6 6 V55" fill="none" stroke="#9910FB" stroke-width="4.5" stroke-linecap="square"/>
+<path d="M12 25 V62 a6 6 0 0 0 6 6 H55" fill="none" stroke="#F47715" stroke-width="4.5" stroke-linecap="square"/>
+<text x="40" y="47.3" text-anchor="middle" font-family="Poppins, Arial, Helvetica, sans-serif" font-size="22" font-weight="500" fill="#9910FB">lab</text>
+</svg>

@@ -103,26 +103,24 @@
     box.hidden = session.paired.length === 0;
   }
 
+  // Called by app.js when the sidebar switches to / away from the pairing view.
   function open() {
     const client = app().state.client;
-    if (!client) { app().toast('The device manager is not connected yet.'); return; }
+    if (!client) { app().toast('The device manager is not connected yet.'); return false; }
     session.open = true;
     Object.assign(session, { paired: [], usedDongles: new Set(), usedRobots: new Set(), usedNetworks: new Set(), sharedNetwork: null, sharedChannel: null });
     client.onDonglesChanged = () => evaluate();
     client.enablePairingMode(true);
-    $('home-view').hidden = true; $('pairing-view').hidden = false;
     $('pair-status').textContent = ''; renderPaired(); evaluate();
+    return true;
   }
 
   function close() {
     session.open = false;
     const client = app().state.client;
     if (client) { try { client.enablePairingMode(false); } catch (e) {} }
-    $('pairing-view').hidden = true; $('home-view').hidden = false;
   }
 
-  $('pair-btn').addEventListener('click', open);
-  $('pair-back').addEventListener('click', close);
   $('pair-go').addEventListener('click', pair);
   document.querySelectorAll('input[name="pair-mode"]').forEach((r) => r.addEventListener('change', () => {
     Object.assign(session, { sharedNetwork: null, sharedChannel: null });
@@ -130,5 +128,5 @@
   }));
   window.addEventListener('beforeunload', () => { if (session.open) close(); });
 
-  window.ThymioPairing = { refresh: () => { if (session.open) evaluate(); } };
+  window.ThymioPairing = { open, close, refresh: () => { if (session.open) evaluate(); } };
 })();

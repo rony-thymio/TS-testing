@@ -135,10 +135,10 @@
     }
 
     const n = state.robots.length;
-    $('robot-count').textContent = n ? `${n} found` : '';
+    $('robot-count').textContent = n > 1 ? `· ${n} found` : '';
     $('no-robot').hidden = n > 0;
     const sel = state.robots.find((r) => r.id === state.selected);
-    $('selected-name').textContent = sel ? sel.name || 'Thymio' : 'your robot';
+    $('selected-name').textContent = sel ? sel.name || 'Thymio' : 'it';
 
     const outdated = state.robots.filter((r) => r.latestFwVersion && fwNum(r.fwVersion) < fwNum(r.latestFwVersion));
     $('fw-note').hidden = outdated.length === 0;
@@ -156,26 +156,61 @@
     for (const m of window.THYMIO_MODES) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'mode' + (m.available ? '' : ' soon');
-      b.innerHTML = `<div class="mode-top"><span class="mode-mark"></span><span class="level"></span></div>
-        <div class="mode-name"></div><div class="mode-desc"></div><span class="mode-cta"></span>`;
-      const mark = b.querySelector('.mode-mark');
-      mark.textContent = m.mark; mark.style.background = m.tint; mark.style.color = m.ink;
-      b.querySelector('.level').textContent = m.level;
+      b.innerHTML = `<img class="mode-icon" alt=""><span class="mode-text"><span class="mode-top">
+        <span class="mode-name"></span><span class="age"></span></span><span class="mode-desc"></span></span>`;
+      b.querySelector('.mode-icon').src = m.icon;
       b.querySelector('.mode-name').textContent = m.name;
+      const age = b.querySelector('.age'); age.textContent = m.age; age.classList.add(m.tone);
       b.querySelector('.mode-desc').textContent = m.short;
-      b.querySelector('.mode-cta').textContent = m.available ? 'Details and open →' : 'Coming in a later test version';
+      if (!m.available) {
+        const soon = document.createElement('span'); soon.className = 'mode-soon'; soon.textContent = 'Coming in a later version';
+        b.querySelector('.mode-text').append(soon);
+      }
       b.addEventListener('click', () => showDetails(m));
       grid.append(b);
     }
   }
 
+  function renderLibraryTabs() {
+    const tabs = $('library-tabs');
+    window.THYMIO_MODES.forEach((m, i) => {
+      const t = document.createElement('button');
+      t.type = 'button'; t.className = 'tab'; t.setAttribute('role', 'tab');
+      t.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      const img = document.createElement('img'); img.src = m.icon; img.alt = '';
+      t.append(img, document.createTextNode(m.name));
+      t.addEventListener('click', () => tabs.querySelectorAll('.tab').forEach((x) => x.setAttribute('aria-selected', x === t ? 'true' : 'false')));
+      tabs.append(t);
+    });
+  }
+
+  // ---------- views (sidebar) ------------------------------------------------------------
+  let view = 'home';
+  function showView(name) {
+    if (name === view) return;
+    if (view === 'pairing' && window.ThymioPairing) window.ThymioPairing.close();
+    if (name === 'pairing' && !(window.ThymioPairing && window.ThymioPairing.open())) return;
+    view = name;
+    for (const v of ['home', 'library', 'pairing']) $(v + '-view').hidden = v !== name;
+    document.querySelectorAll('.nav-item[data-view]').forEach((b) => {
+      if (b.dataset.view === name) b.setAttribute('aria-current', 'page'); else b.removeAttribute('aria-current');
+    });
+  }
+  document.querySelectorAll('.nav-item[data-view]').forEach((b) => b.addEventListener('click', () => showView(b.dataset.view)));
+
+  // ---------- Thymio Lab ------------------------------------------------------------------
+  $('lab-btn').addEventListener('click', () => $('lab-dialog').showModal());
+  $('lab-open').addEventListener('click', () => {
+    invoke('open_thymio_lab').then(() => $('lab-dialog').close()).catch((e) => toast(String(e)));
+  });
+
   let current = null;
   function showDetails(m) {
     current = m;
-    const mark = $('details-mark');
-    mark.textContent = m.mark; mark.style.background = m.tint; mark.style.color = m.ink;
+    $('details-icon').src = m.icon;
     $('details-title').textContent = m.name;
-    $('details-level').textContent = m.level;
+    $('details-level').textContent = m.age;
+    $('details-level').className = 'age ' + m.tone;
     $('details-body').innerHTML = m.details; // static text from modes.js
     const robot = state.robots.find((r) => r.id === state.selected);
     let warning = '';
@@ -257,12 +292,14 @@
   $('fw-dialog').addEventListener('cancel', (e) => { if ($('fw-close').disabled) e.preventDefault(); });
 
   // Shared with pairing.js
-  window.ThymioApp = { state, toast, fwNum, showFirmware };
+  window.ThymioApp = { state, toast, fwNum, showFirmware, showView };
+  $('version-label').textContent = `Test version ${window.THYMIO_VERSION || ''}`;
 
   // Result of "Save" in a programming window (see handle_download in main.rs).
   if (tauri && tauri.event) tauri.event.listen('save-result', (e) => toast(String(e.payload)));
 
   renderModes();
+  renderLibraryTabs();
   renderRobots();
   connect();
 })();

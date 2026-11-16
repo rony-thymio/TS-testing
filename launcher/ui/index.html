@@ -7,117 +7,183 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="topbar">
+  <aside class="sidebar">
     <div class="brand">
-      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="20" rx="8" fill="#5A2FC2"/><circle cx="11" cy="16" r="3" fill="#fff"/><circle cx="21" cy="16" r="3" fill="#fff"/></svg>
-      <span class="brand-name">Thymio Suite</span>
-      <span class="pill">Test version 0.9</span>
+      <img src="img/thymio-logo.png" alt="Thymio" class="brand-logo">
+      <span class="brand-badge">Suite 2.5.0</span>
     </div>
-    <nav class="topnav" aria-label="Main">
-      <button type="button" class="btn" id="pair-btn">Pair wireless robots</button>
-      <button type="button" class="btn" id="help-btn">Help</button>
+    <nav class="nav" aria-label="Main">
+      <button type="button" class="nav-item" data-view="home" aria-current="page">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/></svg>Home</button>
+      <button type="button" class="nav-item" data-view="library">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v15H4z"/><path d="M14 5h6v15h-6z"/></svg>Activity library</button>
+      <button type="button" class="nav-item" data-view="pairing" id="pair-btn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a7 7 0 0 1 14 0"/><path d="M8.5 12.5a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="16" r="1.5"/></svg>Pair wireless robots</button>
+      <button type="button" class="nav-item" id="help-btn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14"/><path d="M12 17.5v.01"/></svg>Help</button>
     </nav>
-  </header>
+    <div class="sidebar-bottom">
+      <button type="button" class="lab-link" id="lab-btn">
+        <img src="img/thymio-lab.svg" alt="">
+        <span>Thymio Lab</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v6H4V6h6"/></svg>
+      </button>
+      <label class="lang">
+        <span class="sr-only">Language</span>
+        <select id="lang-select" aria-label="Language"><option value="en">English</option></select>
+      </label>
+      <div class="byline"><img src="img/mobsya.png" alt="">by Mobsya</div>
+    </div>
+  </aside>
 
-  <main class="layout" id="home-view">
-    <section class="panel robots" aria-labelledby="robots-title">
-      <div class="panel-head">
-        <h2 id="robots-title">1. Choose your robot</h2>
-        <span class="muted" id="robot-count"></span>
-      </div>
-      <div id="robot-list" class="robot-list" role="radiogroup" aria-labelledby="robots-title"></div>
-      <div id="no-robot" class="no-robot" hidden>
-        <p class="no-robot-title">No robot found yet</p>
-        <ol class="checklist">
-          <li id="check-tdm"><span class="dot"></span><span>Connecting to the device manager…</span></li>
-          <li><span class="dot todo">!</span><span>Plug the robot in with its USB cable, or plug in the wireless dongle.</span></li>
-          <li><span class="dot todo">!</span><span>Switch the robot on: press the centre button until the lights turn on. Wireless robots can take up to 20 seconds to appear.</span></li>
-          <li><span class="dot todo">!</span><span>A new wireless robot must be paired with the dongle once.</span></li>
-        </ol>
-      </div>
-      <div id="fw-note" class="note warn" hidden></div>
-    </section>
+  <div class="content">
+    <main class="view" id="home-view">
+      <header class="view-head">
+        <h1>Hello! Ready to program Thymio?</h1>
+        <p>Choose your robot, then a way to program it. Everything runs on this computer, no internet needed.</p>
+      </header>
 
-    <section class="modes" aria-labelledby="modes-title">
-      <div>
-        <h2 id="modes-title">2. Choose how to program <span id="selected-name">your robot</span></h2>
-        <p class="muted">Everything runs on this computer. No internet needed.</p>
-      </div>
-      <div id="mode-grid" class="mode-grid"></div>
-    </section>
-  </main>
-
-  <main class="layout pairing" id="pairing-view" hidden>
-    <section class="panel pair-modes" aria-labelledby="pair-mode-title">
-      <button type="button" class="btn" id="pair-back">← Back</button>
-      <h2 id="pair-mode-title">What do you want to do?</h2>
-      <div role="radiogroup" aria-labelledby="pair-mode-title" class="pair-mode-list">
-        <label class="pair-mode"><input type="radio" name="pair-mode" value="single" checked>
-          <span><b>One robot with one dongle</b><small>A private pair: this dongle only talks to this robot.</small></span></label>
-        <label class="pair-mode"><input type="radio" name="pair-mode" value="case">
-          <span><b>A classroom case: each robot with its own dongle</b><small>Pair robot 1 with dongle 1, robot 2 with dongle 2… Each pair gets its own network.</small></span></label>
-        <label class="pair-mode"><input type="radio" name="pair-mode" value="shared">
-          <span><b>Several robots on one dongle</b><small>All robots join the dongle's network, so one computer sees them all (Aseba, Python).</small></span></label>
-      </div>
-      <p class="note">Tip: put a sticker of the same colour on each robot and its dongle.</p>
-    </section>
-
-    <section class="panel pair-main" aria-labelledby="pair-title">
-      <h2 id="pair-title">Pair a wireless robot</h2>
-      <ol class="checklist pair-checks">
-        <li id="pc-dongle"><span class="dot"></span><span></span></li>
-        <li id="pc-robot"><span class="dot"></span><span></span></li>
-        <li id="pc-fw"><span class="dot"></span><span></span></li>
-      </ol>
-      <details id="pair-advanced">
-        <summary>Advanced: choose channel and network yourself</summary>
-        <div class="adv-row">
-          <label>Channel
-            <select id="adv-channel"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select>
-          </label>
-          <label>Network (4 characters, 0–9 and A–F)
-            <input id="adv-network" maxlength="4" pattern="[0-9A-Fa-f]{4}" placeholder="e.g. 7C2A">
-          </label>
+      <section aria-labelledby="robots-title" class="block">
+        <h2 id="robots-title" class="eyebrow">1 · Your robot <span id="robot-count"></span></h2>
+        <div id="robot-list" class="robot-list" role="radiogroup" aria-labelledby="robots-title"></div>
+        <div id="no-robot" class="no-robot" hidden>
+          <p class="no-robot-title">Let's find your robot</p>
+          <p class="muted">Thymio Suite keeps looking. Check these in order; the list updates by itself.</p>
+          <ol class="checklist">
+            <li id="check-tdm"><span class="dot"></span><span>Connecting to the device manager…</span></li>
+            <li><span class="dot todo">!</span><span>Plug the robot in with its USB cable, or plug in the wireless dongle.</span></li>
+            <li><span class="dot todo">!</span><span>Switch the robot on: press the centre button until the lights turn on. Wireless robots can take up to 20 seconds to appear.</span></li>
+            <li><span class="dot todo">!</span><span>A new wireless robot must be paired with the dongle once: use <b>Pair wireless robots</b> in the menu.</span></li>
+          </ol>
         </div>
-      </details>
-      <div class="pair-actions">
-        <button type="button" class="btn primary" id="pair-go" disabled>Pair</button>
-        <span id="pair-status" class="muted" role="status" aria-live="polite"></span>
-      </div>
-      <div id="pair-done" class="paired-list" hidden></div>
-      <p class="muted small">While this screen is open, wireless robots are disconnected from the programming apps.</p>
-    </section>
-  </main>
+        <div id="fw-note" class="note warn" hidden></div>
+      </section>
 
-  <footer class="footer">
-    <span id="tdm-status">Starting the device manager…</span>
-    <button type="button" class="link-btn" id="report-btn">Copy a report for support</button>
-  </footer>
+      <section aria-labelledby="modes-title" class="block">
+        <h2 id="modes-title" class="eyebrow">2 · How do you want to program <span id="selected-name">it</span>?</h2>
+        <div id="mode-grid" class="mode-grid"></div>
+      </section>
+    </main>
+
+    <main class="view" id="library-view" hidden>
+      <header class="view-head">
+        <h1>Activity library</h1>
+        <p>Ready-made programs to start from. Open one, run it, then change it.</p>
+      </header>
+      <div class="tabs" role="tablist" aria-label="Language" id="library-tabs"></div>
+      <div class="empty">
+        <p class="empty-title">Activities are on their way</p>
+        <p class="muted">The first activities from Mobsya arrive in a coming version. Meanwhile, each editor opens with a small example program.</p>
+      </div>
+    </main>
+
+    <main class="view pairing" id="pairing-view" hidden>
+      <header class="view-head">
+        <h1>Pair wireless robots</h1>
+        <p>Link a robot to a dongle once, then it connects by itself every time.</p>
+      </header>
+      <div class="pair-layout">
+        <section class="pair-modes" aria-labelledby="pair-mode-title">
+          <h2 id="pair-mode-title" class="eyebrow">What do you want to do?</h2>
+          <div role="radiogroup" aria-labelledby="pair-mode-title" class="pair-mode-list">
+            <label class="pair-mode"><input type="radio" name="pair-mode" value="single" checked>
+              <span><b>One robot, one dongle</b><small>A private pair: this dongle only talks to this robot.</small></span></label>
+            <label class="pair-mode"><input type="radio" name="pair-mode" value="case">
+              <span><b>A classroom case: each robot with its own dongle</b><small>Robot 1 with dongle 1, robot 2 with dongle 2… Each pair gets its own network.</small></span></label>
+            <label class="pair-mode"><input type="radio" name="pair-mode" value="shared">
+              <span><b>Several robots on one dongle</b><small>All robots join the dongle's network, so one computer sees them all (Aseba, Python).</small></span></label>
+          </div>
+          <p class="note tip"><b>Tip:</b> put a sticker of the same colour on each robot and its dongle so pupils can find their pair.</p>
+        </section>
+
+        <section class="card pair-main" aria-labelledby="pair-title">
+          <h2 id="pair-title">Pair a wireless robot</h2>
+          <ol class="checklist pair-checks">
+            <li id="pc-dongle"><span class="dot"></span><span></span></li>
+            <li id="pc-robot"><span class="dot"></span><span></span></li>
+            <li id="pc-fw"><span class="dot"></span><span></span></li>
+          </ol>
+          <details id="pair-advanced">
+            <summary>Advanced: choose channel and network yourself</summary>
+            <div class="adv-row">
+              <label>Channel
+                <select id="adv-channel"><option value="0">1</option><option value="1">2</option><option value="2">3</option></select>
+              </label>
+              <label>Network (4 characters, 0–9 and A–F)
+                <input id="adv-network" maxlength="4" pattern="[0-9A-Fa-f]{4}" placeholder="e.g. 7C2A">
+              </label>
+            </div>
+          </details>
+          <div class="pair-actions">
+            <button type="button" class="btn primary" id="pair-go" disabled>Pair</button>
+            <span id="pair-status" class="muted" role="status" aria-live="polite"></span>
+          </div>
+          <div id="pair-done" class="paired-list" hidden></div>
+          <p class="muted small">While this screen is open, wireless robots are disconnected from the programming apps.</p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span id="tdm-status">Starting the device manager…</span>
+      <span class="footer-right"><span id="version-label"></span>
+        <button type="button" class="link-btn" id="report-btn">Copy a report for support</button></span>
+    </footer>
+  </div>
 
   <dialog id="details" aria-labelledby="details-title">
-    <form method="dialog" class="details">
-      <div class="details-head">
-        <span class="mode-mark" id="details-mark"></span>
-        <div>
+    <form method="dialog" class="dialog-body">
+      <div class="dialog-head">
+        <img id="details-icon" class="dialog-icon" alt="">
+        <div class="dialog-title">
           <h2 id="details-title"></h2>
-          <span class="level" id="details-level"></span>
+          <span class="age" id="details-level"></span>
         </div>
       </div>
       <div id="details-body" class="details-body"></div>
       <p id="details-warning" class="note warn" hidden></p>
-      <div class="details-actions">
+      <div class="dialog-actions">
         <button type="submit" value="cancel" class="btn">Back</button>
         <button type="button" id="details-open" class="btn primary">Open</button>
       </div>
     </form>
   </dialog>
 
+  <dialog id="lab-dialog" aria-labelledby="lab-title">
+    <form method="dialog" class="dialog-body">
+      <div class="dialog-head">
+        <img src="img/thymio-lab.svg" class="dialog-icon" alt="">
+        <div class="dialog-title">
+          <h2 id="lab-title">Try Thymio Lab</h2>
+          <span class="muted">The new way to program Thymio, by Mobsya</span>
+        </div>
+        <button type="submit" value="close" class="icon-btn" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </div>
+      <p class="lead">Open your web browser and start coding. <b>Zero installation</b>, nothing to update, and it works on the computers and tablets you already have.</p>
+      <ul class="ticks">
+        <li><b>Made for Thymio 3</b>, and your <b>Thymio II</b> is ready to go</li>
+        <li>Always the newest version, straight from Mobsya</li>
+        <li>All you need is an internet connection</li>
+      </ul>
+      <div class="lab-langs">
+        <span class="muted">With your Thymio II, you can use:</span>
+        <div><span class="chip">vpl.Lab</span><span class="chip">scratch.Lab</span><span class="chip">Aseba</span></div>
+      </div>
+      <div class="dialog-actions">
+        <button type="submit" value="later" class="btn">Maybe later</button>
+        <button type="button" id="lab-open" class="btn primary">Open Thymio Lab
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6"/><path d="M20 4l-9 9"/><path d="M18 14v6H4V6h6"/></svg></button>
+      </div>
+    </form>
+  </dialog>
+
   <dialog id="report" aria-labelledby="report-title">
-    <form method="dialog" class="details">
+    <form method="dialog" class="dialog-body">
       <h2 id="report-title">Report for support</h2>
       <p class="muted">This text helps us understand a problem. It contains no personal files.</p>
-      <textarea id="report-text" readonly rows="14" style="width:100%;font:12px ui-monospace,Consolas,monospace;border:1px solid var(--line-strong);border-radius:10px;padding:10px"></textarea>
-      <div class="details-actions">
+      <textarea id="report-text" readonly rows="14" class="report-text"></textarea>
+      <div class="dialog-actions">
         <button type="submit" value="close" class="btn">Close</button>
         <button type="button" id="report-save" class="btn">Save to Desktop</button>
         <button type="button" id="report-copy" class="btn primary">Copy</button>
@@ -126,14 +192,14 @@
   </dialog>
 
   <dialog id="fw-dialog" aria-labelledby="fw-title">
-    <form method="dialog" class="details">
+    <form method="dialog" class="dialog-body">
       <h2 id="fw-title">Update firmware</h2>
       <p id="fw-text"></p>
       <div id="fw-progress-wrap" hidden>
         <div class="progress" role="progressbar" aria-label="Firmware update progress" aria-valuemin="0" aria-valuemax="100"><div id="fw-bar"></div></div>
         <p class="note warn">Do not unplug the robot. This takes about a minute.</p>
       </div>
-      <div class="details-actions">
+      <div class="dialog-actions">
         <button type="submit" value="close" class="btn" id="fw-close">Close</button>
         <button type="button" class="btn primary" id="fw-start">Update</button>
       </div>
@@ -144,7 +210,7 @@
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
-  <script>window.THYMIO_VERSION = "0.9";</script>
+  <script>window.THYMIO_VERSION = "0.10";</script>
   <script src="tdm.js"></script>
   <script src="modes.js"></script>
   <script src="app.js"></script>

@@ -349,6 +349,36 @@ async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(),
     Command::new(&thonny).spawn().map(|_| ()).map_err(|e| e.to_string())
 }
 
+/// Opens Thymio Lab (Mobsya's online platform) in the system's default web browser.
+/// The address is fixed here, so the launcher page cannot open arbitrary links.
+const THYMIO_LAB_URL: &str = "https://lab.thymio.org";
+
+#[tauri::command]
+fn open_thymio_lab(window: WebviewWindow) -> Result<(), String> {
+    require_main(&window)?;
+    #[cfg(windows)]
+    let mut cmd = {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        let mut c = Command::new("rundll32");
+        c.args(["url.dll,FileProtocolHandler", THYMIO_LAB_URL]).creation_flags(CREATE_NO_WINDOW);
+        c
+    };
+    #[cfg(target_os = "macos")]
+    let mut cmd = {
+        let mut c = Command::new("open");
+        c.arg(THYMIO_LAB_URL);
+        c
+    };
+    #[cfg(all(unix, not(target_os = "macos")))]
+    let mut cmd = {
+        let mut c = Command::new("xdg-open");
+        c.arg(THYMIO_LAB_URL);
+        c
+    };
+    cmd.spawn().map(|_| ()).map_err(|e| format!("Could not open the web browser: {e}"))
+}
+
 #[tauri::command]
 fn device_manager_status(app: tauri::AppHandle) -> DeviceManagerStatus {
     let state = app.state::<DeviceManager>();
@@ -408,7 +438,7 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(DeviceManager::default())
         .manage(WebApps::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();
