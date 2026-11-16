@@ -30,3 +30,6 @@ body.collapsed .cw-strip { display: flex; flex-direction: column; align-items: c
 .cw-strip-title { writing-mode: vertical-rl; font-size: 14px; font-weight: 600; color: var(--title); white-space: nowrap; overflow: hidden; flex: 1; cursor: move; }
 .confirm-host dialog { width: 92vw; }
 .challenge-body .toast { left: 50%; bottom: 70px; max-width: 90vw; }
+.cw-tags span.lvl-1 { color: #1E6B43; background: #E3F4EA; }
+.cw-tags span.lvl-2 { color: #1D4E9E; background: #E3EEFF; }
+.cw-tags span.lvl-3 { color: #8A4B00; background: #FFEBD6; }

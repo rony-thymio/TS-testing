@@ -251,12 +251,12 @@
     const list = activities.filter((a) => a.mode === libraryMode).sort((x, y) => x.level - y.level || x.id.localeCompare(y.id));
     for (const a of list) {
       const card = document.createElement('div'); card.className = 'activity';
-      card.innerHTML = `<span class="activity-tags"><span class="age"></span><span class="level-tag"></span></span>
+      card.innerHTML = `<span class="activity-tags"><span class="level-tag"></span><span class="age"></span></span>
         <span class="activity-title"></span><span class="activity-desc"></span><span class="activity-needs"></span>
         <span class="activity-actions"><button type="button" class="btn primary" data-k="challenge">Start</button>
         <button type="button" class="btn" data-k="read">Challenge</button><button type="button" class="btn" data-k="solution">Solution</button></span>`;
-      const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add(['green', 'orange', 'purple'][a.level - 1]); age.hidden = !a.age;
-      card.querySelector('.level-tag').textContent = a.levelText;
+      const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add('plain'); age.hidden = !a.age;
+      const lvl = card.querySelector('.level-tag'); lvl.textContent = a.levelText; lvl.classList.add('lvl-' + a.level);
       card.querySelector('.activity-title').textContent = a.title;
       card.querySelector('.activity-desc').textContent = plain(a.goal);
       card.querySelector('.activity-needs').textContent = a.needs;

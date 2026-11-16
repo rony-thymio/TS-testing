@@ -30,8 +30,8 @@
     $('cw-title').textContent = activity.title; document.title = `Challenge – ${activity.title}`;
     $('cw-strip-title').textContent = `${mode ? mode.name + ' · ' : ''}${activity.title}`;
     const tags = $('cw-tags'); tags.textContent = '';
-    const tag = (text, plain) => { if (!text) return; const s = document.createElement('span'); s.textContent = text; if (plain) s.className = 'plain'; tags.append(s); };
-    tag(activity.levelText); tag(activity.age); tag(activity.needs, true);
+    const tag = (text, cls) => { if (!text) return; const s = document.createElement('span'); s.textContent = text; if (cls) s.className = cls; tags.append(s); };
+    tag(activity.levelText, 'lvl-' + activity.level); tag(activity.age, 'plain'); tag(activity.needs, 'plain');
     fill('sec-story', 'cw-story', activity.story);
     fill('sec-goal', 'cw-goal', activity.goal);
     fill('sec-steps', 'cw-steps', activity.steps);
