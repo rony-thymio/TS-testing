@@ -76,7 +76,7 @@
   // The robot reports its battery as _vbat (two readings). The firmware's own formula
   // (aseba-target-thymio2, behavior.c) gives volts x 100 = (vbat[0] + vbat[1]) * 1000 / 3978,
   // and the robot's three green lights use 3.90 / 3.60 / 3.40 V. We show the same levels.
-  // Reading is a short "watch" every minute: it needs no lock, so it also works while
+  // Reading is a short "watch" (2 s) about every 10 s: it needs no lock, so it also works while
   // another app (Scratch, VPL3…) uses the robot, and it adds almost no radio traffic.
   const battery = {};          // id -> { level, at }
   const batteryPending = {};   // id -> { started, vbat }
@@ -96,14 +96,14 @@
     for (const r of state.robots) {
       if (r.type === 'SimulatedThymio2' || batteryPending[r.id]) continue;
       const known = battery[r.id];
-      if (known && now - known.at < 60000) continue;
+      if (known && now - known.at < 8000) continue;
       batteryPending[r.id] = { started: now, vbat: null };
       c.watch(r.id, 1).catch(() => {});
       setTimeout(() => {
         const p = batteryPending[r.id]; delete batteryPending[r.id];
         if (state.client === c) c.watch(r.id, 0).catch(() => {});
         if (p && p.vbat) { battery[r.id] = { level: batteryLevel(p.vbat), at: Date.now() }; renderRobots(); }
-      }, 2500);
+      }, 2000);
     }
   }
   function onRobotVariables(id, vars) {
@@ -111,7 +111,7 @@
     const v = vars && vars._vbat;
     if (p && Array.isArray(v) && v.length >= 2 && v[0] > 0) p.vbat = v;
   }
-  setInterval(pollBattery, 5000);
+  setInterval(pollBattery, 2000);
 
   // ---------- robots ---------------------------------------------------------------------
   const STATUS_BADGE = {
@@ -161,7 +161,9 @@
       if (bat) {
         const b = document.createElement('span'); b.className = 'battery ' + bat.level;
         b.title = BATTERY_TEXT[bat.level];
-        b.innerHTML = '<span class="battery-icon" aria-hidden="true"><i></i><i></i><i></i></span>';
+        b.innerHTML = bat.level === 'charging'
+          ? '<svg class="battery-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>'
+          : '<span class="battery-icon" aria-hidden="true"><i></i><i></i><i></i></span>';
         b.append(document.createTextNode(BATTERY_TEXT[bat.level]));
         main.append(name, sub, b);
       } else main.append(name, sub);
