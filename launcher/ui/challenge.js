@@ -4,6 +4,7 @@
   const tauri = window.__TAURI__;
   const invoke = (cmd, args) => (tauri ? tauri.core.invoke(cmd, args) : Promise.reject(new Error('not in the app')));
   const $ = (id) => document.getElementById(id);
+  const T = (text, vars) => window.I18N.T(text, vars);
   const params = new URLSearchParams(location.search);
   const lang = params.get('lang'), id = params.get('id');
   let activity = null, shown = 0, expandedWidth = window.innerWidth;
@@ -19,19 +20,19 @@
     const ol = $('cw-hints'); ol.textContent = '';
     activity.hints.slice(0, shown).forEach((h) => { const li = document.createElement('li'); li.innerHTML = window.ActivityMd.inline(h); ol.append(li); });
     const total = activity.hints.length;
-    $('cw-hints-title').textContent = total ? `Hints · ${shown} of ${total}` : 'Hints';
+    $('cw-hints-title').textContent = total ? T('Hints · {n} of {total}', { n: shown, total }) : T('Hints');
     $('cw-next-hint').hidden = shown >= total;
-    $('cw-next-hint').textContent = shown === 0 ? 'Show a hint' : `Show hint ${shown + 1}`;
+    $('cw-next-hint').textContent = shown === 0 ? T('Show a hint') : T('Show hint {n}', { n: shown + 1 });
     $('sec-hints').hidden = total === 0;
   }
   function render() {
     const mode = (window.THYMIO_MODES || []).find((m) => m.id === activity.mode);
-    if (mode) { $('cw-icon').src = mode.icon; $('cw-lang').textContent = mode.name; }
-    $('cw-title').textContent = activity.title; document.title = `Challenge – ${activity.title}`;
-    $('cw-strip-title').textContent = `${mode ? mode.name + ' · ' : ''}${activity.title}`;
+    if (mode) { $('cw-icon').src = mode.icon; $('cw-lang').textContent = T(mode.name); }
+    $('cw-title').textContent = activity.title; document.title = `${T('Challenge')} – ${activity.title}`;
+    $('cw-strip-title').textContent = `${mode ? T(mode.name) + ' · ' : ''}${activity.title}`;
     const tags = $('cw-tags'); tags.textContent = '';
     const tag = (text, cls) => { if (!text) return; const s = document.createElement('span'); s.textContent = text; if (cls) s.className = cls; tags.append(s); };
-    tag(activity.levelText, 'lvl-' + activity.level); tag(activity.age, 'plain'); tag(activity.needs, 'plain');
+    tag(activity.levelText, 'lvl-' + activity.level); tag(window.I18N.ages(activity.age), 'plain'); tag(activity.needs, 'plain');
     fill('sec-story', 'cw-story', activity.story);
     fill('sec-goal', 'cw-goal', activity.goal);
     fill('sec-steps', 'cw-steps', activity.steps);
@@ -41,6 +42,7 @@
     renderHints();
   }
 
+  window.addEventListener('thymio-lang', () => { if (activity) render(); });
   $('cw-next-hint').addEventListener('click', () => { shown = Math.min(shown + 1, activity.hints.length); renderHints(); });
   function confirmReplace() {
     const d = $('confirm-dialog');
@@ -55,7 +57,7 @@
       : invoke('activity_window_open', { activity: `${lang}/${id}` }).then((open) => (open ? confirmReplace() : true));
     ask.then((go) => {
       if (!go) return;
-      invoke('request_solution', { lang, id }).then(() => toast('Opening the solution…')).catch((e) => toast(String(e)));
+      invoke('request_solution', { lang, id }).then(() => toast(T('Opening the solution…'))).catch((e) => toast(String(e)));
     });
   });
   function setCollapsed(collapsed) {
@@ -69,7 +71,7 @@
 
   invoke('list_activities').then((list) => {
     const entry = list.find((e) => e.lang === lang && e.id === id);
-    if (!entry) { $('cw-title').textContent = 'Activity not found'; return; }
+    if (!entry) { $('cw-title').textContent = T('Activity not found'); return; }
     activity = window.ActivityMd.parse(entry);
     render();
   }).catch((e) => { $('cw-title').textContent = String(e); });

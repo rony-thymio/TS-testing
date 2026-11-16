@@ -5,6 +5,7 @@
   const tauri = window.__TAURI__;
   const invoke = (cmd, args) => (tauri ? tauri.core.invoke(cmd, args) : Promise.reject(new Error('not in the app')));
   const $ = (id) => document.getElementById(id);
+  const T = (text, vars) => window.I18N.T(text, vars);
 
   const state = { client: null, connected: false, robots: [], selected: null, pass: '' };
 
@@ -50,10 +51,10 @@
   function dmProblem() {
     const dm = state.dm;
     if (state.connected || !dm) return null;
-    if (!dm.exe_found) return 'The device manager is missing from the installation. Please reinstall Thymio Suite.';
-    if (dm.error) return `The device manager could not start: ${dm.error}`;
-    if (!dm.running) return 'The device manager stopped. Click "Copy a report for support" and send it to us.';
-    if (dm.port_open && Date.now() - startedAt > 8000) return 'The device manager is running, but this window cannot reach it. Click "Copy a report for support" and send it to us.';
+    if (!dm.exe_found) return T('The device manager is missing from the installation. Please reinstall Thymio Suite.');
+    if (dm.error) return T('The device manager could not start: {e}', { e: dm.error });
+    if (!dm.running) return T('The device manager stopped. Click "Copy a report for support" and send it to us.');
+    if (dm.port_open && Date.now() - startedAt > 8000) return T('The device manager is running, but this window cannot reach it. Click "Copy a report for support" and send it to us.');
     return null;
   }
   const startedAt = Date.now();
@@ -62,13 +63,13 @@
     const n = state.robots.length;
     const problem = dmProblem();
     $('tdm-status').textContent = state.connected
-      ? `Device manager running · ${n} robot${n === 1 ? '' : 's'}`
-      : problem || 'Connecting to the device manager…';
+      ? T('Device manager running · Robots: {n}', { n })
+      : problem || T('Connecting to the device manager…');
     const check = $('check-tdm');
     const dot = check.querySelector('.dot');
     dot.className = 'dot ' + (state.connected ? 'ok' : problem ? 'todo' : '');
     dot.textContent = state.connected ? '✓' : problem ? '!' : '…';
-    check.lastElementChild.textContent = state.connected ? 'Device manager is running.' : problem || 'Connecting to the device manager…';
+    check.lastElementChild.textContent = state.connected ? T('Device manager is running.') : problem || T('Connecting to the device manager…');
   }
 
 
@@ -128,7 +129,8 @@
     if (!state.selected) { const first = state.robots.find(usable); state.selected = first ? first.id : null; }
 
     for (const r of state.robots) {
-      const [label, tone] = STATUS_BADGE[r.status] || STATUS_BADGE.unknown;
+      const [labelEn, tone] = STATUS_BADGE[r.status] || STATUS_BADGE.unknown;
+      const label = T(labelEn);
       const el = document.createElement('label');
       el.className = 'robot' + (r.id === state.selected ? ' selected' : '') + (usable(r) ? '' : ' disabled');
       const input = document.createElement('input');
@@ -139,11 +141,11 @@
       let name;
       if (state.renaming === r.id) {
         name = document.createElement('input'); name.className = 'rename-input'; name.value = r.name || '';
-        name.maxLength = 20; name.setAttribute('aria-label', 'New robot name');
+        name.maxLength = 20; name.setAttribute('aria-label', T('New robot name'));
         const finish = (save) => {
           const value = name.value.trim(); state.renaming = null;
           if (save && value && value !== r.name && state.client) {
-            state.client.rename(r.id, value).then(() => toast(`Renamed to ${value}`)).catch(() => toast('Could not rename this robot.'));
+            state.client.rename(r.id, value).then(() => toast(T('Renamed to {name}', { name: value }))).catch(() => toast(T('Could not rename this robot.')));
           }
           renderRobots();
         };
@@ -155,16 +157,16 @@
         name = document.createElement('div'); name.className = 'robot-name'; name.textContent = r.name || 'Thymio';
       }
       const sub = document.createElement('div'); sub.className = 'robot-sub';
-      sub.textContent = (r.type === 'Thymio2Wireless' ? 'Wireless' : r.type === 'SimulatedThymio2' ? 'Simulated' : 'USB cable')
-        + (r.fwVersion ? ` · firmware ${r.fwVersion}` : '');
+      sub.textContent = T(r.type === 'Thymio2Wireless' ? 'Wireless' : r.type === 'SimulatedThymio2' ? 'Simulated' : 'USB cable')
+        + (r.fwVersion ? ' · ' + T('firmware {v}', { v: r.fwVersion }) : '');
       const bat = battery[r.id];
       if (bat) {
         const b = document.createElement('span'); b.className = 'battery ' + bat.level;
-        b.title = BATTERY_TEXT[bat.level];
+        b.title = T(BATTERY_TEXT[bat.level]);
         b.innerHTML = bat.level === 'charging'
           ? '<svg class="battery-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>'
           : '<span class="battery-icon" aria-hidden="true"><i></i><i></i><i></i></span>';
-        b.append(document.createTextNode(BATTERY_TEXT[bat.level]));
+        b.append(document.createTextNode(T(BATTERY_TEXT[bat.level])));
         main.append(name, sub, b);
       } else main.append(name, sub);
       const actions = document.createElement('div'); actions.className = 'robot-actions';
@@ -176,10 +178,10 @@
         b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); fn(); });
         actions.append(b);
       };
-      if (canRename && state.renaming !== r.id) addAction('Rename', () => { state.renaming = r.id; renderRobots(); });
-      if (canUpdate && outdated) addAction(`Update firmware to ${r.latestFwVersion}`, () => showFirmware(r));
-      else if (canUpdate && state.moreOpen === r.id) addAction('Reinstall firmware (repair)', () => showFirmware(r));
-      else if (canUpdate) addAction('⋯ More', () => { state.moreOpen = r.id; renderRobots(); });
+      if (canRename && state.renaming !== r.id) addAction(T('Rename'), () => { state.renaming = r.id; renderRobots(); });
+      if (canUpdate && outdated) addAction(T('Update firmware to {v}', { v: r.latestFwVersion }), () => showFirmware(r));
+      else if (canUpdate && state.moreOpen === r.id) addAction(T('Reinstall firmware (repair)'), () => showFirmware(r));
+      else if (canUpdate) addAction(T('⋯ More'), () => { state.moreOpen = r.id; renderRobots(); });
       if (actions.childElementCount) main.append(actions);
       const badge = document.createElement('span'); badge.className = 'badge ' + tone; badge.textContent = label;
       el.append(input, main, badge);
@@ -187,16 +189,16 @@
     }
 
     const n = state.robots.length;
-    $('robot-count').textContent = n > 1 ? `· ${n} found` : '';
+    $('robot-count').textContent = n > 1 ? T('· {n} found', { n }) : '';
     $('no-robot').hidden = n > 0;
     const sel = state.robots.find((r) => r.id === state.selected);
-    $('selected-name').textContent = sel ? sel.name || 'Thymio' : 'it';
+    $('modes-title').textContent = sel ? T('2 · How do you want to program {name}?', { name: sel.name || 'Thymio' }) : T('2 · How do you want to program it?');
 
     const outdated = state.robots.filter((r) => r.latestFwVersion && fwNum(r.fwVersion) < fwNum(r.latestFwVersion));
     $('fw-note').hidden = outdated.length === 0;
     if (outdated.length) {
-      $('fw-note').textContent = `${outdated.map((r) => r.name).join(', ')}: firmware ${outdated[0].latestFwVersion} is available. `
-        + 'Wireless robots must be plugged in with the USB cable to update.';
+      $('fw-note').textContent = T('{names}: firmware {v} is available. Wireless robots must be plugged in with the USB cable to update.',
+        { names: outdated.map((r) => r.name).join(', '), v: outdated[0].latestFwVersion });
     }
     if (window.ThymioPairing) window.ThymioPairing.refresh();
     renderStatus();
@@ -204,18 +206,18 @@
 
   // ---------- programming environments ---------------------------------------------------
   function renderModes() {
-    const grid = $('mode-grid');
+    const grid = $('mode-grid'); grid.textContent = '';
     for (const m of window.THYMIO_MODES) {
       const b = document.createElement('button');
       b.type = 'button'; b.className = 'mode' + (m.available ? '' : ' soon');
       b.innerHTML = `<img class="mode-icon" alt=""><span class="mode-text"><span class="mode-top">
         <span class="mode-name"></span><span class="age"></span></span><span class="mode-desc"></span></span>`;
       b.querySelector('.mode-icon').src = m.icon;
-      b.querySelector('.mode-name').textContent = m.name;
-      const age = b.querySelector('.age'); age.textContent = m.age; age.classList.add(m.tone);
-      b.querySelector('.mode-desc').textContent = m.short;
+      b.querySelector('.mode-name').textContent = T(m.name);
+      const age = b.querySelector('.age'); age.textContent = window.I18N.ages(m.age); age.classList.add(m.tone);
+      b.querySelector('.mode-desc').textContent = T(m.short);
       if (!m.available) {
-        const soon = document.createElement('span'); soon.className = 'mode-soon'; soon.textContent = 'Coming in a later version';
+        const soon = document.createElement('span'); soon.className = 'mode-soon'; soon.textContent = T('Coming in a later version');
         b.querySelector('.mode-text').append(soon);
       }
       b.addEventListener('click', () => showDetails(m));
@@ -228,16 +230,16 @@
   function loadActivities() {
     return invoke('list_activities').then((list) => {
       activities = list.map((entry) => window.ActivityMd.parse(entry));
-    }).catch((e) => { activities = []; toast(`Could not read the activities: ${e}`); });
+    }).catch((e) => { activities = []; toast(T('Could not read the activities: {e}', { e })); });
   }
   function renderLibraryTabs() {
-    const tabs = $('library-tabs');
+    const tabs = $('library-tabs'); tabs.textContent = '';
     for (const m of window.THYMIO_MODES) {
       if (m.id === 'vpl') continue; // VPL classic is not in this version
       const t = document.createElement('button');
       t.type = 'button'; t.className = 'tab'; t.setAttribute('role', 'tab'); t.dataset.mode = m.id;
       const img = document.createElement('img'); img.src = m.icon; img.alt = '';
-      t.append(img, document.createTextNode(m.name));
+      t.append(img, document.createTextNode(T(m.name)));
       t.addEventListener('click', () => { libraryMode = m.id; renderLibrary(); });
       tabs.append(t);
     }
@@ -253,9 +255,12 @@
       const card = document.createElement('div'); card.className = 'activity';
       card.innerHTML = `<span class="activity-tags"><span class="level-tag"></span><span class="age"></span></span>
         <span class="activity-title"></span><span class="activity-desc"></span><span class="activity-needs"></span>
-        <span class="activity-actions"><button type="button" class="btn primary" data-k="challenge">Start</button>
-        <button type="button" class="btn" data-k="read">Challenge</button><button type="button" class="btn" data-k="solution">Solution</button></span>`;
-      const age = card.querySelector('.age'); age.textContent = a.age; age.classList.add('plain'); age.hidden = !a.age;
+        <span class="activity-actions"><button type="button" class="btn primary" data-k="challenge"></button>
+        <button type="button" class="btn" data-k="read"></button><button type="button" class="btn" data-k="solution"></button></span>`;
+      card.querySelector('[data-k=challenge]').textContent = T('Start');
+      card.querySelector('[data-k=read]').textContent = T('Challenge');
+      card.querySelector('[data-k=solution]').textContent = T('Solution');
+      const age = card.querySelector('.age'); age.textContent = window.I18N.ages(a.age); age.classList.add('plain'); age.hidden = !a.age;
       const lvl = card.querySelector('.level-tag'); lvl.textContent = a.levelText; lvl.classList.add('lvl-' + a.level);
       card.querySelector('.activity-title').textContent = a.title;
       card.querySelector('.activity-desc').textContent = plain(a.goal);
@@ -271,7 +276,7 @@
   }
   const plain = (md) => String(md).replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
   function openChallenge(a) {
-    return invoke('open_challenge', { lang: a.lang, id: a.id }).catch((e) => toast(`Could not open the challenge: ${e}`));
+    return invoke('open_challenge', { lang: a.lang, id: a.id }).catch((e) => toast(T('Could not open the challenge: {e}', { e })));
   }
   // Asks before replacing the program in the editor (styled dialog, resolves true or false).
   function confirmReplace() {
@@ -289,19 +294,19 @@
   function openActivity(mode, a, kind, confirmed) {
     if (mode.launch === 'thonny') {
       invoke('open_python_activity', { id: a.id, kind })
-        .then((path) => { if (kind === 'challenge') openChallenge(a); toast(`Thonny is opening ${path.split(/[\\/]/).pop()} (in Documents › Thymio Suite › Activities)`); })
+        .then((path) => { if (kind === 'challenge') openChallenge(a); toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() })); })
         .catch((e) => toast(String(e)));
       return;
     }
     const robot = state.robots.find((r) => r.id === state.selected);
-    if (!robot) { toast('Choose a robot first, on the Home page.'); return; }
+    if (!robot) { toast(T('Choose a robot first, on the Home page.')); return; }
     const key = `${a.lang}/${a.id}`;
     const base = mode.url(robot, { ws: TDM_URL, pass: state.pass });
     const title = (what) => `${what} – ${mode.name} – ${robot.name || 'Thymio'}`;
     if (kind !== 'solution') {
       invoke('open_app', { path: base, title: title(a.title), activity: key })
         .then(() => openChallenge(a))
-        .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
+        .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
       return;
     }
     // Solution: load the first program into the editor opened by "Start" (after confirmation),
@@ -311,11 +316,11 @@
       a.solutions.forEach((file, i) => {
         const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
         const path = withReload(`${base}&activity=${encodeURIComponent(file)}`);
-        const t = title(`${a.title} (solution${part})`);
+        const t = title(`${a.title} (${T('solution')}${part})`);
         const fresh = () => invoke('open_app', { path, title: t, activity: i === 0 ? key : null });
         (i === 0 ? invoke('load_into_activity_window', { activity: key, path, title: t }) : Promise.resolve(false))
           .then((loaded) => (loaded ? null : fresh()))
-          .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
+          .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
       });
     });
   }
@@ -351,25 +356,25 @@
   function showDetails(m) {
     current = m;
     $('details-icon').src = m.icon;
-    $('details-title').textContent = m.name;
-    $('details-level').textContent = m.age;
+    $('details-title').textContent = T(m.name);
+    $('details-level').textContent = window.I18N.ages(m.age);
     $('details-level').className = 'age ' + m.tone;
-    $('details-body').innerHTML = m.details; // static text from modes.js
+    $('details-body').innerHTML = window.I18N.details(m); // static text from modes.js / i18n-data.js
     const robot = state.robots.find((r) => r.id === state.selected);
     let warning = '';
-    if (!m.available) warning = `${m.name} is not in this test version yet.`;
-    else if (!robot && m.needsRobot !== false) warning = 'Choose a robot first (step 1).';
+    if (!m.available) warning = T('{app} is not in this test version yet.', { app: T(m.name) });
+    else if (!robot && m.needsRobot !== false) warning = T('Choose a robot first (step 1).');
     $('details-warning').hidden = !warning;
     $('details-warning').textContent = warning;
     $('details-open').disabled = !!warning;
-    $('details-open').textContent = m.launch === 'thonny' ? 'Open Thonny' : robot ? `Open with ${robot.name || 'Thymio'}` : 'Open';
+    $('details-open').textContent = m.launch === 'thonny' ? T('Open Thonny') : robot ? T('Open with {name}', { name: robot.name || 'Thymio' }) : T('Open');
     $('details').showModal();
   }
 
   $('details-open').addEventListener('click', () => {
     const robot = state.robots.find((r) => r.id === state.selected);
     if (current && current.launch === 'thonny') {
-      invoke('open_thonny').then(() => { $('details').close(); toast('Thonny is starting… (the first start can take a few seconds)'); })
+      invoke('open_thonny').then(() => { $('details').close(); toast(T('Thonny is starting… (the first start can take a few seconds)')); })
         .catch((e) => toast(String(e)));
       return;
     }
@@ -377,7 +382,7 @@
     const path = current.url(robot, { ws: TDM_URL, pass: state.pass });
     invoke('open_app', { path, title: `${current.name} – ${robot.name || 'Thymio'}` })
       .then(() => $('details').close())
-      .catch((e) => toast(`Could not open ${current.name}: ${e}`));
+      .catch((e) => toast(T('Could not open {app}: {e}', { app: T(current.name), e })));
   });
 
   // ---------- footer & header ------------------------------------------------------------
@@ -397,7 +402,7 @@
     ].join('\n');
   }
   $('report-btn').addEventListener('click', async () => {
-    $('report-text').value = 'Collecting…';
+    $('report-text').value = T('Collecting…');
     $('report').showModal();
     $('report-text').value = await buildReport();
   });
@@ -406,19 +411,19 @@
     ta.focus(); ta.select();
     let ok = false;
     try { await navigator.clipboard.writeText(ta.value); ok = true; } catch (e) { try { ok = document.execCommand('copy'); } catch (e2) {} }
-    toast(ok ? 'Report copied. Paste it into your message to support.' : 'Select the text and press Ctrl+C (Cmd+C on Mac).');
+    toast(ok ? T('Report copied. Paste it into your message to support.') : T('Select the text and press Ctrl+C (Cmd+C on Mac).'));
   });
   $('report-save').addEventListener('click', async () => {
-    try { const path = await invoke('save_report', { text: $('report-text').value }); toast(`Saved: ${path}`); }
-    catch (e) { toast(`Could not save the report: ${e}`); }
+    try { const path = await invoke('save_report', { text: $('report-text').value }); toast(T('Saved: {path}', { path })); }
+    catch (e) { toast(T('Could not save the report: {e}', { e })); }
   });
-  $('help-btn').addEventListener('click', () => toast('Help: www.thymio.org/support'));
+  $('help-btn').addEventListener('click', () => toast(T('Help: www.thymio.org/support')));
 
   // ---------- firmware update ------------------------------------------------------------
   let fwRobot = null;
   function showFirmware(r) {
     fwRobot = r;
-    $('fw-text').textContent = `Install firmware ${r.latestFwVersion || ''} on ${r.name || 'Thymio'} (currently ${r.fwVersion || 'unknown'})?`;
+    $('fw-text').textContent = T('Install firmware {v} on {name} (currently {cur})?', { v: r.latestFwVersion || '', name: r.name || 'Thymio', cur: r.fwVersion || T('unknown') });
     $('fw-progress-wrap').hidden = true; $('fw-bar').style.width = '0';
     $('fw-start').hidden = false; $('fw-start').disabled = false; $('fw-close').disabled = false;
     $('fw-dialog').showModal();
@@ -426,20 +431,34 @@
   $('fw-start').addEventListener('click', () => {
     if (!fwRobot || !state.client) return;
     $('fw-start').disabled = true; $('fw-close').disabled = true; $('fw-progress-wrap').hidden = false;
-    $('fw-text').textContent = `Installing firmware on ${fwRobot.name || 'Thymio'}…`;
+    $('fw-text').textContent = T('Installing firmware on {name}…', { name: fwRobot.name || 'Thymio' });
     state.client.upgradeFirmware(fwRobot.id, (p) => { $('fw-bar').style.width = `${Math.round(p * 100)}%`; })
-      .then(() => { $('fw-bar').style.width = '100%'; $('fw-text').textContent = 'Done. The robot restarts and appears again in a few seconds.'; })
-      .catch(() => { $('fw-text').textContent = 'The update failed. Check the USB cable and try again; the robot keeps working meanwhile.'; })
+      .then(() => { $('fw-bar').style.width = '100%'; $('fw-text').textContent = T('Done. The robot restarts and appears again in a few seconds.'); })
+      .catch(() => { $('fw-text').textContent = T('The update failed. Check the USB cable and try again; the robot keeps working meanwhile.'); })
       .finally(() => { $('fw-start').hidden = true; $('fw-close').disabled = false; $('fw-progress-wrap').hidden = true; });
   });
   $('fw-dialog').addEventListener('cancel', (e) => { if ($('fw-close').disabled) e.preventDefault(); });
 
   // Shared with pairing.js
   window.ThymioApp = { state, toast, fwNum, showFirmware, showView };
-  $('version-label').textContent = `Test version ${window.THYMIO_VERSION || ''}`;
+  const renderVersion = () => { $('version-label').textContent = T('Test version {v}', { v: window.THYMIO_VERSION || '' }); };
+  renderVersion();
 
   // Result of "Save" in a programming window (see handle_download in main.rs).
   if (tauri && tauri.event) tauri.event.listen('save-result', (e) => toast(String(e.payload)));
+
+  // Language menu (sidebar): re-draws everything built by script; static text follows by itself.
+  const langSelect = $('lang-select');
+  for (const [code, label] of window.I18N.LANGS) {
+    const o = document.createElement('option'); o.value = code; o.textContent = label; langSelect.append(o);
+  }
+  langSelect.value = window.I18N.lang();
+  langSelect.addEventListener('change', () => window.I18N.setLang(langSelect.value));
+  window.addEventListener('thymio-lang', () => {
+    langSelect.value = window.I18N.lang();
+    renderModes(); renderLibraryTabs(); renderRobots(); renderVersion();
+    if (window.ThymioPairing) window.ThymioPairing.refresh();
+  });
 
   renderModes();
   renderLibraryTabs();

@@ -7,6 +7,19 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <div id="splash" class="splash" role="status" aria-label="Starting Thymio Suite">
+    <div class="splash-glow a" aria-hidden="true"></div><div class="splash-glow b" aria-hidden="true"></div>
+    <div class="splash-card"><img src="img/thymio-logo.png" alt="Thymio"><span class="brand-badge">Suite 2.5.0</span></div>
+    <div class="splash-text"><h1>Let’s bring Thymio to life</h1><p>VPL3, Scratch, Blockly, Aseba and Python — all in one place.</p></div>
+    <div class="splash-robot"><div class="splash-shadow" aria-hidden="true"></div>
+      <img src="img/thymio2-body.webp" alt="Thymio II"><img src="img/thymio2-wheel.webp" alt="" class="splash-wheel"></div>
+    <div class="splash-load">
+      <div class="splash-bar"><div id="splash-fill"><div class="splash-shine"></div></div></div>
+      <ul class="splash-steps"><li id="sp-1">Starting</li><li id="sp-2">Looking for robots</li><li id="sp-3">Ready</li></ul>
+    </div>
+    <div class="splash-foot"><span>Works offline · For every Thymio II, wired or wireless</span><button type="button" id="splash-skip">Skip</button></div>
+  </div>
+
   <aside class="sidebar">
     <div class="brand">
       <img src="img/thymio-logo.png" alt="Thymio" class="brand-logo">
@@ -29,7 +42,7 @@
       </button>
       <label class="lang">
         <span class="sr-only">Language</span>
-        <select id="lang-select" aria-label="Language"><option value="en">English</option></select>
+        <select id="lang-select" aria-label="Language"></select>
       </label>
     </div>
   </aside>
@@ -42,7 +55,7 @@
       </header>
 
       <section aria-labelledby="robots-title" class="block">
-        <h2 id="robots-title" class="eyebrow">1 · Your robot <span id="robot-count"></span></h2>
+        <h2 id="robots-title" class="eyebrow">1 · Your robot <span id="robot-count" data-i18n-skip></span></h2>
         <div id="robot-list" class="robot-list" role="radiogroup" aria-labelledby="robots-title"></div>
         <div id="no-robot" class="no-robot" hidden>
           <p class="no-robot-title">Let's find your robot</p>
@@ -51,14 +64,14 @@
             <li id="check-tdm"><span class="dot"></span><span>Connecting to the device manager…</span></li>
             <li><span class="dot todo">!</span><span>Plug the robot in with its USB cable, or plug in the wireless dongle.</span></li>
             <li><span class="dot todo">!</span><span>Switch the robot on: press the centre button until the lights turn on. Wireless robots can take up to 20 seconds to appear.</span></li>
-            <li><span class="dot todo">!</span><span>A new wireless robot must be paired with the dongle once: use <b>Pair wireless robots</b> in the menu.</span></li>
+            <li><span class="dot todo">!</span><span data-i18n-html="pairOnce">A new wireless robot must be paired with the dongle once: use <b>Pair wireless robots</b> in the menu.</span></li>
           </ol>
         </div>
         <div id="fw-note" class="note warn" hidden></div>
       </section>
 
       <section aria-labelledby="modes-title" class="block">
-        <h2 id="modes-title" class="eyebrow">2 · How do you want to program <span id="selected-name">it</span>?</h2>
+        <h2 id="modes-title" class="eyebrow">2 · How do you want to program it?</h2>
         <div id="mode-grid" class="mode-grid"></div>
       </section>
     </main>
@@ -93,7 +106,7 @@
             <label class="pair-mode"><input type="radio" name="pair-mode" value="shared">
               <span><b>Several robots on one dongle</b><small>All robots join the dongle's network, so one computer sees them all (Aseba, Python).</small></span></label>
           </div>
-          <p class="note tip"><b>Tip:</b> put a sticker of the same colour on each robot and its dongle so pupils can find their pair.</p>
+          <p class="note tip" data-i18n-html="pairTip"><b>Tip:</b> put a sticker of the same colour on each robot and its dongle so pupils can find their pair.</p>
         </section>
 
         <section class="card pair-main" aria-labelledby="pair-title">
@@ -160,9 +173,9 @@
         <button type="submit" value="close" class="icon-btn" aria-label="Close">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
       </div>
-      <p class="lead">Open your web browser and start coding. <b>Zero installation</b>, nothing to update, and it works on the computers and tablets you already have.</p>
+      <p class="lead" data-i18n-html="labLead">Open your web browser and start coding. <b>Zero installation</b>, nothing to update, and it works on the computers and tablets you already have.</p>
       <ul class="ticks">
-        <li><b>Made for Thymio 3</b>, and your <b>Thymio II</b> is ready to go</li>
+        <li data-i18n-html="labT3"><b>Made for Thymio 3</b>, and your <b>Thymio II</b> is ready to go</li>
         <li>Always the newest version, straight from Mobsya</li>
         <li>All you need is an internet connection</li>
       </ul>
@@ -221,7 +234,10 @@
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
-  <script>window.THYMIO_VERSION = "0.13";</script>
+  <script>window.THYMIO_VERSION = "0.14";</script>
+  <script src="i18n-data.js"></script>
+  <script src="i18n.js"></script>
+  <script src="splash.js"></script>
   <script src="flexbuffers.js"></script>
   <script src="tdm.js"></script>
   <script src="modes.js"></script>
