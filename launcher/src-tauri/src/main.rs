@@ -31,6 +31,11 @@ struct WebApps {
     error: Mutex<Option<String>>,
 }
 
+/// Editor windows opened by "Start" on a library activity: "<lang>/<id>" -> window label,
+/// so "Show the solution" can load the solution into the same window.
+#[derive(Default)]
+struct ActivityWindows(Mutex<std::collections::HashMap<String, String>>);
+
 #[derive(Default)]
 struct DeviceManager {
     child: Mutex<Option<Child>>,
@@ -299,18 +304,9 @@ fn require_main(window: &WebviewWindow) -> Result<(), String> {
 // Must be `async`: on Windows, creating a window from a synchronous command deadlocks
 // (Tauri known issue, wry#583). That was the blank, frozen VPL3 window in test versions 0.1-0.3.
 #[tauri::command]
-async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String) -> Result<(), String> {
+async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String, activity: Option<String>) -> Result<(), String> {
     require_main(&window)?;
-    if path.starts_with('/') || path.contains("..") || path.contains("://") {
-        return Err("invalid path".into());
-    }
-    let webapps = app.state::<WebApps>();
-    let port = *webapps.port.lock().unwrap();
-    let port = match port {
-        Some(p) => p,
-        None => return Err(webapps.error.lock().unwrap().clone().unwrap_or_else(|| "web apps not available".into())),
-    };
-    let url = tauri::Url::parse(&format!("http://127.0.0.1:{port}/{path}")).map_err(|e| e.to_string())?;
+    let url = webapp_url(&app, &path)?;
     static NEXT_WINDOW: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
     let label = format!(
         "app-{}-{}",
@@ -319,6 +315,7 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
     );
     let dl_app = app.clone();
     let kind = file_kind(&path);
+    let label_for_map = label.clone();
     WebviewWindowBuilder::new(&app, label, WebviewUrl::External(url))
         .title(title)
         .on_download(move |_webview, event| handle_download(&dl_app, kind, event))
@@ -330,7 +327,50 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
         .center()
         .build()
         .map_err(|e| e.to_string())?;
+    if let Some(key) = activity {
+        app.state::<ActivityWindows>().0.lock().unwrap().insert(key, label_for_map);
+    }
     Ok(())
+}
+
+fn webapp_url(app: &tauri::AppHandle, path: &str) -> Result<tauri::Url, String> {
+    if path.starts_with('/') || path.contains("..") || path.contains("://") {
+        return Err("invalid path".into());
+    }
+    let webapps = app.state::<WebApps>();
+    let port = *webapps.port.lock().unwrap();
+    let port = match port {
+        Some(p) => p,
+        None => return Err(webapps.error.lock().unwrap().clone().unwrap_or_else(|| "web apps not available".into())),
+    };
+    tauri::Url::parse(&format!("http://127.0.0.1:{port}/{path}")).map_err(|e| e.to_string())
+}
+
+/// "Show the solution": loads it into the editor window opened by "Start" for this activity.
+/// Returns false when that window is gone (the launcher then opens a new one).
+#[tauri::command]
+fn load_into_activity_window(app: tauri::AppHandle, window: WebviewWindow, activity: String, path: String, title: String) -> Result<bool, String> {
+    require_main(&window)?;
+    let label = app.state::<ActivityWindows>().0.lock().unwrap().get(&activity).cloned();
+    let Some(target) = label.and_then(|l| app.get_webview_window(&l)) else {
+        return Ok(false);
+    };
+    let url = webapp_url(&app, &path)?;
+    target.navigate(url).map_err(|e| e.to_string())?;
+    let _ = target.set_title(&title);
+    let _ = target.unminimize();
+    let _ = target.set_focus();
+    Ok(true)
+}
+
+/// Whether the editor window opened by "Start" for this activity is still open.
+#[tauri::command]
+fn activity_window_open(app: tauri::AppHandle, window: WebviewWindow, activity: String) -> bool {
+    if window.label() != "main" && window.label() != "challenge" {
+        return false;
+    }
+    let label = app.state::<ActivityWindows>().0.lock().unwrap().get(&activity).cloned();
+    label.and_then(|l| app.get_webview_window(&l)).is_some()
 }
 
 /// Finds Thonny (bundled on Windows, with the Thymio plug-in tdmclient_ty preinstalled).
@@ -462,10 +502,10 @@ fn list_activities(app: tauri::AppHandle, window: WebviewWindow) -> Result<Vec<A
 }
 
 const CHALLENGE_WIDTH: f64 = 400.0;
-const CHALLENGE_COLLAPSED_HEIGHT: f64 = 96.0;
+const CHALLENGE_COLLAPSED_WIDTH: f64 = 52.0;
 
-/// Opens (or replaces) the challenge window: a small window that stays on top of the editor,
-/// on the right side of the screen, with the challenge, the hints and the solution button.
+/// Opens (or replaces) the challenge window: a small window without the system title bar that
+/// stays on top of the editor, on the right side of the screen.
 #[tauri::command]
 async fn open_challenge(app: tauri::AppHandle, window: WebviewWindow, lang: String, id: String) -> Result<(), String> {
     require_main(&window)?;
@@ -487,25 +527,40 @@ async fn open_challenge(app: tauri::AppHandle, window: WebviewWindow, lang: Stri
     let url = format!("challenge.html?lang={lang}&id={id}");
     WebviewWindowBuilder::new(&app, "challenge", WebviewUrl::App(url.into()))
         .title("Challenge")
+        .decorations(false)
         .inner_size(CHALLENGE_WIDTH, height)
-        .min_inner_size(300.0, CHALLENGE_COLLAPSED_HEIGHT)
+        .min_inner_size(CHALLENGE_COLLAPSED_WIDTH, 300.0)
         .position(x, y)
         .always_on_top(true)
+        .skip_taskbar(false)
         .additional_browser_args(BROWSER_ARGS)
         .build()
         .map_err(|e| e.to_string())?;
     Ok(())
 }
 
-/// Collapse button of the challenge window: shrinks it to a small bar, or opens it again.
+/// Collapse button of the challenge window: it becomes a thin vertical strip that keeps its
+/// right edge and height, or opens again to its previous width.
 #[tauri::command]
-fn set_challenge_collapsed(window: WebviewWindow, collapsed: bool, height: f64) -> Result<(), String> {
+fn set_challenge_collapsed(window: WebviewWindow, collapsed: bool, width: f64) -> Result<(), String> {
     if window.label() != "challenge" {
         return Err("not allowed from this window".into());
     }
-    let h = if collapsed { CHALLENGE_COLLAPSED_HEIGHT } else { height.clamp(300.0, 1200.0) };
-    let w = window.inner_size().map_err(|e| e.to_string())?.to_logical::<f64>(window.scale_factor().unwrap_or(1.0)).width;
-    window.set_size(tauri::LogicalSize::new(w, h)).map_err(|e| e.to_string())
+    let scale = window.scale_factor().unwrap_or(1.0);
+    let size = window.inner_size().map_err(|e| e.to_string())?.to_logical::<f64>(scale);
+    let pos = window.outer_position().map_err(|e| e.to_string())?.to_logical::<f64>(scale);
+    let new_w = if collapsed { CHALLENGE_COLLAPSED_WIDTH } else { width.clamp(300.0, 800.0) };
+    let right = pos.x + size.width;
+    window.set_size(tauri::LogicalSize::new(new_w, size.height)).map_err(|e| e.to_string())?;
+    window.set_position(tauri::LogicalPosition::new(right - new_w, pos.y)).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn close_challenge(window: WebviewWindow) -> Result<(), String> {
+    if window.label() != "challenge" {
+        return Err("not allowed from this window".into());
+    }
+    window.destroy().map_err(|e| e.to_string())
 }
 
 /// "Show the solution" in the challenge window: the main window opens it (it knows the robot).
@@ -609,7 +664,8 @@ fn main() {
         .plugin(tauri_plugin_dialog::init())
         .manage(DeviceManager::default())
         .manage(WebApps::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, request_solution, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .manage(ActivityWindows::default())
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();

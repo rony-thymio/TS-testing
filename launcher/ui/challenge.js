@@ -6,7 +6,7 @@
   const $ = (id) => document.getElementById(id);
   const params = new URLSearchParams(location.search);
   const lang = params.get('lang'), id = params.get('id');
-  let activity = null, shown = 0, expandedHeight = window.innerHeight;
+  let activity = null, shown = 0, expandedWidth = window.innerWidth;
 
   function toast(text) {
     const t = $('toast'); t.textContent = text; t.hidden = false;
@@ -28,6 +28,7 @@
     const mode = (window.THYMIO_MODES || []).find((m) => m.id === activity.mode);
     if (mode) { $('cw-icon').src = mode.icon; $('cw-lang').textContent = mode.name; }
     $('cw-title').textContent = activity.title; document.title = `Challenge – ${activity.title}`;
+    $('cw-strip-title').textContent = `${mode ? mode.name + ' · ' : ''}${activity.title}`;
     const tags = $('cw-tags'); tags.textContent = '';
     const tag = (text, plain) => { if (!text) return; const s = document.createElement('span'); s.textContent = text; if (plain) s.className = 'plain'; tags.append(s); };
     tag(activity.levelText); tag(activity.age); tag(activity.needs, true);
@@ -41,18 +42,30 @@
   }
 
   $('cw-next-hint').addEventListener('click', () => { shown = Math.min(shown + 1, activity.hints.length); renderHints(); });
+  function confirmReplace() {
+    const d = $('confirm-dialog');
+    return new Promise((resolve) => {
+      d.addEventListener('close', () => resolve(d.returnValue === 'ok'), { once: true });
+      d.returnValue = ''; d.showModal();
+    });
+  }
   $('cw-solution').addEventListener('click', () => {
-    invoke('request_solution', { lang, id }).then(() => toast('The solution opens in a new window.')).catch((e) => toast(String(e)));
+    // Python opens the solution as an extra tab in Thonny; other editors get it in place of the program.
+    const ask = lang === 'python' ? Promise.resolve(true)
+      : invoke('activity_window_open', { activity: `${lang}/${id}` }).then((open) => (open ? confirmReplace() : true));
+    ask.then((go) => {
+      if (!go) return;
+      invoke('request_solution', { lang, id }).then(() => toast('Opening the solution…')).catch((e) => toast(String(e)));
+    });
   });
-  $('cw-collapse').addEventListener('click', () => {
-    const collapsed = !document.body.classList.contains('collapsed');
-    if (collapsed) expandedHeight = window.innerHeight;
+  function setCollapsed(collapsed) {
+    if (collapsed) expandedWidth = window.innerWidth;
     document.body.classList.toggle('collapsed', collapsed);
-    $('cw-collapse').setAttribute('aria-expanded', String(!collapsed));
-    $('cw-collapse').setAttribute('aria-label', collapsed ? 'Open the challenge' : 'Collapse');
-    $('cw-collapse-path').setAttribute('d', collapsed ? 'M6 9l6 6 6-6' : 'M6 15l6-6 6 6');
-    invoke('set_challenge_collapsed', { collapsed, height: expandedHeight }).catch(() => {});
-  });
+    invoke('set_challenge_collapsed', { collapsed, width: expandedWidth }).catch(() => {});
+  }
+  $('cw-collapse').addEventListener('click', () => setCollapsed(true));
+  $('cw-expand').addEventListener('click', () => setCollapsed(false));
+  $('cw-close').addEventListener('click', () => invoke('close_challenge').catch(() => window.close()));
 
   invoke('list_activities').then((list) => {
     const entry = list.find((e) => e.lang === lang && e.id === id);

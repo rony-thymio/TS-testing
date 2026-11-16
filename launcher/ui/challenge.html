@@ -8,13 +8,22 @@
   <link rel="stylesheet" href="challenge.css">
 </head>
 <body class="challenge-body">
+  <div class="cw-strip" id="cw-strip">
+    <button type="button" class="icon-btn" id="cw-expand" aria-label="Open the challenge">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button>
+    <span class="cw-strip-title" id="cw-strip-title" data-tauri-drag-region></span>
+  </div>
   <header class="cw-head">
-    <div class="cw-top">
-      <span class="cw-lang"><img id="cw-icon" alt=""><span id="cw-lang"></span></span>
-      <button type="button" class="icon-btn cw-collapse" id="cw-collapse" aria-label="Collapse" aria-expanded="true">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path id="cw-collapse-path" d="M6 15l6-6 6 6"/></svg></button>
+    <div class="cw-top" data-tauri-drag-region>
+      <span class="cw-lang" data-tauri-drag-region><img id="cw-icon" alt=""><span id="cw-lang"></span></span>
+      <span class="cw-buttons">
+        <button type="button" class="icon-btn" id="cw-collapse" aria-label="Fold to the side">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button>
+        <button type="button" class="icon-btn" id="cw-close" aria-label="Close">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+      </span>
     </div>
-    <h1 id="cw-title">…</h1>
+    <h1 id="cw-title" data-tauri-drag-region>…</h1>
     <div class="cw-tags" id="cw-tags"></div>
   </header>
   <main class="cw-main" id="cw-main">
@@ -32,6 +41,16 @@
     <span class="cw-author" id="cw-author"></span>
     <button type="button" class="btn" id="cw-solution">Show the solution</button>
   </footer>
+  <dialog id="confirm-dialog" aria-labelledby="confirm-title">
+    <form method="dialog" class="dialog-body">
+      <h2 id="confirm-title">Show the solution?</h2>
+      <p class="lead" id="confirm-text">It replaces the program in the open editor. Save your work first if you want to keep it.</p>
+      <div class="dialog-actions">
+        <button type="submit" value="cancel" class="btn">Cancel</button>
+        <button type="submit" value="ok" class="btn primary">Replace with the solution</button>
+      </div>
+    </form>
+  </dialog>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <script src="modes.js"></script>
   <script src="activity-md.js"></script>

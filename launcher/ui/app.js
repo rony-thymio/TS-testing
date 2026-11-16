@@ -273,7 +273,20 @@
   function openChallenge(a) {
     return invoke('open_challenge', { lang: a.lang, id: a.id }).catch((e) => toast(`Could not open the challenge: ${e}`));
   }
-  function openActivity(mode, a, kind) {
+  // Asks before replacing the program in the editor (styled dialog, resolves true or false).
+  function confirmReplace() {
+    const d = document.getElementById('confirm-dialog');
+    return new Promise((resolve) => {
+      d.addEventListener('close', () => resolve(d.returnValue === 'ok'), { once: true });
+      d.returnValue = ''; d.showModal();
+    });
+  }
+  // Adds a changing query parameter, so the editor page reloads even when only the "#…" part changes.
+  const withReload = (path) => {
+    const [main, hash] = path.split('#');
+    return `${main}${main.includes('?') ? '&' : '?'}v=${Date.now()}${hash !== undefined ? '#' + hash : ''}`;
+  };
+  function openActivity(mode, a, kind, confirmed) {
     if (mode.launch === 'thonny') {
       invoke('open_python_activity', { id: a.id, kind })
         .then((path) => { if (kind === 'challenge') openChallenge(a); toast(`Thonny is opening ${path.split(/[\\/]/).pop()} (in Documents › Thymio Suite › Activities)`); })
@@ -282,26 +295,36 @@
     }
     const robot = state.robots.find((r) => r.id === state.selected);
     if (!robot) { toast('Choose a robot first, on the Home page.'); return; }
+    const key = `${a.lang}/${a.id}`;
     const base = mode.url(robot, { ws: TDM_URL, pass: state.pass });
-    if (kind === 'solution') {
-      // One window per solution file (some activities need a different program per robot).
-      a.solutions.forEach((file, i) => {
-        const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
-        invoke('open_app', { path: `${base}&activity=${encodeURIComponent(file)}`, title: `${a.title} (solution${part}) – ${mode.name} – ${robot.name || 'Thymio'}` })
-          .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
-      });
+    const title = (what) => `${what} – ${mode.name} – ${robot.name || 'Thymio'}`;
+    if (kind !== 'solution') {
+      invoke('open_app', { path: base, title: title(a.title), activity: key })
+        .then(() => openChallenge(a))
+        .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
       return;
     }
-    invoke('open_app', { path: base, title: `${a.title} – ${mode.name} – ${robot.name || 'Thymio'}` })
-      .then(() => openChallenge(a))
-      .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
+    // Solution: load the first program into the editor opened by "Start" (after confirmation),
+    // or into a new window; other programs (other robots) always get their own window.
+    invoke('activity_window_open', { activity: key }).then((open) => (open && !confirmed ? confirmReplace() : true)).then((go) => {
+      if (!go) return;
+      a.solutions.forEach((file, i) => {
+        const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
+        const path = withReload(`${base}&activity=${encodeURIComponent(file)}`);
+        const t = title(`${a.title} (solution${part})`);
+        const fresh = () => invoke('open_app', { path, title: t, activity: i === 0 ? key : null });
+        (i === 0 ? invoke('load_into_activity_window', { activity: key, path, title: t }) : Promise.resolve(false))
+          .then((loaded) => (loaded ? null : fresh()))
+          .catch((e) => toast(`Could not open ${mode.name}: ${e}`));
+      });
+    });
   }
   // "Show the solution" in the challenge window.
   if (tauri && tauri.event) tauri.event.listen('open-solution', (e) => {
     const { lang, id } = e.payload || {};
     const a = (activities || []).find((x) => x.lang === lang && x.id === id);
     const mode = a && window.THYMIO_MODES.find((m) => m.id === a.mode);
-    if (a && mode) openActivity(mode, a, 'solution');
+    if (a && mode) openActivity(mode, a, 'solution', true); // already confirmed in the challenge window
   });
 
   // ---------- views (sidebar) ------------------------------------------------------------

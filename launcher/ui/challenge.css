@@ -4,7 +4,9 @@
 .cw-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .cw-lang { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: var(--muted); }
 .cw-lang img { height: 22px; width: auto; max-width: 44px; object-fit: contain; }
-.cw-collapse { width: 36px; height: 36px; }
+.cw-buttons { display: flex; gap: 6px; }
+.cw-buttons .icon-btn, .cw-strip .icon-btn { width: 34px; height: 34px; }
+.cw-top { cursor: move; }
 .cw-head h1 { font-size: 20px; font-weight: 700; color: var(--title); line-height: 1.25; }
 .cw-tags { display: flex; gap: 6px; flex-wrap: wrap; }
 .cw-tags span { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; color: var(--purple-ink); background: var(--purple-soft); }
@@ -20,7 +22,11 @@
 .cw-foot { padding: 10px 18px; border-top: 1px solid #EEEAF6; display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-shrink: 0; }
 .cw-author { font-size: 11px; color: var(--muted); line-height: 1.35; }
 .cw-foot .btn { min-height: 38px; font-size: 13px; flex-shrink: 0; }
-body.collapsed .cw-main, body.collapsed .cw-foot, body.collapsed .cw-tags { display: none; }
-body.collapsed .cw-head { border-bottom: none; padding-bottom: 8px; }
-body.collapsed .cw-head h1 { font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Folded to the side: a thin vertical strip with the title written sideways. */
+.challenge-body { border: 1px solid #DCD6EC; }
+.cw-strip { display: none; }
+body.collapsed .cw-head, body.collapsed .cw-main, body.collapsed .cw-foot { display: none; }
+body.collapsed .cw-strip { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 8px 0; height: 100%; background: #FAF7FF; }
+.cw-strip-title { writing-mode: vertical-rl; font-size: 14px; font-weight: 600; color: var(--title); white-space: nowrap; overflow: hidden; flex: 1; cursor: move; }
+.confirm-host dialog { width: 92vw; }
 .challenge-body .toast { left: 50%; bottom: 70px; max-width: 90vw; }
