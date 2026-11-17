@@ -2,8 +2,11 @@
 // Static page text is translated in place; scripts call I18N.T('English text', {vars}).
 (function () {
   'use strict';
+  // Order of the language menu: the four main languages first.
   const LANGS = [['en', 'English'], ['fr', 'Français'], ['de', 'Deutsch'], ['it', 'Italiano'],
-    ['es', 'Español'], ['ar', 'العربية'], ['pl', 'Polski']];
+    ['es', 'Español'], ['pl', 'Polski'], ['ar', 'العربية'], ['he', 'עברית'], ['zh', '简体中文'], ['ja', '日本語']];
+  const RTL = ['ar', 'he'];
+  const HTML_LANG = { zh: 'zh-Hans' };
   const data = window.THYMIO_I18N || { strings: {}, html: {}, details: {} };
   const known = (l) => LANGS.some(([c]) => c === l);
 
@@ -25,8 +28,14 @@
   const details = (mode) => (lang !== 'en' && data.details[mode.id] && data.details[mode.id][lang]) || mode.details;
 
   // Language passed to the bundled programming apps (each supports its own set).
-  const APP_LANGS = { vpl3: ['en', 'fr', 'de', 'it'], blockly: ['en', 'fr', 'de', 'it', 'es', 'pl'], scratch: ['en', 'fr', 'de', 'it', 'es', 'ar', 'pl'] };
-  const appLang = (app) => ((APP_LANGS[app] || ['en']).includes(lang) ? lang : 'en');
+  const APP_LANGS = { vpl3: ['en', 'fr', 'de', 'it', 'zh'], blockly: ['en', 'fr', 'de', 'it', 'es', 'pl'],
+    scratch: ['en', 'fr', 'de', 'it', 'es', 'ar', 'pl', 'he', 'zh', 'ja'] };
+  // Some apps spell a language differently.
+  const APP_CODE = { vpl3: { zh: 'zh_cn' }, scratch: { zh: 'zh-cn' } };
+  const appLang = (app) => {
+    if (!(APP_LANGS[app] || ['en']).includes(lang)) return 'en';
+    return (APP_CODE[app] && APP_CODE[app][lang]) || lang;
+  };
 
   // Remember the page's static text once, so it can be re-translated when the language changes.
   const textNodes = [], attrNodes = [], htmlNodes = [];
@@ -44,8 +53,8 @@
     root.querySelectorAll('[data-i18n-html]').forEach((el) => htmlNodes.push(el));
   }
   function apply() {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.lang = HTML_LANG[lang] || lang;
+    document.documentElement.dir = RTL.includes(lang) ? 'rtl' : 'ltr';
     for (const [n, raw] of textNodes) { const key = raw.trim(); n.nodeValue = raw.replace(key, T(key)); }
     for (const [el, a, raw] of attrNodes) el.setAttribute(a, T(raw));
     for (const el of htmlNodes) {

@@ -16,10 +16,14 @@
     'the story': 'story', 'story': 'story', 'your goal': 'goal', 'goal': 'goal', 'step by step': 'steps', 'steps': 'steps',
     'hints': 'hints', 'to go further': 'further', 'go further': 'further', 'for the teacher': 'teacher'
   };
-  const LEVELS = { 1: '★ Beginner', 2: '★★ Intermediate', 3: '★★★ Advanced' };
+  const LEVELS = { 1: 'Beginner', 2: 'Intermediate', 3: 'Advanced' };
+  const levelText = (n) => '★'.repeat(n) + ' ' + (window.I18N ? window.I18N.T(LEVELS[n]) : LEVELS[n]);
 
   function parse(entry) {
-    const text = String(entry.md || '').replace(/\r\n/g, '\n');
+    // The text in the launcher's language when a translation exists (activity.fr.md…), else English.
+    const lang = window.I18N ? window.I18N.lang() : 'en';
+    const md = (entry.translations && entry.translations[lang]) || entry.md;
+    const text = String(md || '').replace(/\r\n/g, '\n');
     const meta = {};
     let body = text;
     const fm = /^---\n([\s\S]*?)\n---\n?/.exec(text);
@@ -46,7 +50,7 @@
       .sort((a, b) => (a === 'solution.' + ext ? -1 : b === 'solution.' + ext ? 1 : a.localeCompare(b)));
     return {
       lang: entry.lang, id: entry.id, mode: LANG_TO_MODE[entry.lang] || entry.lang,
-      title: meta.title || entry.id, level, levelText: LEVELS[level], age: meta.age ? `Ages ${meta.age}` : '',
+      title: meta.title || entry.id, level, levelText: levelText(level), age: meta.age ? `Ages ${meta.age}` : '',
       needs: meta.needs || '', author: meta.author || '', robots: meta.robots || '',
       story: sections.story || '', goal: sections.goal || sections.intro || '', steps: sections.steps || '',
       hints: listItems(sections.hints || ''), further: sections.further || '', teacher: sections.teacher || '',

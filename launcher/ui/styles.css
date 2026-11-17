@@ -232,3 +232,9 @@ dialog::backdrop { background: rgba(28, 26, 41, .4); }
 [dir=rtl] .toast { left: calc(50% - 120px); }
 [dir=rtl] .splash-robot, [dir=rtl] .battery { direction: ltr; }
 [dir=rtl] .splash-glow.b { right: auto; left: -260px; }
+
+/* ---------- scripts Poppins does not cover ---------- */
+:lang(zh) body, :lang(zh) button, :lang(zh) input, :lang(zh) select { font-family: Poppins, "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", "Noto Sans SC", sans-serif; }
+:lang(ja) body, :lang(ja) button, :lang(ja) input, :lang(ja) select { font-family: Poppins, "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Noto Sans CJK JP", "Noto Sans JP", sans-serif; }
+:lang(he) body, :lang(ar) body { font-family: Poppins, "Segoe UI", "Noto Sans Hebrew", "Noto Sans Arabic", Tahoma, sans-serif; }
+:lang(zh) .eyebrow, :lang(ja) .eyebrow, :lang(he) .eyebrow, :lang(ar) .eyebrow { letter-spacing: 0; }

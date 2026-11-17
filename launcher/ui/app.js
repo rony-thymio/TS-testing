@@ -227,8 +227,10 @@
 
   let libraryMode = 'vpl3';
   let activities = null; // parsed activity.md files, loaded from the installation
+  let activityEntries = []; // the raw files, kept to re-read them in another language
   function loadActivities() {
     return invoke('list_activities').then((list) => {
+      activityEntries = list;
       activities = list.map((entry) => window.ActivityMd.parse(entry));
     }).catch((e) => { activities = []; toast(T('Could not read the activities: {e}', { e })); });
   }
@@ -254,7 +256,7 @@
     for (const a of list) {
       const card = document.createElement('div'); card.className = 'activity';
       card.innerHTML = `<span class="activity-tags"><span class="level-tag"></span><span class="age"></span></span>
-        <span class="activity-title"></span><span class="activity-desc"></span><span class="activity-needs"></span>
+        <span class="activity-title" dir="auto"></span><span class="activity-desc" dir="auto"></span><span class="activity-needs" dir="auto"></span>
         <span class="activity-actions"><button type="button" class="btn primary" data-k="challenge"></button>
         <button type="button" class="btn" data-k="read"></button><button type="button" class="btn" data-k="solution"></button></span>`;
       card.querySelector('[data-k=challenge]').textContent = T('Start');
@@ -456,6 +458,7 @@
   langSelect.addEventListener('change', () => window.I18N.setLang(langSelect.value));
   window.addEventListener('thymio-lang', () => {
     langSelect.value = window.I18N.lang();
+    if (activities) activities = activityEntries.map((entry) => window.ActivityMd.parse(entry));
     renderModes(); renderLibraryTabs(); renderRobots(); renderVersion();
     if (window.ThymioPairing) window.ThymioPairing.refresh();
   });

@@ -462,6 +462,8 @@ struct ActivityEntry {
     lang: String,
     id: String,
     md: String,
+    /// Translated texts from activity.<language>.md files (language code -> text).
+    translations: std::collections::BTreeMap<String, String>,
     files: Vec<String>,
 }
 
@@ -494,7 +496,16 @@ fn list_activities(app: tauri::AppHandle, window: WebviewWindow) -> Result<Vec<A
                 .map(|it| it.flatten().map(|f| f.file_name().to_string_lossy().to_string()).collect())
                 .unwrap_or_default();
             files.sort();
-            out.push(ActivityEntry { lang: lang_name.clone(), id, md, files });
+            let mut translations = std::collections::BTreeMap::new();
+            for f in &files {
+                if let Some(code) = f.strip_prefix("activity.").and_then(|r| r.strip_suffix(".md")) {
+                    let ok = (2..=5).contains(&code.len()) && code.chars().all(|c| c.is_ascii_alphanumeric() || c == '-');
+                    if ok {
+                        translations.insert(code.to_string(), fs::read_to_string(dir.path().join(f)).unwrap_or_default());
+                    }
+                }
+            }
+            out.push(ActivityEntry { lang: lang_name.clone(), id, md, translations, files });
         }
     }
     out.sort_by(|a, b| (a.lang.as_str(), a.id.as_str()).cmp(&(b.lang.as_str(), b.id.as_str())));

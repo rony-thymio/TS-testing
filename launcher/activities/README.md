@@ -6,6 +6,9 @@ One folder per activity: `activities/<language>/<NN-name>/`
 - `solution.<ext>` – the solution (`.vpl3`, `.sb3`, `.aesl` for Blockly and Aseba, `.py`).
   When several robots need different programs: `solution.<ext>` plus `solution-<name>.<ext>`.
 - Python only: `challenge.py` – the file students start from.
+- Translations: `activity.fr.md`, `activity.de.md`, `activity.it.md`… – the same file in another language.
+  Keep the front-matter keys and the `## …` section headings in English (the app translates them);
+  translate the values and the text. A missing translation falls back to `activity.md`.
 
 `activity.md` starts with:
 

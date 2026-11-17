@@ -7,7 +7,10 @@ window.THYMIO_I18N = {
 "it": "Home",
 "es": "Inicio",
 "ar": "الرئيسية",
-"pl": "Start"
+"pl": "Start",
+"he": "בית",
+"zh": "主页",
+"ja": "ホーム"
 },
 "Activity library": {
 "fr": "Bibliothèque d’activités",
@@ -15,7 +18,10 @@ window.THYMIO_I18N = {
 "it": "Libreria di attività",
 "es": "Biblioteca de actividades",
 "ar": "مكتبة الأنشطة",
-"pl": "Biblioteka zadań"
+"pl": "Biblioteka zadań",
+"he": "ספריית פעילויות",
+"zh": "活动库",
+"ja": "アクティビティ"
 },
 "Pair wireless robots": {
 "fr": "Appairer des robots sans fil",
@@ -23,7 +29,10 @@ window.THYMIO_I18N = {
 "it": "Associa robot wireless",
 "es": "Emparejar robots inalámbricos",
 "ar": "إقران الروبوتات اللاسلكية",
-"pl": "Parowanie robotów bezprzewodowych"
+"pl": "Parowanie robotów bezprzewodowych",
+"he": "צימוד רובוטים אלחוטיים",
+"zh": "配对无线机器人",
+"ja": "ワイヤレスロボットのペアリング"
 },
 "Help": {
 "fr": "Aide",
@@ -31,7 +40,10 @@ window.THYMIO_I18N = {
 "it": "Aiuto",
 "es": "Ayuda",
 "ar": "مساعدة",
-"pl": "Pomoc"
+"pl": "Pomoc",
+"he": "עזרה",
+"zh": "帮助",
+"ja": "ヘルプ"
 },
 "Language": {
 "fr": "Langue",
@@ -39,7 +51,10 @@ window.THYMIO_I18N = {
 "it": "Lingua",
 "es": "Idioma",
 "ar": "اللغة",
-"pl": "Język"
+"pl": "Język",
+"he": "שפה",
+"zh": "语言",
+"ja": "言語"
 },
 "Hello! Ready to program Thymio?": {
 "fr": "Bonjour ! Prêt à programmer Thymio ?",
@@ -47,7 +62,10 @@ window.THYMIO_I18N = {
 "it": "Ciao! Pronto a programmare Thymio?",
 "es": "¡Hola! ¿Listo para programar Thymio?",
 "ar": "مرحبًا! هل أنت مستعد لبرمجة ثيميو؟",
-"pl": "Cześć! Gotowy, by zaprogramować Thymio?"
+"pl": "Cześć! Gotowy, by zaprogramować Thymio?",
+"he": "שלום! מוכנים לתכנת את תימיו?",
+"zh": "你好！准备好给 Thymio 编程了吗？",
+"ja": "こんにちは！Thymio をプログラムしてみよう！"
 },
 "Choose your robot, then a way to program it. Everything runs on this computer, no internet needed.": {
 "fr": "Choisis ton robot, puis une façon de le programmer. Tout fonctionne sur cet ordinateur, sans internet.",
@@ -55,7 +73,10 @@ window.THYMIO_I18N = {
 "it": "Scegli il tuo robot, poi un modo per programmarlo. Tutto funziona su questo computer, senza internet.",
 "es": "Elige tu robot y después una forma de programarlo. Todo funciona en este ordenador, sin internet.",
 "ar": "اختر الروبوت، ثم طريقة لبرمجته. كل شيء يعمل على هذا الحاسوب، دون الحاجة إلى الإنترنت.",
-"pl": "Wybierz robota, a potem sposób programowania. Wszystko działa na tym komputerze, bez internetu."
+"pl": "Wybierz robota, a potem sposób programowania. Wszystko działa na tym komputerze, bez internetu.",
+"he": "בחרו רובוט, ואז דרך לתכנת אותו. הכול רץ על המחשב הזה, בלי צורך באינטרנט.",
+"zh": "先选择机器人，再选择编程方式。一切都在这台电脑上运行，无需联网。",
+"ja": "ロボットを選んで、プログラムの方法を選びましょう。すべてこのパソコンで動き、インターネットは不要です。"
 },
 "1 · Your robot": {
 "fr": "1 · Ton robot",
@@ -63,7 +84,10 @@ window.THYMIO_I18N = {
 "it": "1 · Il tuo robot",
 "es": "1 · Tu robot",
 "ar": "1 · الروبوت",
-"pl": "1 · Twój robot"
+"pl": "1 · Twój robot",
+"he": "1 · הרובוט שלכם",
+"zh": "1 · 你的机器人",
+"ja": "1 · ロボット"
 },
 "2 · How do you want to program {name}?": {
 "fr": "2 · Comment veux-tu programmer {name} ?",
@@ -71,7 +95,10 @@ window.THYMIO_I18N = {
 "it": "2 · Come vuoi programmare {name}?",
 "es": "2 · ¿Cómo quieres programar a {name}?",
 "ar": "2 · كيف تريد برمجة {name}؟",
-"pl": "2 · Jak chcesz zaprogramować robota {name}?"
+"pl": "2 · Jak chcesz zaprogramować robota {name}?",
+"he": "2 · איך תרצו לתכנת את {name}?",
+"zh": "2 · 你想怎样给 {name} 编程？",
+"ja": "2 · {name} をどうやってプログラムする？"
 },
 "2 · How do you want to program it?": {
 "fr": "2 · Comment veux-tu le programmer ?",
@@ -79,7 +106,10 @@ window.THYMIO_I18N = {
 "it": "2 · Come vuoi programmarlo?",
 "es": "2 · ¿Cómo quieres programarlo?",
 "ar": "2 · كيف تريد برمجته؟",
-"pl": "2 · Jak chcesz go zaprogramować?"
+"pl": "2 · Jak chcesz go zaprogramować?",
+"he": "2 · איך תרצו לתכנת אותו?",
+"zh": "2 · 你想用什么方式编程？",
+"ja": "2 · どうやってプログラムする？"
 },
 "Let's find your robot": {
 "fr": "Trouvons ton robot",
@@ -87,7 +117,10 @@ window.THYMIO_I18N = {
 "it": "Troviamo il tuo robot",
 "es": "Busquemos tu robot",
 "ar": "لنعثر على الروبوت",
-"pl": "Znajdźmy twojego robota"
+"pl": "Znajdźmy twojego robota",
+"he": "בואו נמצא את הרובוט שלכם",
+"zh": "一起找到你的机器人",
+"ja": "ロボットを探しましょう"
 },
 "Thymio Suite keeps looking. Check these in order; the list updates by itself.": {
 "fr": "Thymio Suite continue de chercher. Vérifie ces points dans l’ordre ; la liste se met à jour toute seule.",
@@ -95,7 +128,10 @@ window.THYMIO_I18N = {
 "it": "Thymio Suite continua a cercare. Controlla questi punti in ordine; l’elenco si aggiorna da solo.",
 "es": "Thymio Suite sigue buscando. Revisa estos puntos en orden; la lista se actualiza sola.",
 "ar": "يواصل Thymio Suite البحث. تحقّق من هذه النقاط بالترتيب؛ تتحدّث القائمة تلقائيًا.",
-"pl": "Thymio Suite wciąż szuka. Sprawdź te punkty po kolei; lista odświeża się sama."
+"pl": "Thymio Suite wciąż szuka. Sprawdź te punkty po kolei; lista odświeża się sama.",
+"he": "Thymio Suite ממשיך לחפש. בדקו את הנקודות לפי הסדר; הרשימה מתעדכנת מעצמה.",
+"zh": "Thymio Suite 会持续搜索。请按顺序检查以下几点，列表会自动更新。",
+"ja": "Thymio Suite は探し続けています。順番に確認してください。リストは自動で更新されます。"
 },
 "Connecting to the device manager…": {
 "fr": "Connexion au gestionnaire d’appareils…",
@@ -103,7 +139,10 @@ window.THYMIO_I18N = {
 "it": "Connessione al gestore dei dispositivi…",
 "es": "Conectando con el gestor de dispositivos…",
 "ar": "جارٍ الاتصال بمدير الأجهزة…",
-"pl": "Łączenie z menedżerem urządzeń…"
+"pl": "Łączenie z menedżerem urządzeń…",
+"he": "מתחבר למנהל ההתקנים…",
+"zh": "正在连接设备管理器…",
+"ja": "デバイスマネージャーに接続中…"
 },
 "Plug the robot in with its USB cable, or plug in the wireless dongle.": {
 "fr": "Branche le robot avec son câble USB, ou branche le dongle sans fil.",
@@ -111,7 +150,10 @@ window.THYMIO_I18N = {
 "it": "Collega il robot con il cavo USB, oppure inserisci la chiavetta wireless.",
 "es": "Conecta el robot con su cable USB o conecta el adaptador inalámbrico.",
 "ar": "وصّل الروبوت بكابل USB، أو وصّل المفتاح اللاسلكي (الدونجل).",
-"pl": "Podłącz robota kablem USB albo włóż klucz bezprzewodowy."
+"pl": "Podłącz robota kablem USB albo włóż klucz bezprzewodowy.",
+"he": "חברו את הרובוט בכבל ה-USB שלו, או חברו את הדונגל האלחוטי.",
+"zh": "用 USB 线连接机器人，或插入无线接收器。",
+"ja": "USB ケーブルでロボットをつなぐか、ワイヤレスドングルを差し込んでください。"
 },
 "Switch the robot on: press the centre button until the lights turn on. Wireless robots can take up to 20 seconds to appear.": {
 "fr": "Allume le robot : appuie sur le bouton central jusqu’à ce que les lumières s’allument. Un robot sans fil peut mettre jusqu’à 20 secondes à apparaître.",
@@ -119,7 +161,10 @@ window.THYMIO_I18N = {
 "it": "Accendi il robot: tieni premuto il pulsante centrale finché si accendono le luci. I robot wireless possono impiegare fino a 20 secondi.",
 "es": "Enciende el robot: mantén pulsado el botón central hasta que se enciendan las luces. Los robots inalámbricos pueden tardar hasta 20 segundos.",
 "ar": "شغّل الروبوت: اضغط على الزر الأوسط حتى تضيء الأنوار. قد يستغرق ظهور الروبوت اللاسلكي حتى 20 ثانية.",
-"pl": "Włącz robota: przytrzymaj środkowy przycisk, aż zapalą się światła. Robot bezprzewodowy może pojawić się dopiero po 20 sekundach."
+"pl": "Włącz robota: przytrzymaj środkowy przycisk, aż zapalą się światła. Robot bezprzewodowy może pojawić się dopiero po 20 sekundach.",
+"he": "הדליקו את הרובוט: לחצו על הכפתור המרכזי עד שהאורות נדלקים. רובוט אלחוטי עשוי להופיע רק אחרי 20 שניות.",
+"zh": "打开机器人：按住中间按钮直到灯亮起。无线机器人可能需要最多 20 秒才会出现。",
+"ja": "ロボットの電源を入れます：中央のボタンをライトがつくまで押してください。ワイヤレスロボットは表示まで最大 20 秒かかります。"
 },
 "Ready-made programs to start from. Open one, run it, then change it.": {
 "fr": "Des programmes prêts pour démarrer. Ouvre-en un, lance-le, puis modifie-le.",
@@ -127,7 +172,10 @@ window.THYMIO_I18N = {
 "it": "Programmi pronti da cui partire. Aprine uno, avvialo, poi modificalo.",
 "es": "Programas listos para empezar. Abre uno, ejecútalo y luego cámbialo.",
 "ar": "برامج جاهزة للبدء. افتح واحدًا وشغّله ثم عدّله.",
-"pl": "Gotowe programy na start. Otwórz, uruchom, a potem zmień."
+"pl": "Gotowe programy na start. Otwórz, uruchom, a potem zmień.",
+"he": "תוכניות מוכנות להתחלה. פתחו אחת, הריצו אותה ואז שנו אותה.",
+"zh": "现成的程序，帮你轻松起步。打开、运行，然后修改它。",
+"ja": "すぐに使えるプログラム。開いて、動かして、自分で変えてみよう。"
 },
 "Activities are on their way": {
 "fr": "Les activités arrivent bientôt",
@@ -135,7 +183,10 @@ window.THYMIO_I18N = {
 "it": "Le attività arriveranno presto",
 "es": "Las actividades llegarán pronto",
 "ar": "الأنشطة قادمة قريبًا",
-"pl": "Zadania już wkrótce"
+"pl": "Zadania już wkrótce",
+"he": "הפעילויות בדרך",
+"zh": "活动即将推出",
+"ja": "アクティビティは準備中です"
 },
 "Activities for this language arrive in a coming version. Meanwhile, the editor opens with a small example program.": {
 "fr": "Les activités pour ce langage arrivent dans une prochaine version. En attendant, l’éditeur s’ouvre avec un petit programme d’exemple.",
@@ -143,7 +194,10 @@ window.THYMIO_I18N = {
 "it": "Le attività per questo linguaggio arriveranno in una prossima versione. Intanto l’editor si apre con un piccolo programma di esempio.",
 "es": "Las actividades para este lenguaje llegarán en una próxima versión. Mientras tanto, el editor se abre con un pequeño programa de ejemplo.",
 "ar": "ستصل أنشطة هذه اللغة في إصدار قادم. حتى ذلك الحين، يفتح المحرّر ببرنامج مثال صغير.",
-"pl": "Zadania dla tego języka pojawią się w kolejnej wersji. Na razie edytor otwiera się z małym przykładowym programem."
+"pl": "Zadania dla tego języka pojawią się w kolejnej wersji. Na razie edytor otwiera się z małym przykładowym programem.",
+"he": "פעילויות לשפה זו יגיעו בגרסה הבאה. בינתיים, העורך נפתח עם תוכנית דוגמה קטנה.",
+"zh": "该语言的活动将在后续版本中推出。目前，编辑器会打开一个小示例程序。",
+"ja": "この言語のアクティビティは次のバージョンで追加されます。それまでは小さなサンプルプログラムでエディターが開きます。"
 },
 "Link a robot to a dongle once, then it connects by itself every time.": {
 "fr": "Associe une fois un robot à un dongle, ensuite il se connecte tout seul à chaque fois.",
@@ -151,7 +205,10 @@ window.THYMIO_I18N = {
 "it": "Associa una volta un robot a una chiavetta: poi si collegherà da solo ogni volta.",
 "es": "Vincula un robot a un adaptador una vez y después se conectará solo cada vez.",
 "ar": "اربط الروبوت بالدونجل مرة واحدة، وبعدها يتصل تلقائيًا في كل مرة.",
-"pl": "Połącz robota z kluczem raz, a potem będzie łączył się sam za każdym razem."
+"pl": "Połącz robota z kluczem raz, a potem będzie łączył się sam za każdym razem.",
+"he": "צמדו רובוט לדונגל פעם אחת, ומאז הוא יתחבר לבד בכל פעם.",
+"zh": "只需将机器人与接收器配对一次，之后每次都会自动连接。",
+"ja": "ロボットとドングルを一度ペアリングすれば、次からは自動で接続します。"
 },
 "What do you want to do?": {
 "fr": "Que veux-tu faire ?",
@@ -159,7 +216,10 @@ window.THYMIO_I18N = {
 "it": "Cosa vuoi fare?",
 "es": "¿Qué quieres hacer?",
 "ar": "ماذا تريد أن تفعل؟",
-"pl": "Co chcesz zrobić?"
+"pl": "Co chcesz zrobić?",
+"he": "מה תרצו לעשות?",
+"zh": "你想做什么？",
+"ja": "何をしますか？"
 },
 "One robot, one dongle": {
 "fr": "Un robot, un dongle",
@@ -167,7 +227,10 @@ window.THYMIO_I18N = {
 "it": "Un robot, una chiavetta",
 "es": "Un robot, un adaptador",
 "ar": "روبوت واحد، دونجل واحد",
-"pl": "Jeden robot, jeden klucz"
+"pl": "Jeden robot, jeden klucz",
+"he": "רובוט אחד, דונגל אחד",
+"zh": "一个机器人，一个接收器",
+"ja": "ロボット1台、ドングル1個"
 },
 "A private pair: this dongle only talks to this robot.": {
 "fr": "Une paire privée : ce dongle ne parle qu’à ce robot.",
@@ -175,7 +238,10 @@ window.THYMIO_I18N = {
 "it": "Una coppia privata: questa chiavetta parla solo con questo robot.",
 "es": "Una pareja privada: este adaptador solo habla con este robot.",
 "ar": "زوج خاص: هذا الدونجل يتواصل مع هذا الروبوت فقط.",
-"pl": "Prywatna para: ten klucz rozmawia tylko z tym robotem."
+"pl": "Prywatna para: ten klucz rozmawia tylko z tym robotem.",
+"he": "זוג פרטי: הדונגל הזה מדבר רק עם הרובוט הזה.",
+"zh": "专属配对：这个接收器只与这台机器人通信。",
+"ja": "専用ペア：このドングルはこのロボットとだけ通信します。"
 },
 "A classroom case: each robot with its own dongle": {
 "fr": "Une valise de classe : chaque robot avec son propre dongle",
@@ -183,7 +249,10 @@ window.THYMIO_I18N = {
 "it": "Una valigetta di classe: ogni robot con la sua chiavetta",
 "es": "Un maletín de clase: cada robot con su propio adaptador",
 "ar": "حقيبة صفّية: لكل روبوت دونجل خاص به",
-"pl": "Zestaw klasowy: każdy robot z własnym kluczem"
+"pl": "Zestaw klasowy: każdy robot z własnym kluczem",
+"he": "ערכת כיתה: לכל רובוט דונגל משלו",
+"zh": "教室套装：每台机器人配一个接收器",
+"ja": "クラスセット：ロボットごとに専用ドングル"
 },
 "Robot 1 with dongle 1, robot 2 with dongle 2… Each pair gets its own network.": {
 "fr": "Robot 1 avec dongle 1, robot 2 avec dongle 2… Chaque paire a son propre réseau.",
@@ -191,7 +260,10 @@ window.THYMIO_I18N = {
 "it": "Robot 1 con chiavetta 1, robot 2 con chiavetta 2… Ogni coppia ha la sua rete.",
 "es": "Robot 1 con adaptador 1, robot 2 con adaptador 2… Cada pareja tiene su propia red.",
 "ar": "الروبوت 1 مع الدونجل 1، والروبوت 2 مع الدونجل 2… لكل زوج شبكته الخاصة.",
-"pl": "Robot 1 z kluczem 1, robot 2 z kluczem 2… Każda para ma własną sieć."
+"pl": "Robot 1 z kluczem 1, robot 2 z kluczem 2… Każda para ma własną sieć.",
+"he": "רובוט 1 עם דונגל 1, רובוט 2 עם דונגל 2… לכל זוג רשת משלו.",
+"zh": "机器人 1 配接收器 1，机器人 2 配接收器 2……每一对都有自己的网络。",
+"ja": "ロボット1とドングル1、ロボット2とドングル2… ペアごとに専用のネットワークになります。"
 },
 "Several robots on one dongle": {
 "fr": "Plusieurs robots sur un dongle",
@@ -199,7 +271,10 @@ window.THYMIO_I18N = {
 "it": "Più robot su una chiavetta",
 "es": "Varios robots en un adaptador",
 "ar": "عدة روبوتات على دونجل واحد",
-"pl": "Kilka robotów na jednym kluczu"
+"pl": "Kilka robotów na jednym kluczu",
+"he": "כמה רובוטים על דונגל אחד",
+"zh": "多台机器人共用一个接收器",
+"ja": "複数のロボットを1つのドングルで"
 },
 "All robots join the dongle's network, so one computer sees them all (Aseba, Python).": {
 "fr": "Tous les robots rejoignent le réseau du dongle : un seul ordinateur les voit tous (Aseba, Python).",
@@ -207,7 +282,10 @@ window.THYMIO_I18N = {
 "it": "Tutti i robot entrano nella rete della chiavetta: un solo computer li vede tutti (Aseba, Python).",
 "es": "Todos los robots se unen a la red del adaptador, así un ordenador los ve a todos (Aseba, Python).",
 "ar": "تنضم كل الروبوتات إلى شبكة الدونجل، فيراها حاسوب واحد كلها (Aseba وPython).",
-"pl": "Wszystkie roboty dołączają do sieci klucza, więc jeden komputer widzi je wszystkie (Aseba, Python)."
+"pl": "Wszystkie roboty dołączają do sieci klucza, więc jeden komputer widzi je wszystkie (Aseba, Python).",
+"he": "כל הרובוטים מצטרפים לרשת של הדונגל, כך שמחשב אחד רואה את כולם (Aseba, Python).",
+"zh": "所有机器人加入同一个接收器网络，一台电脑即可看到全部机器人（Aseba、Python）。",
+"ja": "すべてのロボットがドングルのネットワークに入り、1台のパソコンで全部を扱えます（Aseba、Python）。"
 },
 "Pair a wireless robot": {
 "fr": "Appairer un robot sans fil",
@@ -215,7 +293,10 @@ window.THYMIO_I18N = {
 "it": "Associa un robot wireless",
 "es": "Emparejar un robot inalámbrico",
 "ar": "إقران روبوت لاسلكي",
-"pl": "Sparuj robota bezprzewodowego"
+"pl": "Sparuj robota bezprzewodowego",
+"he": "צימוד רובוט אלחוטי",
+"zh": "配对无线机器人",
+"ja": "ワイヤレスロボットをペアリング"
 },
 "Advanced: choose channel and network yourself": {
 "fr": "Avancé : choisir soi-même le canal et le réseau",
@@ -223,7 +304,10 @@ window.THYMIO_I18N = {
 "it": "Avanzate: scegli tu canale e rete",
 "es": "Avanzado: elige tú el canal y la red",
 "ar": "متقدّم: اختر القناة والشبكة بنفسك",
-"pl": "Zaawansowane: wybierz kanał i sieć samodzielnie"
+"pl": "Zaawansowane: wybierz kanał i sieć samodzielnie",
+"he": "מתקדם: בחירה ידנית של ערוץ ורשת",
+"zh": "高级：自行选择频道和网络",
+"ja": "詳細設定：チャンネルとネットワークを指定"
 },
 "Channel": {
 "fr": "Canal",
@@ -231,7 +315,10 @@ window.THYMIO_I18N = {
 "it": "Canale",
 "es": "Canal",
 "ar": "القناة",
-"pl": "Kanał"
+"pl": "Kanał",
+"he": "ערוץ",
+"zh": "频道",
+"ja": "チャンネル"
 },
 "Network (4 characters, 0–9 and A–F)": {
 "fr": "Réseau (4 caractères, 0–9 et A–F)",
@@ -239,7 +326,10 @@ window.THYMIO_I18N = {
 "it": "Rete (4 caratteri, 0–9 e A–F)",
 "es": "Red (4 caracteres, 0–9 y A–F)",
 "ar": "الشبكة (4 رموز، 0–9 وA–F)",
-"pl": "Sieć (4 znaki, 0–9 i A–F)"
+"pl": "Sieć (4 znaki, 0–9 i A–F)",
+"he": "רשת (4 תווים, 0–9 ו-A–F)",
+"zh": "网络（4 个字符，0–9 和 A–F）",
+"ja": "ネットワーク（4文字、0–9 と A–F）"
 },
 "e.g. 7C2A": {
 "fr": "ex. 7C2A",
@@ -247,7 +337,10 @@ window.THYMIO_I18N = {
 "it": "es. 7C2A",
 "es": "p. ej. 7C2A",
 "ar": "مثال: 7C2A",
-"pl": "np. 7C2A"
+"pl": "np. 7C2A",
+"he": "לדוגמה 7C2A",
+"zh": "例如 7C2A",
+"ja": "例：7C2A"
 },
 "Pair": {
 "fr": "Appairer",
@@ -255,7 +348,10 @@ window.THYMIO_I18N = {
 "it": "Associa",
 "es": "Emparejar",
 "ar": "إقران",
-"pl": "Sparuj"
+"pl": "Sparuj",
+"he": "צימוד",
+"zh": "配对",
+"ja": "ペアリング"
 },
 "While this screen is open, wireless robots are disconnected from the programming apps.": {
 "fr": "Tant que cet écran est ouvert, les robots sans fil sont déconnectés des applications de programmation.",
@@ -263,7 +359,10 @@ window.THYMIO_I18N = {
 "it": "Finché questa schermata è aperta, i robot wireless sono scollegati dalle app di programmazione.",
 "es": "Mientras esta pantalla esté abierta, los robots inalámbricos están desconectados de las aplicaciones de programación.",
 "ar": "ما دامت هذه الشاشة مفتوحة، تكون الروبوتات اللاسلكية مفصولة عن تطبيقات البرمجة.",
-"pl": "Dopóki ten ekran jest otwarty, roboty bezprzewodowe są odłączone od aplikacji do programowania."
+"pl": "Dopóki ten ekran jest otwarty, roboty bezprzewodowe są odłączone od aplikacji do programowania.",
+"he": "כל עוד המסך הזה פתוח, הרובוטים האלחוטיים מנותקים מיישומי התכנות.",
+"zh": "此页面打开期间，无线机器人会与编程应用断开连接。",
+"ja": "この画面を開いている間、ワイヤレスロボットはプログラミングアプリから切断されます。"
 },
 "Starting the device manager…": {
 "fr": "Démarrage du gestionnaire d’appareils…",
@@ -271,7 +370,10 @@ window.THYMIO_I18N = {
 "it": "Avvio del gestore dei dispositivi…",
 "es": "Iniciando el gestor de dispositivos…",
 "ar": "جارٍ تشغيل مدير الأجهزة…",
-"pl": "Uruchamianie menedżera urządzeń…"
+"pl": "Uruchamianie menedżera urządzeń…",
+"he": "מפעיל את מנהל ההתקנים…",
+"zh": "正在启动设备管理器…",
+"ja": "デバイスマネージャーを起動中…"
 },
 "Copy a report for support": {
 "fr": "Copier un rapport pour le support",
@@ -279,7 +381,10 @@ window.THYMIO_I18N = {
 "it": "Copia un rapporto per l’assistenza",
 "es": "Copiar un informe para soporte",
 "ar": "نسخ تقرير للدعم الفني",
-"pl": "Skopiuj raport dla pomocy technicznej"
+"pl": "Skopiuj raport dla pomocy technicznej",
+"he": "העתקת דוח לתמיכה",
+"zh": "复制报告给技术支持",
+"ja": "サポート用のレポートをコピー"
 },
 "Back": {
 "fr": "Retour",
@@ -287,7 +392,10 @@ window.THYMIO_I18N = {
 "it": "Indietro",
 "es": "Atrás",
 "ar": "رجوع",
-"pl": "Wstecz"
+"pl": "Wstecz",
+"he": "חזרה",
+"zh": "返回",
+"ja": "戻る"
 },
 "Open": {
 "fr": "Ouvrir",
@@ -295,7 +403,10 @@ window.THYMIO_I18N = {
 "it": "Apri",
 "es": "Abrir",
 "ar": "فتح",
-"pl": "Otwórz"
+"pl": "Otwórz",
+"he": "פתיחה",
+"zh": "打开",
+"ja": "開く"
 },
 "Access Thymio Lab": {
 "fr": "Accéder à Thymio Lab",
@@ -303,7 +414,10 @@ window.THYMIO_I18N = {
 "it": "Accedi a Thymio Lab",
 "es": "Acceder a Thymio Lab",
 "ar": "الدخول إلى Thymio Lab",
-"pl": "Przejdź do Thymio Lab"
+"pl": "Przejdź do Thymio Lab",
+"he": "כניסה ל-Thymio Lab",
+"zh": "进入 Thymio Lab",
+"ja": "Thymio Lab へ"
 },
 "The new way to program Thymio, by Mobsya": {
 "fr": "La nouvelle façon de programmer Thymio, par Mobsya",
@@ -311,7 +425,10 @@ window.THYMIO_I18N = {
 "it": "Il nuovo modo di programmare Thymio, by Mobsya",
 "es": "La nueva forma de programar Thymio, de Mobsya",
 "ar": "الطريقة الجديدة لبرمجة ثيميو، من Mobsya",
-"pl": "Nowy sposób programowania Thymio od Mobsya"
+"pl": "Nowy sposób programowania Thymio od Mobsya",
+"he": "הדרך החדשה לתכנת את תימיו, מבית Mobsya",
+"zh": "Mobsya 推出的 Thymio 全新编程方式",
+"ja": "Mobsya による Thymio の新しいプログラミング"
 },
 "Always the newest version, straight from Mobsya": {
 "fr": "Toujours la dernière version, directement de Mobsya",
@@ -319,7 +436,10 @@ window.THYMIO_I18N = {
 "it": "Sempre l’ultima versione, direttamente da Mobsya",
 "es": "Siempre la versión más reciente, directamente de Mobsya",
 "ar": "دائمًا أحدث إصدار، مباشرةً من Mobsya",
-"pl": "Zawsze najnowsza wersja, prosto od Mobsya"
+"pl": "Zawsze najnowsza wersja, prosto od Mobsya",
+"he": "תמיד הגרסה העדכנית ביותר, ישירות מ-Mobsya",
+"zh": "始终是最新版本，直接来自 Mobsya",
+"ja": "いつも最新版を Mobsya から直接"
 },
 "All you need is an internet connection": {
 "fr": "Il suffit d’une connexion internet",
@@ -327,7 +447,10 @@ window.THYMIO_I18N = {
 "it": "Basta una connessione internet",
 "es": "Solo necesitas conexión a internet",
 "ar": "كل ما تحتاجه اتصال بالإنترنت",
-"pl": "Wystarczy połączenie z internetem"
+"pl": "Wystarczy połączenie z internetem",
+"he": "כל מה שצריך הוא חיבור לאינטרנט",
+"zh": "只需要连接互联网",
+"ja": "必要なのはインターネット接続だけ"
 },
 "With your Thymio II, you can use:": {
 "fr": "Avec ton Thymio II, tu peux utiliser :",
@@ -335,7 +458,10 @@ window.THYMIO_I18N = {
 "it": "Con il tuo Thymio II puoi usare:",
 "es": "Con tu Thymio II puedes usar:",
 "ar": "مع Thymio II يمكنك استخدام:",
-"pl": "Z Thymio II możesz używać:"
+"pl": "Z Thymio II możesz używać:",
+"he": "עם ה-Thymio II שלכם אפשר להשתמש ב:",
+"zh": "你的 Thymio II 可以使用：",
+"ja": "Thymio II で使えるもの："
 },
 "Maybe later": {
 "fr": "Plus tard",
@@ -343,7 +469,10 @@ window.THYMIO_I18N = {
 "it": "Più tardi",
 "es": "Quizás más tarde",
 "ar": "ربما لاحقًا",
-"pl": "Może później"
+"pl": "Może później",
+"he": "אולי אחר כך",
+"zh": "以后再说",
+"ja": "あとで"
 },
 "Open Thymio Lab": {
 "fr": "Ouvrir Thymio Lab",
@@ -351,7 +480,10 @@ window.THYMIO_I18N = {
 "it": "Apri Thymio Lab",
 "es": "Abrir Thymio Lab",
 "ar": "فتح Thymio Lab",
-"pl": "Otwórz Thymio Lab"
+"pl": "Otwórz Thymio Lab",
+"he": "פתיחת Thymio Lab",
+"zh": "打开 Thymio Lab",
+"ja": "Thymio Lab を開く"
 },
 "Close": {
 "fr": "Fermer",
@@ -359,7 +491,10 @@ window.THYMIO_I18N = {
 "it": "Chiudi",
 "es": "Cerrar",
 "ar": "إغلاق",
-"pl": "Zamknij"
+"pl": "Zamknij",
+"he": "סגירה",
+"zh": "关闭",
+"ja": "閉じる"
 },
 "Show the solution?": {
 "fr": "Afficher la solution ?",
@@ -367,7 +502,10 @@ window.THYMIO_I18N = {
 "it": "Mostrare la soluzione?",
 "es": "¿Mostrar la solución?",
 "ar": "هل تريد عرض الحل؟",
-"pl": "Pokazać rozwiązanie?"
+"pl": "Pokazać rozwiązanie?",
+"he": "להציג את הפתרון?",
+"zh": "显示答案？",
+"ja": "答えを表示しますか？"
 },
 "It replaces the program in the open editor. Save your work first if you want to keep it.": {
 "fr": "Elle remplace le programme dans l’éditeur ouvert. Enregistre d’abord ton travail si tu veux le garder.",
@@ -375,7 +513,10 @@ window.THYMIO_I18N = {
 "it": "Sostituisce il programma nell’editor aperto. Salva prima il tuo lavoro se vuoi conservarlo.",
 "es": "Sustituye el programa del editor abierto. Guarda primero tu trabajo si quieres conservarlo.",
 "ar": "سيحلّ محل البرنامج في المحرّر المفتوح. احفظ عملك أولًا إن أردت الاحتفاظ به.",
-"pl": "Zastąpi program w otwartym edytorze. Najpierw zapisz swoją pracę, jeśli chcesz ją zachować."
+"pl": "Zastąpi program w otwartym edytorze. Najpierw zapisz swoją pracę, jeśli chcesz ją zachować.",
+"he": "הוא יחליף את התוכנית בעורך הפתוח. שמרו קודם את העבודה שלכם אם תרצו לשמור אותה.",
+"zh": "它会替换编辑器中当前的程序。如果想保留你的作品，请先保存。",
+"ja": "開いているエディターのプログラムが置き換わります。残したい場合は先に保存してください。"
 },
 "Cancel": {
 "fr": "Annuler",
@@ -383,7 +524,10 @@ window.THYMIO_I18N = {
 "it": "Annulla",
 "es": "Cancelar",
 "ar": "إلغاء",
-"pl": "Anuluj"
+"pl": "Anuluj",
+"he": "ביטול",
+"zh": "取消",
+"ja": "キャンセル"
 },
 "Replace with the solution": {
 "fr": "Remplacer par la solution",
@@ -391,7 +535,10 @@ window.THYMIO_I18N = {
 "it": "Sostituisci con la soluzione",
 "es": "Sustituir por la solución",
 "ar": "استبدال بالحل",
-"pl": "Zastąp rozwiązaniem"
+"pl": "Zastąp rozwiązaniem",
+"he": "החלפה בפתרון",
+"zh": "替换为答案",
+"ja": "答えに置き換える"
 },
 "Report for support": {
 "fr": "Rapport pour le support",
@@ -399,7 +546,10 @@ window.THYMIO_I18N = {
 "it": "Rapporto per l’assistenza",
 "es": "Informe para soporte",
 "ar": "تقرير للدعم الفني",
-"pl": "Raport dla pomocy technicznej"
+"pl": "Raport dla pomocy technicznej",
+"he": "דוח לתמיכה",
+"zh": "技术支持报告",
+"ja": "サポート用レポート"
 },
 "This text helps us understand a problem. It contains no personal files.": {
 "fr": "Ce texte nous aide à comprendre un problème. Il ne contient aucun fichier personnel.",
@@ -407,7 +557,10 @@ window.THYMIO_I18N = {
 "it": "Questo testo ci aiuta a capire un problema. Non contiene file personali.",
 "es": "Este texto nos ayuda a entender un problema. No contiene archivos personales.",
 "ar": "يساعدنا هذا النص على فهم المشكلة. لا يحتوي على ملفات شخصية.",
-"pl": "Ten tekst pomaga nam zrozumieć problem. Nie zawiera prywatnych plików."
+"pl": "Ten tekst pomaga nam zrozumieć problem. Nie zawiera prywatnych plików.",
+"he": "הטקסט הזה עוזר לנו להבין תקלה. הוא לא מכיל קבצים אישיים.",
+"zh": "这段文字帮助我们了解问题，不包含任何个人文件。",
+"ja": "このテキストは問題の把握に役立ちます。個人のファイルは含まれません。"
 },
 "Save to Desktop": {
 "fr": "Enregistrer sur le Bureau",
@@ -415,7 +568,10 @@ window.THYMIO_I18N = {
 "it": "Salva sulla Scrivania",
 "es": "Guardar en el Escritorio",
 "ar": "حفظ على سطح المكتب",
-"pl": "Zapisz na pulpicie"
+"pl": "Zapisz na pulpicie",
+"he": "שמירה בשולחן העבודה",
+"zh": "保存到桌面",
+"ja": "デスクトップに保存"
 },
 "Copy": {
 "fr": "Copier",
@@ -423,7 +579,10 @@ window.THYMIO_I18N = {
 "it": "Copia",
 "es": "Copiar",
 "ar": "نسخ",
-"pl": "Kopiuj"
+"pl": "Kopiuj",
+"he": "העתקה",
+"zh": "复制",
+"ja": "コピー"
 },
 "Update firmware": {
 "fr": "Mettre à jour le firmware",
@@ -431,7 +590,10 @@ window.THYMIO_I18N = {
 "it": "Aggiorna il firmware",
 "es": "Actualizar el firmware",
 "ar": "تحديث البرنامج الثابت",
-"pl": "Zaktualizuj firmware"
+"pl": "Zaktualizuj firmware",
+"he": "עדכון קושחה",
+"zh": "更新固件",
+"ja": "ファームウェアを更新"
 },
 "Firmware update progress": {
 "fr": "Progression de la mise à jour",
@@ -439,7 +601,10 @@ window.THYMIO_I18N = {
 "it": "Avanzamento dell’aggiornamento",
 "es": "Progreso de la actualización",
 "ar": "تقدّم التحديث",
-"pl": "Postęp aktualizacji"
+"pl": "Postęp aktualizacji",
+"he": "התקדמות עדכון הקושחה",
+"zh": "固件更新进度",
+"ja": "ファームウェア更新の進行状況"
 },
 "Do not unplug the robot. This takes about a minute.": {
 "fr": "Ne débranche pas le robot. Cela prend environ une minute.",
@@ -447,7 +612,10 @@ window.THYMIO_I18N = {
 "it": "Non scollegare il robot. Ci vuole circa un minuto.",
 "es": "No desconectes el robot. Tarda alrededor de un minuto.",
 "ar": "لا تفصل الروبوت. يستغرق ذلك نحو دقيقة.",
-"pl": "Nie odłączaj robota. To trwa około minuty."
+"pl": "Nie odłączaj robota. To trwa około minuty.",
+"he": "אל תנתקו את הרובוט. זה לוקח בערך דקה.",
+"zh": "请勿拔下机器人。大约需要一分钟。",
+"ja": "ロボットを外さないでください。約1分かかります。"
 },
 "Update": {
 "fr": "Mettre à jour",
@@ -455,7 +623,10 @@ window.THYMIO_I18N = {
 "it": "Aggiorna",
 "es": "Actualizar",
 "ar": "تحديث",
-"pl": "Aktualizuj"
+"pl": "Aktualizuj",
+"he": "עדכון",
+"zh": "更新",
+"ja": "更新"
 },
 "Open the challenge": {
 "fr": "Ouvrir le défi",
@@ -463,7 +634,10 @@ window.THYMIO_I18N = {
 "it": "Apri la sfida",
 "es": "Abrir el reto",
 "ar": "فتح التحدّي",
-"pl": "Otwórz wyzwanie"
+"pl": "Otwórz wyzwanie",
+"he": "פתיחת האתגר",
+"zh": "打开挑战",
+"ja": "チャレンジを開く"
 },
 "Fold to the side": {
 "fr": "Replier sur le côté",
@@ -471,7 +645,10 @@ window.THYMIO_I18N = {
 "it": "Riduci di lato",
 "es": "Plegar al lado",
 "ar": "طيّ إلى الجانب",
-"pl": "Zwiń na bok"
+"pl": "Zwiń na bok",
+"he": "קיפול לצד",
+"zh": "折叠到侧边",
+"ja": "横にたたむ"
 },
 "The story": {
 "fr": "L’histoire",
@@ -479,7 +656,10 @@ window.THYMIO_I18N = {
 "it": "La storia",
 "es": "La historia",
 "ar": "القصة",
-"pl": "Historia"
+"pl": "Historia",
+"he": "הסיפור",
+"zh": "故事",
+"ja": "ストーリー"
 },
 "Your goal": {
 "fr": "Ton objectif",
@@ -487,7 +667,10 @@ window.THYMIO_I18N = {
 "it": "Il tuo obiettivo",
 "es": "Tu objetivo",
 "ar": "هدفك",
-"pl": "Twój cel"
+"pl": "Twój cel",
+"he": "המטרה שלכם",
+"zh": "你的目标",
+"ja": "目標"
 },
 "Step by step": {
 "fr": "Pas à pas",
@@ -495,7 +678,10 @@ window.THYMIO_I18N = {
 "it": "Passo dopo passo",
 "es": "Paso a paso",
 "ar": "خطوة بخطوة",
-"pl": "Krok po kroku"
+"pl": "Krok po kroku",
+"he": "צעד אחר צעד",
+"zh": "一步一步来",
+"ja": "ステップ・バイ・ステップ"
 },
 "Hints": {
 "fr": "Indices",
@@ -503,7 +689,10 @@ window.THYMIO_I18N = {
 "it": "Suggerimenti",
 "es": "Pistas",
 "ar": "تلميحات",
-"pl": "Podpowiedzi"
+"pl": "Podpowiedzi",
+"he": "רמזים",
+"zh": "提示",
+"ja": "ヒント"
 },
 "Hints · {n} of {total}": {
 "fr": "Indices · {n} sur {total}",
@@ -511,7 +700,10 @@ window.THYMIO_I18N = {
 "it": "Suggerimenti · {n} di {total}",
 "es": "Pistas · {n} de {total}",
 "ar": "التلميحات · {n} من {total}",
-"pl": "Podpowiedzi · {n} z {total}"
+"pl": "Podpowiedzi · {n} z {total}",
+"he": "רמזים · {n} מתוך {total}",
+"zh": "提示 · 第 {n} 个，共 {total} 个",
+"ja": "ヒント · {n} / {total}"
 },
 "Show a hint": {
 "fr": "Afficher un indice",
@@ -519,7 +711,10 @@ window.THYMIO_I18N = {
 "it": "Mostra un suggerimento",
 "es": "Mostrar una pista",
 "ar": "اعرض تلميحًا",
-"pl": "Pokaż podpowiedź"
+"pl": "Pokaż podpowiedź",
+"he": "הצגת רמז",
+"zh": "显示提示",
+"ja": "ヒントを見る"
 },
 "Show hint {n}": {
 "fr": "Afficher l’indice {n}",
@@ -527,7 +722,10 @@ window.THYMIO_I18N = {
 "it": "Mostra il suggerimento {n}",
 "es": "Mostrar la pista {n}",
 "ar": "اعرض التلميح {n}",
-"pl": "Pokaż podpowiedź {n}"
+"pl": "Pokaż podpowiedź {n}",
+"he": "הצגת רמז {n}",
+"zh": "显示提示 {n}",
+"ja": "ヒント {n} を見る"
 },
 "To go further": {
 "fr": "Pour aller plus loin",
@@ -535,7 +733,10 @@ window.THYMIO_I18N = {
 "it": "Per andare oltre",
 "es": "Para ir más allá",
 "ar": "للتعمّق أكثر",
-"pl": "Dla chętnych"
+"pl": "Dla chętnych",
+"he": "להעמיק עוד",
+"zh": "进一步挑战",
+"ja": "もっとやってみよう"
 },
 "Show the solution": {
 "fr": "Afficher la solution",
@@ -543,7 +744,10 @@ window.THYMIO_I18N = {
 "it": "Mostra la soluzione",
 "es": "Mostrar la solución",
 "ar": "عرض الحل",
-"pl": "Pokaż rozwiązanie"
+"pl": "Pokaż rozwiązanie",
+"he": "הצגת הפתרון",
+"zh": "显示答案",
+"ja": "答えを表示"
 },
 "Opening the solution…": {
 "fr": "Ouverture de la solution…",
@@ -551,7 +755,10 @@ window.THYMIO_I18N = {
 "it": "Apertura della soluzione…",
 "es": "Abriendo la solución…",
 "ar": "جارٍ فتح الحل…",
-"pl": "Otwieranie rozwiązania…"
+"pl": "Otwieranie rozwiązania…",
+"he": "פותח את הפתרון…",
+"zh": "正在打开答案…",
+"ja": "答えを開いています…"
 },
 "Activity not found": {
 "fr": "Activité introuvable",
@@ -559,7 +766,10 @@ window.THYMIO_I18N = {
 "it": "Attività non trovata",
 "es": "Actividad no encontrada",
 "ar": "النشاط غير موجود",
-"pl": "Nie znaleziono zadania"
+"pl": "Nie znaleziono zadania",
+"he": "הפעילות לא נמצאה",
+"zh": "未找到该活动",
+"ja": "アクティビティが見つかりません"
 },
 "Challenge": {
 "fr": "Défi",
@@ -567,7 +777,10 @@ window.THYMIO_I18N = {
 "it": "Sfida",
 "es": "Reto",
 "ar": "التحدّي",
-"pl": "Wyzwanie"
+"pl": "Wyzwanie",
+"he": "אתגר",
+"zh": "挑战",
+"ja": "チャレンジ"
 },
 "The device manager is missing from the installation. Please reinstall Thymio Suite.": {
 "fr": "Le gestionnaire d’appareils manque dans l’installation. Réinstalle Thymio Suite.",
@@ -575,7 +788,10 @@ window.THYMIO_I18N = {
 "it": "Il gestore dei dispositivi manca nell’installazione. Reinstalla Thymio Suite.",
 "es": "Falta el gestor de dispositivos en la instalación. Vuelve a instalar Thymio Suite.",
 "ar": "مدير الأجهزة غير موجود في التثبيت. يُرجى إعادة تثبيت Thymio Suite.",
-"pl": "W instalacji brakuje menedżera urządzeń. Zainstaluj ponownie Thymio Suite."
+"pl": "W instalacji brakuje menedżera urządzeń. Zainstaluj ponownie Thymio Suite.",
+"he": "מנהל ההתקנים חסר בהתקנה. התקינו מחדש את Thymio Suite.",
+"zh": "安装中缺少设备管理器。请重新安装 Thymio Suite。",
+"ja": "デバイスマネージャーがインストールされていません。Thymio Suite を再インストールしてください。"
 },
 "The device manager could not start: {e}": {
 "fr": "Le gestionnaire d’appareils n’a pas pu démarrer : {e}",
@@ -583,7 +799,10 @@ window.THYMIO_I18N = {
 "it": "Il gestore dei dispositivi non è partito: {e}",
 "es": "El gestor de dispositivos no pudo iniciarse: {e}",
 "ar": "تعذّر تشغيل مدير الأجهزة: {e}",
-"pl": "Nie udało się uruchomić menedżera urządzeń: {e}"
+"pl": "Nie udało się uruchomić menedżera urządzeń: {e}",
+"he": "מנהל ההתקנים לא הצליח לפעול: {e}",
+"zh": "设备管理器无法启动：{e}",
+"ja": "デバイスマネージャーを起動できませんでした：{e}"
 },
 "The device manager stopped. Click \"Copy a report for support\" and send it to us.": {
 "fr": "Le gestionnaire d’appareils s’est arrêté. Clique sur « Copier un rapport pour le support » et envoie-le-nous.",
@@ -591,7 +810,10 @@ window.THYMIO_I18N = {
 "it": "Il gestore dei dispositivi si è fermato. Clicca su «Copia un rapporto per l’assistenza» e inviacelo.",
 "es": "El gestor de dispositivos se detuvo. Pulsa «Copiar un informe para soporte» y envíanoslo.",
 "ar": "توقّف مدير الأجهزة. انقر على «نسخ تقرير للدعم الفني» وأرسله إلينا.",
-"pl": "Menedżer urządzeń się zatrzymał. Kliknij „Skopiuj raport dla pomocy technicznej” i wyślij go nam."
+"pl": "Menedżer urządzeń się zatrzymał. Kliknij „Skopiuj raport dla pomocy technicznej” i wyślij go nam.",
+"he": "מנהל ההתקנים נעצר. לחצו על \"העתקת דוח לתמיכה\" ושלחו אותו אלינו.",
+"zh": "设备管理器已停止。请点击“复制报告给技术支持”并发送给我们。",
+"ja": "デバイスマネージャーが停止しました。「サポート用のレポートをコピー」を押して送ってください。"
 },
 "The device manager is running, but this window cannot reach it. Click \"Copy a report for support\" and send it to us.": {
 "fr": "Le gestionnaire d’appareils fonctionne, mais cette fenêtre ne l’atteint pas. Clique sur « Copier un rapport pour le support » et envoie-le-nous.",
@@ -599,7 +821,10 @@ window.THYMIO_I18N = {
 "it": "Il gestore dei dispositivi funziona, ma questa finestra non lo raggiunge. Clicca su «Copia un rapporto per l’assistenza» e inviacelo.",
 "es": "El gestor de dispositivos funciona, pero esta ventana no lo alcanza. Pulsa «Copiar un informe para soporte» y envíanoslo.",
 "ar": "مدير الأجهزة يعمل، لكن هذه النافذة لا تصل إليه. انقر على «نسخ تقرير للدعم الفني» وأرسله إلينا.",
-"pl": "Menedżer urządzeń działa, ale to okno nie może się z nim połączyć. Kliknij „Skopiuj raport dla pomocy technicznej” i wyślij go nam."
+"pl": "Menedżer urządzeń działa, ale to okno nie może się z nim połączyć. Kliknij „Skopiuj raport dla pomocy technicznej” i wyślij go nam.",
+"he": "מנהל ההתקנים פועל, אבל החלון הזה לא מצליח להגיע אליו. לחצו על \"העתקת דוח לתמיכה\" ושלחו אותו אלינו.",
+"zh": "设备管理器正在运行，但此窗口无法连接到它。请点击“复制报告给技术支持”并发送给我们。",
+"ja": "デバイスマネージャーは動いていますが、このウィンドウから接続できません。「サポート用のレポートをコピー」を押して送ってください。"
 },
 "Device manager running · Robots: {n}": {
 "fr": "Gestionnaire d’appareils actif · Robots : {n}",
@@ -607,7 +832,10 @@ window.THYMIO_I18N = {
 "it": "Gestore dei dispositivi attivo · Robot: {n}",
 "es": "Gestor de dispositivos activo · Robots: {n}",
 "ar": "مدير الأجهزة يعمل · الروبوتات: {n}",
-"pl": "Menedżer urządzeń działa · Roboty: {n}"
+"pl": "Menedżer urządzeń działa · Roboty: {n}",
+"he": "מנהל ההתקנים פועל · רובוטים: {n}",
+"zh": "设备管理器运行中 · 机器人：{n}",
+"ja": "デバイスマネージャー動作中 · ロボット：{n}"
 },
 "Device manager is running.": {
 "fr": "Le gestionnaire d’appareils fonctionne.",
@@ -615,7 +843,10 @@ window.THYMIO_I18N = {
 "it": "Il gestore dei dispositivi è attivo.",
 "es": "El gestor de dispositivos está funcionando.",
 "ar": "مدير الأجهزة يعمل.",
-"pl": "Menedżer urządzeń działa."
+"pl": "Menedżer urządzeń działa.",
+"he": "מנהל ההתקנים פועל.",
+"zh": "设备管理器正在运行。",
+"ja": "デバイスマネージャーは動作中です。"
 },
 "Charging": {
 "fr": "En charge",
@@ -623,7 +854,10 @@ window.THYMIO_I18N = {
 "it": "In carica",
 "es": "Cargando",
 "ar": "قيد الشحن",
-"pl": "Ładowanie"
+"pl": "Ładowanie",
+"he": "בטעינה",
+"zh": "充电中",
+"ja": "充電中"
 },
 "Battery full": {
 "fr": "Batterie pleine",
@@ -631,7 +865,10 @@ window.THYMIO_I18N = {
 "it": "Batteria carica",
 "es": "Batería llena",
 "ar": "البطارية ممتلئة",
-"pl": "Bateria pełna"
+"pl": "Bateria pełna",
+"he": "סוללה מלאה",
+"zh": "电量已满",
+"ja": "バッテリー満タン"
 },
 "Battery good": {
 "fr": "Batterie bonne",
@@ -639,7 +876,10 @@ window.THYMIO_I18N = {
 "it": "Batteria buona",
 "es": "Batería bien",
 "ar": "البطارية جيدة",
-"pl": "Bateria dobra"
+"pl": "Bateria dobra",
+"he": "סוללה טובה",
+"zh": "电量充足",
+"ja": "バッテリー良好"
 },
 "Battery low": {
 "fr": "Batterie faible",
@@ -647,7 +887,10 @@ window.THYMIO_I18N = {
 "it": "Batteria scarica",
 "es": "Batería baja",
 "ar": "البطارية منخفضة",
-"pl": "Słaba bateria"
+"pl": "Słaba bateria",
+"he": "סוללה חלשה",
+"zh": "电量低",
+"ja": "バッテリー残量わずか"
 },
 "Battery empty: charge it": {
 "fr": "Batterie vide : recharge-la",
@@ -655,7 +898,10 @@ window.THYMIO_I18N = {
 "it": "Batteria esaurita: ricaricala",
 "es": "Batería vacía: cárgala",
 "ar": "البطارية فارغة: اشحنها",
-"pl": "Bateria rozładowana: naładuj ją"
+"pl": "Bateria rozładowana: naładuj ją",
+"he": "הסוללה ריקה: טענו אותה",
+"zh": "电量耗尽：请充电",
+"ja": "バッテリー切れ：充電してください"
 },
 "Ready": {
 "fr": "Prêt",
@@ -663,7 +909,10 @@ window.THYMIO_I18N = {
 "it": "Pronto",
 "es": "Listo",
 "ar": "جاهز",
-"pl": "Gotowy"
+"pl": "Gotowy",
+"he": "מוכן",
+"zh": "就绪",
+"ja": "準備完了"
 },
 "In use here": {
 "fr": "Utilisé ici",
@@ -671,7 +920,10 @@ window.THYMIO_I18N = {
 "it": "In uso qui",
 "es": "En uso aquí",
 "ar": "مستخدم هنا",
-"pl": "Używany tutaj"
+"pl": "Używany tutaj",
+"he": "בשימוש כאן",
+"zh": "此处使用中",
+"ja": "ここで使用中"
 },
 "Busy": {
 "fr": "Occupé",
@@ -679,7 +931,10 @@ window.THYMIO_I18N = {
 "it": "Occupato",
 "es": "Ocupado",
 "ar": "مشغول",
-"pl": "Zajęty"
+"pl": "Zajęty",
+"he": "תפוס",
+"zh": "忙碌",
+"ja": "使用中"
 },
 "Connecting…": {
 "fr": "Connexion…",
@@ -687,7 +942,10 @@ window.THYMIO_I18N = {
 "it": "Connessione…",
 "es": "Conectando…",
 "ar": "جارٍ الاتصال…",
-"pl": "Łączenie…"
+"pl": "Łączenie…",
+"he": "מתחבר…",
+"zh": "正在连接…",
+"ja": "接続中…"
 },
 "Unknown": {
 "fr": "Inconnu",
@@ -695,7 +953,10 @@ window.THYMIO_I18N = {
 "it": "Sconosciuto",
 "es": "Desconocido",
 "ar": "غير معروف",
-"pl": "Nieznany"
+"pl": "Nieznany",
+"he": "לא ידוע",
+"zh": "未知",
+"ja": "不明"
 },
 "New robot name": {
 "fr": "Nouveau nom du robot",
@@ -703,7 +964,10 @@ window.THYMIO_I18N = {
 "it": "Nuovo nome del robot",
 "es": "Nuevo nombre del robot",
 "ar": "اسم الروبوت الجديد",
-"pl": "Nowa nazwa robota"
+"pl": "Nowa nazwa robota",
+"he": "שם חדש לרובוט",
+"zh": "新的机器人名称",
+"ja": "新しいロボット名"
 },
 "Renamed to {name}": {
 "fr": "Renommé en {name}",
@@ -711,7 +975,10 @@ window.THYMIO_I18N = {
 "it": "Rinominato in {name}",
 "es": "Renombrado como {name}",
 "ar": "تمت إعادة التسمية إلى {name}",
-"pl": "Zmieniono nazwę na {name}"
+"pl": "Zmieniono nazwę na {name}",
+"he": "השם שונה ל-{name}",
+"zh": "已重命名为 {name}",
+"ja": "{name} に名前を変更しました"
 },
 "Could not rename this robot.": {
 "fr": "Impossible de renommer ce robot.",
@@ -719,7 +986,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile rinominare questo robot.",
 "es": "No se pudo renombrar este robot.",
 "ar": "تعذّرت إعادة تسمية هذا الروبوت.",
-"pl": "Nie udało się zmienić nazwy robota."
+"pl": "Nie udało się zmienić nazwy robota.",
+"he": "לא ניתן לשנות את שם הרובוט.",
+"zh": "无法重命名此机器人。",
+"ja": "このロボットの名前を変更できませんでした。"
 },
 "Wireless": {
 "fr": "Sans fil",
@@ -727,7 +997,10 @@ window.THYMIO_I18N = {
 "it": "Wireless",
 "es": "Inalámbrico",
 "ar": "لاسلكي",
-"pl": "Bezprzewodowy"
+"pl": "Bezprzewodowy",
+"he": "אלחוטי",
+"zh": "无线",
+"ja": "ワイヤレス"
 },
 "Simulated": {
 "fr": "Simulé",
@@ -735,7 +1008,10 @@ window.THYMIO_I18N = {
 "it": "Simulato",
 "es": "Simulado",
 "ar": "محاكى",
-"pl": "Symulowany"
+"pl": "Symulowany",
+"he": "מדומה",
+"zh": "模拟",
+"ja": "シミュレーション"
 },
 "USB cable": {
 "fr": "Câble USB",
@@ -743,7 +1019,10 @@ window.THYMIO_I18N = {
 "it": "Cavo USB",
 "es": "Cable USB",
 "ar": "كابل USB",
-"pl": "Kabel USB"
+"pl": "Kabel USB",
+"he": "כבל USB",
+"zh": "USB 线",
+"ja": "USB ケーブル"
 },
 "firmware {v}": {
 "fr": "firmware {v}",
@@ -751,7 +1030,10 @@ window.THYMIO_I18N = {
 "it": "firmware {v}",
 "es": "firmware {v}",
 "ar": "البرنامج الثابت {v}",
-"pl": "firmware {v}"
+"pl": "firmware {v}",
+"he": "קושחה {v}",
+"zh": "固件 {v}",
+"ja": "ファームウェア {v}"
 },
 "Rename": {
 "fr": "Renommer",
@@ -759,7 +1041,10 @@ window.THYMIO_I18N = {
 "it": "Rinomina",
 "es": "Renombrar",
 "ar": "إعادة تسمية",
-"pl": "Zmień nazwę"
+"pl": "Zmień nazwę",
+"he": "שינוי שם",
+"zh": "重命名",
+"ja": "名前を変更"
 },
 "Update firmware to {v}": {
 "fr": "Mettre à jour le firmware en {v}",
@@ -767,7 +1052,10 @@ window.THYMIO_I18N = {
 "it": "Aggiorna il firmware a {v}",
 "es": "Actualizar el firmware a {v}",
 "ar": "تحديث البرنامج الثابت إلى {v}",
-"pl": "Zaktualizuj firmware do {v}"
+"pl": "Zaktualizuj firmware do {v}",
+"he": "עדכון קושחה ל-{v}",
+"zh": "将固件更新到 {v}",
+"ja": "ファームウェアを {v} に更新"
 },
 "Reinstall firmware (repair)": {
 "fr": "Réinstaller le firmware (réparer)",
@@ -775,7 +1063,10 @@ window.THYMIO_I18N = {
 "it": "Reinstalla il firmware (riparazione)",
 "es": "Reinstalar el firmware (reparar)",
 "ar": "إعادة تثبيت البرنامج الثابت (إصلاح)",
-"pl": "Zainstaluj firmware ponownie (naprawa)"
+"pl": "Zainstaluj firmware ponownie (naprawa)",
+"he": "התקנה מחדש של הקושחה (תיקון)",
+"zh": "重新安装固件（修复）",
+"ja": "ファームウェアを再インストール（修復）"
 },
 "⋯ More": {
 "fr": "⋯ Plus",
@@ -783,7 +1074,10 @@ window.THYMIO_I18N = {
 "it": "⋯ Altro",
 "es": "⋯ Más",
 "ar": "⋯ المزيد",
-"pl": "⋯ Więcej"
+"pl": "⋯ Więcej",
+"he": "⋯ עוד",
+"zh": "⋯ 更多",
+"ja": "⋯ その他"
 },
 "· {n} found": {
 "fr": "· {n} trouvés",
@@ -791,7 +1085,10 @@ window.THYMIO_I18N = {
 "it": "· {n} trovati",
 "es": "· {n} encontrados",
 "ar": "· تم العثور على {n}",
-"pl": "· znaleziono: {n}"
+"pl": "· znaleziono: {n}",
+"he": "· נמצאו {n}",
+"zh": "· 找到 {n} 台",
+"ja": "· {n} 台見つかりました"
 },
 "{names}: firmware {v} is available. Wireless robots must be plugged in with the USB cable to update.": {
 "fr": "{names} : le firmware {v} est disponible. Les robots sans fil doivent être branchés avec le câble USB pour la mise à jour.",
@@ -799,7 +1096,10 @@ window.THYMIO_I18N = {
 "it": "{names}: è disponibile il firmware {v}. I robot wireless devono essere collegati con il cavo USB per l’aggiornamento.",
 "es": "{names}: el firmware {v} está disponible. Los robots inalámbricos deben conectarse con el cable USB para actualizarse.",
 "ar": "{names}: يتوفّر البرنامج الثابت {v}. يجب توصيل الروبوتات اللاسلكية بكابل USB لتحديثها.",
-"pl": "{names}: dostępny jest firmware {v}. Roboty bezprzewodowe trzeba podłączyć kablem USB, aby je zaktualizować."
+"pl": "{names}: dostępny jest firmware {v}. Roboty bezprzewodowe trzeba podłączyć kablem USB, aby je zaktualizować.",
+"he": "{names}: קושחה {v} זמינה. כדי לעדכן רובוטים אלחוטיים יש לחבר אותם בכבל USB.",
+"zh": "{names}：固件 {v} 可用。无线机器人需用 USB 线连接后才能更新。",
+"ja": "{names}：ファームウェア {v} が利用できます。ワイヤレスロボットは USB ケーブルでつないで更新してください。"
 },
 "Ages {n}+": {
 "fr": "{n} ans et +",
@@ -807,7 +1107,10 @@ window.THYMIO_I18N = {
 "it": "Dai {n} anni",
 "es": "Desde {n} años",
 "ar": "من {n} سنوات فأكثر",
-"pl": "Od {n} lat"
+"pl": "Od {n} lat",
+"he": "מגיל {n}",
+"zh": "{n} 岁以上",
+"ja": "{n} 歳以上"
 },
 "Coming in a later version": {
 "fr": "Disponible dans une prochaine version",
@@ -815,7 +1118,10 @@ window.THYMIO_I18N = {
 "it": "In arrivo in una prossima versione",
 "es": "Llegará en una versión posterior",
 "ar": "قادم في إصدار لاحق",
-"pl": "W kolejnej wersji"
+"pl": "W kolejnej wersji",
+"he": "יגיע בגרסה מאוחרת יותר",
+"zh": "将在后续版本中推出",
+"ja": "今後のバージョンで対応"
 },
 "Program with pictures: when this happens, do that.": {
 "fr": "Programmer avec des images : quand ceci arrive, fais cela.",
@@ -823,7 +1129,10 @@ window.THYMIO_I18N = {
 "it": "Programmare con le immagini: quando succede questo, fai quello.",
 "es": "Programar con imágenes: cuando pase esto, haz aquello.",
 "ar": "البرمجة بالصور: عندما يحدث هذا، افعل ذاك.",
-"pl": "Programowanie obrazkami: gdy stanie się to, zrób tamto."
+"pl": "Programowanie obrazkami: gdy stanie się to, zrób tamto.",
+"he": "תכנות בתמונות: כשזה קורה, עשו את זה.",
+"zh": "用图片编程：当这件事发生时，就做那件事。",
+"ja": "絵でプログラム：これが起きたら、あれをする。"
 },
 "The newer picture language, great on touch screens.": {
 "fr": "Le nouveau langage en images, idéal sur écran tactile.",
@@ -831,7 +1140,10 @@ window.THYMIO_I18N = {
 "it": "Il nuovo linguaggio a immagini, perfetto sui touch screen.",
 "es": "El nuevo lenguaje de imágenes, ideal en pantallas táctiles.",
 "ar": "لغة الصور الأحدث، رائعة على الشاشات اللمسية.",
-"pl": "Nowszy język obrazkowy, świetny na ekranach dotykowych."
+"pl": "Nowszy język obrazkowy, świetny na ekranach dotykowych.",
+"he": "שפת התמונות החדשה, מצוינת למסכי מגע.",
+"zh": "更新的图片编程语言，非常适合触摸屏。",
+"ja": "新しい絵のプログラミング言語。タッチ画面にぴったり。"
 },
 "The popular block language, with Thymio blocks.": {
 "fr": "Le célèbre langage à blocs, avec des blocs Thymio.",
@@ -839,7 +1151,10 @@ window.THYMIO_I18N = {
 "it": "Il famoso linguaggio a blocchi, con i blocchi Thymio.",
 "es": "El popular lenguaje de bloques, con bloques de Thymio.",
 "ar": "لغة الكتل الشهيرة، مع كتل خاصة بثيميو.",
-"pl": "Popularny język bloków, z blokami Thymio."
+"pl": "Popularny język bloków, z blokami Thymio.",
+"he": "שפת הבלוקים הפופולרית, עם בלוקים של תימיו.",
+"zh": "广受欢迎的积木编程语言，附带 Thymio 积木。",
+"ja": "人気のブロック言語に Thymio 用ブロックつき。"
 },
 "Puzzle blocks that also show the text code.": {
 "fr": "Des blocs puzzle qui montrent aussi le code texte.",
@@ -847,7 +1162,10 @@ window.THYMIO_I18N = {
 "it": "Blocchi a incastro che mostrano anche il codice testuale.",
 "es": "Bloques de puzle que también muestran el código de texto.",
 "ar": "كتل على شكل أحجية تُظهر أيضًا الشيفرة النصية.",
-"pl": "Bloki-puzzle, które pokazują też kod tekstowy."
+"pl": "Bloki-puzzle, które pokazują też kod tekstowy.",
+"he": "בלוקי פאזל שמציגים גם את הקוד הטקסטואלי.",
+"zh": "拼图式积木，同时显示文字代码。",
+"ja": "テキストのコードも見えるパズル型ブロック。"
 },
 "Write text code and watch the sensors live.": {
 "fr": "Écrire du code texte et voir les capteurs en direct.",
@@ -855,7 +1173,10 @@ window.THYMIO_I18N = {
 "it": "Scrivi codice testuale e osserva i sensori in tempo reale.",
 "es": "Escribe código de texto y observa los sensores en directo.",
 "ar": "اكتب شيفرة نصية وراقب المستشعرات مباشرةً.",
-"pl": "Pisz kod tekstowy i obserwuj czujniki na żywo."
+"pl": "Pisz kod tekstowy i obserwuj czujniki na żywo.",
+"he": "כתבו קוד טקסטואלי וצפו בחיישנים בזמן אמת.",
+"zh": "编写文字代码，实时查看传感器数据。",
+"ja": "テキストでコードを書き、センサーをリアルタイムで確認。"
 },
 "Real Python code, written in the Thonny editor.": {
 "fr": "Du vrai code Python, écrit dans l’éditeur Thonny.",
@@ -863,7 +1184,10 @@ window.THYMIO_I18N = {
 "it": "Vero codice Python, scritto nell’editor Thonny.",
 "es": "Código Python de verdad, escrito en el editor Thonny.",
 "ar": "شيفرة Python حقيقية تُكتب في محرّر Thonny.",
-"pl": "Prawdziwy kod Python pisany w edytorze Thonny."
+"pl": "Prawdziwy kod Python pisany w edytorze Thonny.",
+"he": "קוד Python אמיתי, שנכתב בעורך Thonny.",
+"zh": "在 Thonny 编辑器中编写真正的 Python 代码。",
+"ja": "Thonny エディターで書く本物の Python コード。"
 },
 "Python via Thonny": {
 "fr": "Python avec Thonny",
@@ -871,7 +1195,10 @@ window.THYMIO_I18N = {
 "it": "Python con Thonny",
 "es": "Python con Thonny",
 "ar": "Python عبر Thonny",
-"pl": "Python w Thonny"
+"pl": "Python w Thonny",
+"he": "Python עם Thonny",
+"zh": "Python（Thonny）",
+"ja": "Python（Thonny）"
 },
 "Start": {
 "fr": "Commencer",
@@ -879,7 +1206,10 @@ window.THYMIO_I18N = {
 "it": "Inizia",
 "es": "Empezar",
 "ar": "ابدأ",
-"pl": "Start"
+"pl": "Start",
+"he": "התחלה",
+"zh": "开始",
+"ja": "はじめる"
 },
 "Solution": {
 "fr": "Solution",
@@ -887,7 +1217,10 @@ window.THYMIO_I18N = {
 "it": "Soluzione",
 "es": "Solución",
 "ar": "الحل",
-"pl": "Rozwiązanie"
+"pl": "Rozwiązanie",
+"he": "פתרון",
+"zh": "答案",
+"ja": "答え"
 },
 "Could not read the activities: {e}": {
 "fr": "Impossible de lire les activités : {e}",
@@ -895,7 +1228,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile leggere le attività: {e}",
 "es": "No se pudieron leer las actividades: {e}",
 "ar": "تعذّرت قراءة الأنشطة: {e}",
-"pl": "Nie udało się odczytać zadań: {e}"
+"pl": "Nie udało się odczytać zadań: {e}",
+"he": "לא ניתן לקרוא את הפעילויות: {e}",
+"zh": "无法读取活动：{e}",
+"ja": "アクティビティを読み込めませんでした：{e}"
 },
 "Could not open the challenge: {e}": {
 "fr": "Impossible d’ouvrir le défi : {e}",
@@ -903,7 +1239,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile aprire la sfida: {e}",
 "es": "No se pudo abrir el reto: {e}",
 "ar": "تعذّر فتح التحدّي: {e}",
-"pl": "Nie udało się otworzyć wyzwania: {e}"
+"pl": "Nie udało się otworzyć wyzwania: {e}",
+"he": "לא ניתן לפתוח את האתגר: {e}",
+"zh": "无法打开挑战：{e}",
+"ja": "チャレンジを開けませんでした：{e}"
 },
 "Thonny is opening {file} (in Documents › Thymio Suite › Activities)": {
 "fr": "Thonny ouvre {file} (dans Documents › Thymio Suite › Activities)",
@@ -911,7 +1250,10 @@ window.THYMIO_I18N = {
 "it": "Thonny sta aprendo {file} (in Documenti › Thymio Suite › Activities)",
 "es": "Thonny está abriendo {file} (en Documentos › Thymio Suite › Activities)",
 "ar": "يفتح Thonny الملف {file} (في المستندات › Thymio Suite › Activities)",
-"pl": "Thonny otwiera {file} (w Dokumenty › Thymio Suite › Activities)"
+"pl": "Thonny otwiera {file} (w Dokumenty › Thymio Suite › Activities)",
+"he": "Thonny פותח את {file} (במסמכים › Thymio Suite › Activities)",
+"zh": "Thonny 正在打开 {file}（位于 文档 › Thymio Suite › Activities）",
+"ja": "Thonny で {file} を開いています（ドキュメント › Thymio Suite › Activities）"
 },
 "Choose a robot first, on the Home page.": {
 "fr": "Choisis d’abord un robot, sur la page d’accueil.",
@@ -919,7 +1261,10 @@ window.THYMIO_I18N = {
 "it": "Scegli prima un robot, nella pagina Home.",
 "es": "Elige primero un robot en la página de inicio.",
 "ar": "اختر روبوتًا أولًا من الصفحة الرئيسية.",
-"pl": "Najpierw wybierz robota na stronie Start."
+"pl": "Najpierw wybierz robota na stronie Start.",
+"he": "בחרו קודם רובוט, בדף הבית.",
+"zh": "请先在主页选择一台机器人。",
+"ja": "まずホーム画面でロボットを選んでください。"
 },
 "Could not open {app}: {e}": {
 "fr": "Impossible d’ouvrir {app} : {e}",
@@ -927,7 +1272,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile aprire {app}: {e}",
 "es": "No se pudo abrir {app}: {e}",
 "ar": "تعذّر فتح {app}: {e}",
-"pl": "Nie udało się otworzyć {app}: {e}"
+"pl": "Nie udało się otworzyć {app}: {e}",
+"he": "לא ניתן לפתוח את {app}: {e}",
+"zh": "无法打开 {app}：{e}",
+"ja": "{app} を開けませんでした：{e}"
 },
 "solution": {
 "fr": "solution",
@@ -935,7 +1283,10 @@ window.THYMIO_I18N = {
 "it": "soluzione",
 "es": "solución",
 "ar": "الحل",
-"pl": "rozwiązanie"
+"pl": "rozwiązanie",
+"he": "פתרון",
+"zh": "答案",
+"ja": "答え"
 },
 "{app} is not in this test version yet.": {
 "fr": "{app} n’est pas encore dans cette version de test.",
@@ -943,7 +1294,10 @@ window.THYMIO_I18N = {
 "it": "{app} non è ancora in questa versione di prova.",
 "es": "{app} aún no está en esta versión de prueba.",
 "ar": "{app} غير متوفر بعد في هذا الإصدار التجريبي.",
-"pl": "{app} nie ma jeszcze w tej wersji testowej."
+"pl": "{app} nie ma jeszcze w tej wersji testowej.",
+"he": "{app} עדיין לא קיים בגרסת הבדיקה הזו.",
+"zh": "此测试版本中暂时没有 {app}。",
+"ja": "{app} はこのテスト版にはまだありません。"
 },
 "Choose a robot first (step 1).": {
 "fr": "Choisis d’abord un robot (étape 1).",
@@ -951,7 +1305,10 @@ window.THYMIO_I18N = {
 "it": "Scegli prima un robot (passo 1).",
 "es": "Elige primero un robot (paso 1).",
 "ar": "اختر روبوتًا أولًا (الخطوة 1).",
-"pl": "Najpierw wybierz robota (krok 1)."
+"pl": "Najpierw wybierz robota (krok 1).",
+"he": "בחרו קודם רובוט (שלב 1).",
+"zh": "请先选择机器人（第 1 步）。",
+"ja": "まずロボットを選んでください（ステップ1）。"
 },
 "Open Thonny": {
 "fr": "Ouvrir Thonny",
@@ -959,7 +1316,10 @@ window.THYMIO_I18N = {
 "it": "Apri Thonny",
 "es": "Abrir Thonny",
 "ar": "فتح Thonny",
-"pl": "Otwórz Thonny"
+"pl": "Otwórz Thonny",
+"he": "פתיחת Thonny",
+"zh": "打开 Thonny",
+"ja": "Thonny を開く"
 },
 "Open with {name}": {
 "fr": "Ouvrir avec {name}",
@@ -967,7 +1327,10 @@ window.THYMIO_I18N = {
 "it": "Apri con {name}",
 "es": "Abrir con {name}",
 "ar": "فتح مع {name}",
-"pl": "Otwórz z robotem {name}"
+"pl": "Otwórz z robotem {name}",
+"he": "פתיחה עם {name}",
+"zh": "用 {name} 打开",
+"ja": "{name} で開く"
 },
 "Thonny is starting… (the first start can take a few seconds)": {
 "fr": "Thonny démarre… (le premier démarrage peut prendre quelques secondes)",
@@ -975,7 +1338,10 @@ window.THYMIO_I18N = {
 "it": "Thonny si sta avviando… (il primo avvio può richiedere qualche secondo)",
 "es": "Thonny se está iniciando… (la primera vez puede tardar unos segundos)",
 "ar": "يبدأ Thonny… (قد يستغرق التشغيل الأول بضع ثوانٍ)",
-"pl": "Thonny się uruchamia… (pierwsze uruchomienie może potrwać kilka sekund)"
+"pl": "Thonny się uruchamia… (pierwsze uruchomienie może potrwać kilka sekund)",
+"he": "Thonny נפתח… (בפעם הראשונה זה עשוי לקחת כמה שניות)",
+"zh": "Thonny 正在启动…（首次启动可能需要几秒钟）",
+"ja": "Thonny を起動中…（初回は数秒かかることがあります）"
 },
 "Collecting…": {
 "fr": "Collecte…",
@@ -983,7 +1349,10 @@ window.THYMIO_I18N = {
 "it": "Raccolta in corso…",
 "es": "Recopilando…",
 "ar": "جارٍ الجمع…",
-"pl": "Zbieranie…"
+"pl": "Zbieranie…",
+"he": "אוסף…",
+"zh": "正在收集…",
+"ja": "収集中…"
 },
 "Report copied. Paste it into your message to support.": {
 "fr": "Rapport copié. Colle-le dans ton message au support.",
@@ -991,7 +1360,10 @@ window.THYMIO_I18N = {
 "it": "Rapporto copiato. Incollalo nel tuo messaggio all’assistenza.",
 "es": "Informe copiado. Pégalo en tu mensaje a soporte.",
 "ar": "تم نسخ التقرير. الصقه في رسالتك إلى الدعم الفني.",
-"pl": "Raport skopiowany. Wklej go do wiadomości do pomocy technicznej."
+"pl": "Raport skopiowany. Wklej go do wiadomości do pomocy technicznej.",
+"he": "הדוח הועתק. הדביקו אותו בהודעה שלכם לתמיכה.",
+"zh": "报告已复制。请粘贴到发给技术支持的消息中。",
+"ja": "レポートをコピーしました。サポートへのメッセージに貼り付けてください。"
 },
 "Select the text and press Ctrl+C (Cmd+C on Mac).": {
 "fr": "Sélectionne le texte et appuie sur Ctrl+C (Cmd+C sur Mac).",
@@ -999,7 +1371,10 @@ window.THYMIO_I18N = {
 "it": "Seleziona il testo e premi Ctrl+C (Cmd+C su Mac).",
 "es": "Selecciona el texto y pulsa Ctrl+C (Cmd+C en Mac).",
 "ar": "حدّد النص واضغط Ctrl+C (أو Cmd+C على Mac).",
-"pl": "Zaznacz tekst i naciśnij Ctrl+C (Cmd+C na Macu)."
+"pl": "Zaznacz tekst i naciśnij Ctrl+C (Cmd+C na Macu).",
+"he": "סמנו את הטקסט ולחצו Ctrl+C (Cmd+C ב-Mac).",
+"zh": "选中文字后按 Ctrl+C（Mac 上为 Cmd+C）。",
+"ja": "テキストを選んで Ctrl+C（Mac は Cmd+C）を押してください。"
 },
 "Saved: {path}": {
 "fr": "Enregistré : {path}",
@@ -1007,7 +1382,10 @@ window.THYMIO_I18N = {
 "it": "Salvato: {path}",
 "es": "Guardado: {path}",
 "ar": "تم الحفظ: {path}",
-"pl": "Zapisano: {path}"
+"pl": "Zapisano: {path}",
+"he": "נשמר: {path}",
+"zh": "已保存：{path}",
+"ja": "保存しました：{path}"
 },
 "Could not save the report: {e}": {
 "fr": "Impossible d’enregistrer le rapport : {e}",
@@ -1015,7 +1393,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile salvare il rapporto: {e}",
 "es": "No se pudo guardar el informe: {e}",
 "ar": "تعذّر حفظ التقرير: {e}",
-"pl": "Nie udało się zapisać raportu: {e}"
+"pl": "Nie udało się zapisać raportu: {e}",
+"he": "לא ניתן לשמור את הדוח: {e}",
+"zh": "无法保存报告：{e}",
+"ja": "レポートを保存できませんでした：{e}"
 },
 "Help: www.thymio.org/support": {
 "fr": "Aide : www.thymio.org/support",
@@ -1023,7 +1404,10 @@ window.THYMIO_I18N = {
 "it": "Aiuto: www.thymio.org/support",
 "es": "Ayuda: www.thymio.org/support",
 "ar": "مساعدة: www.thymio.org/support",
-"pl": "Pomoc: www.thymio.org/support"
+"pl": "Pomoc: www.thymio.org/support",
+"he": "עזרה: www.thymio.org/support",
+"zh": "帮助：www.thymio.org/support",
+"ja": "ヘルプ：www.thymio.org/support"
 },
 "Install firmware {v} on {name} (currently {cur})?": {
 "fr": "Installer le firmware {v} sur {name} (actuellement {cur}) ?",
@@ -1031,7 +1415,10 @@ window.THYMIO_I18N = {
 "it": "Installare il firmware {v} su {name} (attualmente {cur})?",
 "es": "¿Instalar el firmware {v} en {name} (ahora {cur})?",
 "ar": "هل تريد تثبيت البرنامج الثابت {v} على {name} (الحالي {cur})؟",
-"pl": "Zainstalować firmware {v} na robocie {name} (obecnie {cur})?"
+"pl": "Zainstalować firmware {v} na robocie {name} (obecnie {cur})?",
+"he": "להתקין קושחה {v} על {name} (כרגע {cur})?",
+"zh": "要在 {name} 上安装固件 {v} 吗（当前为 {cur}）？",
+"ja": "{name} にファームウェア {v} をインストールしますか（現在 {cur}）？"
 },
 "unknown": {
 "fr": "inconnu",
@@ -1039,7 +1426,10 @@ window.THYMIO_I18N = {
 "it": "sconosciuto",
 "es": "desconocido",
 "ar": "غير معروف",
-"pl": "nieznany"
+"pl": "nieznany",
+"he": "לא ידוע",
+"zh": "未知",
+"ja": "不明"
 },
 "Installing firmware on {name}…": {
 "fr": "Installation du firmware sur {name}…",
@@ -1047,7 +1437,10 @@ window.THYMIO_I18N = {
 "it": "Installazione del firmware su {name}…",
 "es": "Instalando el firmware en {name}…",
 "ar": "جارٍ تثبيت البرنامج الثابت على {name}…",
-"pl": "Instalowanie firmware na robocie {name}…"
+"pl": "Instalowanie firmware na robocie {name}…",
+"he": "מתקין קושחה על {name}…",
+"zh": "正在为 {name} 安装固件…",
+"ja": "{name} にファームウェアをインストール中…"
 },
 "Done. The robot restarts and appears again in a few seconds.": {
 "fr": "Terminé. Le robot redémarre et réapparaît dans quelques secondes.",
@@ -1055,7 +1448,10 @@ window.THYMIO_I18N = {
 "it": "Fatto. Il robot si riavvia e riappare tra qualche secondo.",
 "es": "Listo. El robot se reinicia y vuelve a aparecer en unos segundos.",
 "ar": "تم. يُعاد تشغيل الروبوت ويظهر مجددًا خلال ثوانٍ.",
-"pl": "Gotowe. Robot uruchomi się ponownie i pojawi za kilka sekund."
+"pl": "Gotowe. Robot uruchomi się ponownie i pojawi za kilka sekund.",
+"he": "הסתיים. הרובוט מופעל מחדש ויופיע שוב בעוד כמה שניות.",
+"zh": "完成。机器人正在重启，几秒钟后会重新出现。",
+"ja": "完了しました。ロボットは再起動し、数秒後にまた表示されます。"
 },
 "The update failed. Check the USB cable and try again; the robot keeps working meanwhile.": {
 "fr": "La mise à jour a échoué. Vérifie le câble USB et réessaie ; le robot continue de fonctionner en attendant.",
@@ -1063,7 +1459,10 @@ window.THYMIO_I18N = {
 "it": "L’aggiornamento non è riuscito. Controlla il cavo USB e riprova; nel frattempo il robot continua a funzionare.",
 "es": "La actualización falló. Revisa el cable USB e inténtalo de nuevo; mientras tanto el robot sigue funcionando.",
 "ar": "فشل التحديث. تحقّق من كابل USB وحاول مجددًا؛ يستمر الروبوت في العمل خلال ذلك.",
-"pl": "Aktualizacja się nie powiodła. Sprawdź kabel USB i spróbuj ponownie; robot w tym czasie działa dalej."
+"pl": "Aktualizacja się nie powiodła. Sprawdź kabel USB i spróbuj ponownie; robot w tym czasie działa dalej.",
+"he": "העדכון נכשל. בדקו את כבל ה-USB ונסו שוב; בינתיים הרובוט ממשיך לעבוד.",
+"zh": "更新失败。请检查 USB 线后重试；在此期间机器人仍可正常使用。",
+"ja": "更新に失敗しました。USB ケーブルを確認してもう一度試してください。その間もロボットは使えます。"
 },
 "Test version {v}": {
 "fr": "Version de test {v}",
@@ -1071,7 +1470,10 @@ window.THYMIO_I18N = {
 "it": "Versione di prova {v}",
 "es": "Versión de prueba {v}",
 "ar": "الإصدار التجريبي {v}",
-"pl": "Wersja testowa {v}"
+"pl": "Wersja testowa {v}",
+"he": "גרסת בדיקה {v}",
+"zh": "测试版 {v}",
+"ja": "テスト版 {v}"
 },
 "Let’s bring Thymio to life": {
 "fr": "Donnons vie à Thymio",
@@ -1079,7 +1481,10 @@ window.THYMIO_I18N = {
 "it": "Diamo vita a Thymio",
 "es": "Demos vida a Thymio",
 "ar": "لنُحيِ ثيميو",
-"pl": "Ożywmy Thymio"
+"pl": "Ożywmy Thymio",
+"he": "בואו נעיר את תימיו לחיים",
+"zh": "让 Thymio 动起来",
+"ja": "Thymio に命を吹き込もう"
 },
 "VPL3, Scratch, Blockly, Aseba and Python — all in one place.": {
 "fr": "VPL3, Scratch, Blockly, Aseba et Python, tout au même endroit.",
@@ -1087,7 +1492,10 @@ window.THYMIO_I18N = {
 "it": "VPL3, Scratch, Blockly, Aseba e Python, tutto in un unico posto.",
 "es": "VPL3, Scratch, Blockly, Aseba y Python, todo en un solo lugar.",
 "ar": "VPL3 وScratch وBlockly وAseba وPython، كلها في مكان واحد.",
-"pl": "VPL3, Scratch, Blockly, Aseba i Python – wszystko w jednym miejscu."
+"pl": "VPL3, Scratch, Blockly, Aseba i Python – wszystko w jednym miejscu.",
+"he": "VPL3, Scratch, Blockly, Aseba ו-Python, הכול במקום אחד.",
+"zh": "VPL3、Scratch、Blockly、Aseba 和 Python，尽在一处。",
+"ja": "VPL3、Scratch、Blockly、Aseba、Python をひとつの場所で。"
 },
 "Starting": {
 "fr": "Démarrage",
@@ -1095,7 +1503,10 @@ window.THYMIO_I18N = {
 "it": "Avvio",
 "es": "Iniciando",
 "ar": "بدء التشغيل",
-"pl": "Uruchamianie"
+"pl": "Uruchamianie",
+"he": "מתחיל",
+"zh": "启动中",
+"ja": "起動中"
 },
 "Looking for robots": {
 "fr": "Recherche des robots",
@@ -1103,7 +1514,10 @@ window.THYMIO_I18N = {
 "it": "Ricerca dei robot",
 "es": "Buscando robots",
 "ar": "البحث عن الروبوتات",
-"pl": "Szukanie robotów"
+"pl": "Szukanie robotów",
+"he": "מחפש רובוטים",
+"zh": "正在查找机器人",
+"ja": "ロボットを検索中"
 },
 "Works offline · For every Thymio II, wired or wireless": {
 "fr": "Fonctionne hors ligne · Pour tous les Thymio II, avec ou sans fil",
@@ -1111,7 +1525,10 @@ window.THYMIO_I18N = {
 "it": "Funziona offline · Per ogni Thymio II, con cavo o wireless",
 "es": "Funciona sin conexión · Para cualquier Thymio II, con cable o inalámbrico",
 "ar": "يعمل دون اتصال · لكل Thymio II، سلكي أو لاسلكي",
-"pl": "Działa offline · Dla każdego Thymio II, przewodowego i bezprzewodowego"
+"pl": "Działa offline · Dla każdego Thymio II, przewodowego i bezprzewodowego",
+"he": "עובד ללא אינטרנט · לכל Thymio II, עם כבל או אלחוטי",
+"zh": "离线可用 · 适用于所有 Thymio II，有线或无线",
+"ja": "オフラインで動作 · すべての Thymio II（有線・ワイヤレス）に対応"
 },
 "Skip": {
 "fr": "Passer",
@@ -1119,7 +1536,10 @@ window.THYMIO_I18N = {
 "it": "Salta",
 "es": "Omitir",
 "ar": "تخطٍّ",
-"pl": "Pomiń"
+"pl": "Pomiń",
+"he": "דילוג",
+"zh": "跳过",
+"ja": "スキップ"
 },
 "Starting Thymio Suite": {
 "fr": "Démarrage de Thymio Suite",
@@ -1127,7 +1547,10 @@ window.THYMIO_I18N = {
 "it": "Avvio di Thymio Suite",
 "es": "Iniciando Thymio Suite",
 "ar": "جارٍ تشغيل Thymio Suite",
-"pl": "Uruchamianie Thymio Suite"
+"pl": "Uruchamianie Thymio Suite",
+"he": "מפעיל את Thymio Suite",
+"zh": "正在启动 Thymio Suite",
+"ja": "Thymio Suite を起動中"
 },
 "The device manager is not connected yet.": {
 "fr": "Le gestionnaire d’appareils n’est pas encore connecté.",
@@ -1135,7 +1558,10 @@ window.THYMIO_I18N = {
 "it": "Il gestore dei dispositivi non è ancora collegato.",
 "es": "El gestor de dispositivos aún no está conectado.",
 "ar": "مدير الأجهزة غير متصل بعد.",
-"pl": "Menedżer urządzeń nie jest jeszcze połączony."
+"pl": "Menedżer urządzeń nie jest jeszcze połączony.",
+"he": "מנהל ההתקנים עדיין לא מחובר.",
+"zh": "设备管理器尚未连接。",
+"ja": "デバイスマネージャーにまだ接続されていません。"
 },
 "Plug the wireless dongle into a USB port of this computer.": {
 "fr": "Branche le dongle sans fil sur un port USB de cet ordinateur.",
@@ -1143,7 +1569,10 @@ window.THYMIO_I18N = {
 "it": "Inserisci la chiavetta wireless in una porta USB di questo computer.",
 "es": "Conecta el adaptador inalámbrico a un puerto USB de este ordenador.",
 "ar": "وصّل الدونجل اللاسلكي بمنفذ USB في هذا الحاسوب.",
-"pl": "Włóż klucz bezprzewodowy do portu USB tego komputera."
+"pl": "Włóż klucz bezprzewodowy do portu USB tego komputera.",
+"he": "חברו את הדונגל האלחוטי ליציאת USB במחשב הזה.",
+"zh": "将无线接收器插入这台电脑的 USB 接口。",
+"ja": "ワイヤレスドングルをこのパソコンの USB ポートに差し込んでください。"
 },
 "{n} dongles are plugged in. Keep only one.": {
 "fr": "{n} dongles sont branchés. N’en garde qu’un.",
@@ -1151,7 +1580,10 @@ window.THYMIO_I18N = {
 "it": "Sono inserite {n} chiavette. Lasciane solo una.",
 "es": "Hay {n} adaptadores conectados. Deja solo uno.",
 "ar": "هناك {n} دونجل موصولة. أبقِ واحدًا فقط.",
-"pl": "Podłączono kluczy: {n}. Zostaw tylko jeden."
+"pl": "Podłączono kluczy: {n}. Zostaw tylko jeden.",
+"he": "מחוברים {n} דונגלים. השאירו רק אחד.",
+"zh": "插入了 {n} 个接收器。请只保留一个。",
+"ja": "ドングルが {n} 個差し込まれています。1個だけにしてください。"
 },
 "This dongle is already paired. Unplug it and plug in the next one.": {
 "fr": "Ce dongle est déjà appairé. Débranche-le et branche le suivant.",
@@ -1159,7 +1591,10 @@ window.THYMIO_I18N = {
 "it": "Questa chiavetta è già associata. Scollegala e inserisci la successiva.",
 "es": "Este adaptador ya está emparejado. Desconéctalo y conecta el siguiente.",
 "ar": "هذا الدونجل مقترن بالفعل. افصله ووصّل التالي.",
-"pl": "Ten klucz jest już sparowany. Odłącz go i podłącz następny."
+"pl": "Ten klucz jest już sparowany. Odłącz go i podłącz następny.",
+"he": "הדונגל הזה כבר צומד. נתקו אותו וחברו את הבא.",
+"zh": "该接收器已配对。请拔下它并插入下一个。",
+"ja": "このドングルはペアリング済みです。抜いて次のものを差し込んでください。"
 },
 "Dongle found (network {net}, channel {ch}).": {
 "fr": "Dongle trouvé (réseau {net}, canal {ch}).",
@@ -1167,7 +1602,10 @@ window.THYMIO_I18N = {
 "it": "Chiavetta trovata (rete {net}, canale {ch}).",
 "es": "Adaptador encontrado (red {net}, canal {ch}).",
 "ar": "تم العثور على الدونجل (الشبكة {net}، القناة {ch}).",
-"pl": "Znaleziono klucz (sieć {net}, kanał {ch})."
+"pl": "Znaleziono klucz (sieć {net}, kanał {ch}).",
+"he": "נמצא דונגל (רשת {net}, ערוץ {ch}).",
+"zh": "已找到接收器（网络 {net}，频道 {ch}）。",
+"ja": "ドングルが見つかりました（ネットワーク {net}、チャンネル {ch}）。"
 },
 "Plug the wireless robot into this computer with its USB cable, and switch it on.": {
 "fr": "Branche le robot sans fil à cet ordinateur avec son câble USB, et allume-le.",
@@ -1175,7 +1613,10 @@ window.THYMIO_I18N = {
 "it": "Collega il robot wireless a questo computer con il cavo USB e accendilo.",
 "es": "Conecta el robot inalámbrico a este ordenador con su cable USB y enciéndelo.",
 "ar": "وصّل الروبوت اللاسلكي بهذا الحاسوب بكابل USB وشغّله.",
-"pl": "Podłącz robota bezprzewodowego do tego komputera kablem USB i włącz go."
+"pl": "Podłącz robota bezprzewodowego do tego komputera kablem USB i włącz go.",
+"he": "חברו את הרובוט האלחוטי למחשב הזה בכבל ה-USB שלו והדליקו אותו.",
+"zh": "用 USB 线把无线机器人连接到这台电脑，并打开它。",
+"ja": "ワイヤレスロボットを USB ケーブルでこのパソコンにつなぎ、電源を入れてください。"
 },
 "{n} robots are plugged in by cable. Keep only one.": {
 "fr": "{n} robots sont branchés par câble. N’en garde qu’un.",
@@ -1183,7 +1624,10 @@ window.THYMIO_I18N = {
 "it": "Sono collegati via cavo {n} robot. Lasciane solo uno.",
 "es": "Hay {n} robots conectados por cable. Deja solo uno.",
 "ar": "هناك {n} روبوتات موصولة بالكابل. أبقِ واحدًا فقط.",
-"pl": "Kablem podłączono robotów: {n}. Zostaw tylko jednego."
+"pl": "Kablem podłączono robotów: {n}. Zostaw tylko jednego.",
+"he": "מחוברים בכבל {n} רובוטים. השאירו רק אחד.",
+"zh": "有 {n} 台机器人通过 USB 线连接。请只保留一台。",
+"ja": "USB で {n} 台のロボットがつながっています。1台だけにしてください。"
 },
 "{name} is already paired. Plug in the next robot.": {
 "fr": "{name} est déjà appairé. Branche le robot suivant.",
@@ -1191,7 +1635,10 @@ window.THYMIO_I18N = {
 "it": "{name} è già associato. Collega il robot successivo.",
 "es": "{name} ya está emparejado. Conecta el siguiente robot.",
 "ar": "{name} مقترن بالفعل. وصّل الروبوت التالي.",
-"pl": "{name} jest już sparowany. Podłącz następnego robota."
+"pl": "{name} jest już sparowany. Podłącz następnego robota.",
+"he": "{name} כבר צומד. חברו את הרובוט הבא.",
+"zh": "{name} 已配对。请连接下一台机器人。",
+"ja": "{name} はペアリング済みです。次のロボットをつないでください。"
 },
 "Robot {name} plugged in by cable.": {
 "fr": "Robot {name} branché par câble.",
@@ -1199,7 +1646,10 @@ window.THYMIO_I18N = {
 "it": "Robot {name} collegato via cavo.",
 "es": "Robot {name} conectado por cable.",
 "ar": "الروبوت {name} موصول بالكابل.",
-"pl": "Robot {name} podłączony kablem."
+"pl": "Robot {name} podłączony kablem.",
+"he": "הרובוט {name} מחובר בכבל.",
+"zh": "机器人 {name} 已通过 USB 线连接。",
+"ja": "ロボット {name} が USB でつながりました。"
 },
 "Firmware {v} is too old for pairing. Update it first (button on the robot in the main screen).": {
 "fr": "Le firmware {v} est trop ancien pour l’appairage. Mets-le d’abord à jour (bouton sur le robot dans l’écran principal).",
@@ -1207,7 +1657,10 @@ window.THYMIO_I18N = {
 "it": "Il firmware {v} è troppo vecchio per l’associazione. Aggiornalo prima (pulsante sul robot nella schermata principale).",
 "es": "El firmware {v} es demasiado antiguo para emparejar. Actualízalo primero (botón en el robot de la pantalla principal).",
 "ar": "البرنامج الثابت {v} قديم جدًا للإقران. حدّثه أولًا (الزر بجانب الروبوت في الشاشة الرئيسية).",
-"pl": "Firmware {v} jest za stary do parowania. Najpierw go zaktualizuj (przycisk przy robocie na ekranie głównym)."
+"pl": "Firmware {v} jest za stary do parowania. Najpierw go zaktualizuj (przycisk przy robocie na ekranie głównym).",
+"he": "קושחה {v} ישנה מדי לצימוד. עדכנו אותה קודם (הכפתור ליד הרובוט במסך הראשי).",
+"zh": "固件 {v} 版本过旧，无法配对。请先更新（主界面中机器人旁的按钮）。",
+"ja": "ファームウェア {v} はペアリングには古すぎます。先に更新してください（メイン画面のロボットのボタン）。"
 },
 "Firmware {v} is fine.": {
 "fr": "Le firmware {v} convient.",
@@ -1215,7 +1668,10 @@ window.THYMIO_I18N = {
 "it": "Il firmware {v} va bene.",
 "es": "El firmware {v} es correcto.",
 "ar": "البرنامج الثابت {v} مناسب.",
-"pl": "Firmware {v} jest w porządku."
+"pl": "Firmware {v} jest w porządku.",
+"he": "קושחה {v} תקינה.",
+"zh": "固件 {v} 没问题。",
+"ja": "ファームウェア {v} で問題ありません。"
 },
 "Firmware 13 or newer is needed.": {
 "fr": "Il faut le firmware 13 ou plus récent.",
@@ -1223,7 +1679,10 @@ window.THYMIO_I18N = {
 "it": "Serve il firmware 13 o successivo.",
 "es": "Se necesita el firmware 13 o posterior.",
 "ar": "يلزم البرنامج الثابت 13 أو أحدث.",
-"pl": "Potrzebny jest firmware 13 lub nowszy."
+"pl": "Potrzebny jest firmware 13 lub nowszy.",
+"he": "נדרשת קושחה 13 ומעלה.",
+"zh": "需要固件 13 或更高版本。",
+"ja": "ファームウェア 13 以降が必要です。"
 },
 "Pair robot #{n}": {
 "fr": "Appairer le robot n° {n}",
@@ -1231,7 +1690,10 @@ window.THYMIO_I18N = {
 "it": "Associa il robot n. {n}",
 "es": "Emparejar el robot n.º {n}",
 "ar": "إقران الروبوت رقم {n}",
-"pl": "Sparuj robota nr {n}"
+"pl": "Sparuj robota nr {n}",
+"he": "צימוד רובוט מס' {n}",
+"zh": "配对第 {n} 台机器人",
+"ja": "ロボット {n} 台目をペアリング"
 },
 "Enter a network of 4 characters (0–9, A–F).": {
 "fr": "Saisis un réseau de 4 caractères (0–9, A–F).",
@@ -1239,7 +1701,10 @@ window.THYMIO_I18N = {
 "it": "Inserisci una rete di 4 caratteri (0–9, A–F).",
 "es": "Escribe una red de 4 caracteres (0–9, A–F).",
 "ar": "أدخل شبكة من 4 رموز (0–9، A–F).",
-"pl": "Wpisz sieć z 4 znaków (0–9, A–F)."
+"pl": "Wpisz sieć z 4 znaków (0–9, A–F).",
+"he": "הזינו רשת בת 4 תווים (0–9, A–F).",
+"zh": "请输入 4 个字符的网络（0–9、A–F）。",
+"ja": "4文字のネットワークを入力してください（0–9、A–F）。"
 },
 "Pairing… keep both plugged in.": {
 "fr": "Appairage… garde les deux branchés.",
@@ -1247,7 +1712,10 @@ window.THYMIO_I18N = {
 "it": "Associazione in corso… lascia entrambi collegati.",
 "es": "Emparejando… deja ambos conectados.",
 "ar": "جارٍ الإقران… أبقِ الاثنين موصولين.",
-"pl": "Parowanie… nie odłączaj żadnego z nich."
+"pl": "Parowanie… nie odłączaj żadnego z nich.",
+"he": "מצמד… השאירו את שניהם מחוברים.",
+"zh": "正在配对…请保持两者都已连接。",
+"ja": "ペアリング中… 両方つないだままにしてください。"
 },
 "Unplug the cable: the robot now talks through the dongle.": {
 "fr": "Débranche le câble : le robot passe maintenant par le dongle.",
@@ -1255,7 +1723,10 @@ window.THYMIO_I18N = {
 "it": "Scollega il cavo: ora il robot comunica tramite la chiavetta.",
 "es": "Desconecta el cable: el robot ahora habla a través del adaptador.",
 "ar": "افصل الكابل: يتواصل الروبوت الآن عبر الدونجل.",
-"pl": "Odłącz kabel: robot komunikuje się teraz przez klucz."
+"pl": "Odłącz kabel: robot komunikuje się teraz przez klucz.",
+"he": "נתקו את הכבל: הרובוט מדבר עכשיו דרך הדונגל.",
+"zh": "拔下 USB 线：机器人现在通过接收器通信。",
+"ja": "ケーブルを外してください：ロボットはドングル経由で通信します。"
 },
 "Unplug this robot and dongle (stick matching stickers), then plug in the next pair.": {
 "fr": "Débranche ce robot et ce dongle (colle des gommettes assorties), puis branche la paire suivante.",
@@ -1263,7 +1734,10 @@ window.THYMIO_I18N = {
 "it": "Scollega questo robot e questa chiavetta (attacca adesivi uguali), poi collega la coppia successiva.",
 "es": "Desconecta este robot y este adaptador (pon pegatinas iguales) y conecta la siguiente pareja.",
 "ar": "افصل هذا الروبوت والدونجل (ألصق ملصقين متطابقين)، ثم وصّل الزوج التالي.",
-"pl": "Odłącz tego robota i klucz (naklej pasujące naklejki), a potem podłącz kolejną parę."
+"pl": "Odłącz tego robota i klucz (naklej pasujące naklejki), a potem podłącz kolejną parę.",
+"he": "נתקו את הרובוט והדונגל האלה (הדביקו מדבקות תואמות), ואז חברו את הזוג הבא.",
+"zh": "拔下这台机器人和接收器（贴上相同的贴纸），然后连接下一对。",
+"ja": "このロボットとドングルを外し（おそろいのシールを貼りましょう）、次のペアをつないでください。"
 },
 "Unplug this robot and plug in the next one.": {
 "fr": "Débranche ce robot et branche le suivant.",
@@ -1271,7 +1745,10 @@ window.THYMIO_I18N = {
 "it": "Scollega questo robot e collega il successivo.",
 "es": "Desconecta este robot y conecta el siguiente.",
 "ar": "افصل هذا الروبوت ووصّل التالي.",
-"pl": "Odłącz tego robota i podłącz następnego."
+"pl": "Odłącz tego robota i podłącz następnego.",
+"he": "נתקו את הרובוט הזה וחברו את הבא.",
+"zh": "拔下这台机器人，然后连接下一台。",
+"ja": "このロボットを外して、次のロボットをつないでください。"
 },
 "Paired: network {net}, channel {ch}.": {
 "fr": "Appairé : réseau {net}, canal {ch}.",
@@ -1279,7 +1756,10 @@ window.THYMIO_I18N = {
 "it": "Associato: rete {net}, canale {ch}.",
 "es": "Emparejado: red {net}, canal {ch}.",
 "ar": "تم الإقران: الشبكة {net}، القناة {ch}.",
-"pl": "Sparowano: sieć {net}, kanał {ch}."
+"pl": "Sparowano: sieć {net}, kanał {ch}.",
+"he": "צומד: רשת {net}, ערוץ {ch}.",
+"zh": "已配对：网络 {net}，频道 {ch}。",
+"ja": "ペアリング完了：ネットワーク {net}、チャンネル {ch}。"
 },
 "Could not write the settings to the dongle. Unplug and replug it, then try again.": {
 "fr": "Impossible d’écrire les réglages dans le dongle. Débranche-le, rebranche-le, puis réessaie.",
@@ -1287,7 +1767,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile scrivere le impostazioni sulla chiavetta. Scollegala, ricollegala e riprova.",
 "es": "No se pudieron escribir los ajustes en el adaptador. Desconéctalo, vuelve a conectarlo e inténtalo de nuevo.",
 "ar": "تعذّرت كتابة الإعدادات على الدونجل. افصله وأعد توصيله ثم حاول مجددًا.",
-"pl": "Nie udało się zapisać ustawień w kluczu. Odłącz go, podłącz ponownie i spróbuj jeszcze raz."
+"pl": "Nie udało się zapisać ustawień w kluczu. Odłącz go, podłącz ponownie i spróbuj jeszcze raz.",
+"he": "לא ניתן לכתוב את ההגדרות לדונגל. נתקו וחברו אותו מחדש, ונסו שוב.",
+"zh": "无法将设置写入接收器。请拔下后重新插入，再试一次。",
+"ja": "ドングルに設定を書き込めませんでした。抜き差ししてもう一度試してください。"
 },
 "Could not write the settings to the robot. Check the cable and that the robot is on, then try again.": {
 "fr": "Impossible d’écrire les réglages dans le robot. Vérifie le câble et que le robot est allumé, puis réessaie.",
@@ -1295,7 +1778,10 @@ window.THYMIO_I18N = {
 "it": "Impossibile scrivere le impostazioni sul robot. Controlla il cavo e che il robot sia acceso, poi riprova.",
 "es": "No se pudieron escribir los ajustes en el robot. Revisa el cable y que el robot esté encendido, e inténtalo de nuevo.",
 "ar": "تعذّرت كتابة الإعدادات على الروبوت. تحقّق من الكابل ومن أن الروبوت مشغّل، ثم حاول مجددًا.",
-"pl": "Nie udało się zapisać ustawień w robocie. Sprawdź kabel i czy robot jest włączony, a potem spróbuj ponownie."
+"pl": "Nie udało się zapisać ustawień w robocie. Sprawdź kabel i czy robot jest włączony, a potem spróbuj ponownie.",
+"he": "לא ניתן לכתוב את ההגדרות לרובוט. בדקו את הכבל ושהרובוט דולק, ונסו שוב.",
+"zh": "无法将设置写入机器人。请检查 USB 线并确认机器人已开机，再试一次。",
+"ja": "ロボットに設定を書き込めませんでした。ケーブルと電源を確認して、もう一度試してください。"
 },
 "Pairing failed. Unplug and replug the robot and dongle, then try again.": {
 "fr": "L’appairage a échoué. Débranche et rebranche le robot et le dongle, puis réessaie.",
@@ -1303,7 +1789,10 @@ window.THYMIO_I18N = {
 "it": "Associazione non riuscita. Scollega e ricollega robot e chiavetta, poi riprova.",
 "es": "El emparejamiento falló. Desconecta y vuelve a conectar el robot y el adaptador, e inténtalo de nuevo.",
 "ar": "فشل الإقران. افصل الروبوت والدونجل وأعد توصيلهما، ثم حاول مجددًا.",
-"pl": "Parowanie się nie powiodło. Odłącz i podłącz ponownie robota i klucz, a potem spróbuj jeszcze raz."
+"pl": "Parowanie się nie powiodło. Odłącz i podłącz ponownie robota i klucz, a potem spróbuj jeszcze raz.",
+"he": "הצימוד נכשל. נתקו וחברו מחדש את הרובוט והדונגל, ונסו שוב.",
+"zh": "配对失败。请重新插拔机器人和接收器，再试一次。",
+"ja": "ペアリングに失敗しました。ロボットとドングルを抜き差しして、もう一度試してください。"
 },
 "ch {n}": {
 "fr": "canal {n}",
@@ -1311,7 +1800,43 @@ window.THYMIO_I18N = {
 "it": "canale {n}",
 "es": "canal {n}",
 "ar": "القناة {n}",
-"pl": "kanał {n}"
+"pl": "kanał {n}",
+"he": "ערוץ {n}",
+"zh": "频道 {n}",
+"ja": "チャンネル {n}"
+},
+"Beginner": {
+"fr": "Débutant",
+"de": "Einsteiger",
+"it": "Principiante",
+"es": "Principiante",
+"ar": "مبتدئ",
+"pl": "Początkujący",
+"he": "מתחילים",
+"zh": "入门",
+"ja": "初級"
+},
+"Intermediate": {
+"fr": "Intermédiaire",
+"de": "Fortgeschritten",
+"it": "Intermedio",
+"es": "Intermedio",
+"ar": "متوسط",
+"pl": "Średni",
+"he": "בינוני",
+"zh": "进阶",
+"ja": "中級"
+},
+"Advanced": {
+"fr": "Avancé",
+"de": "Profi",
+"it": "Avanzato",
+"es": "Avanzado",
+"ar": "متقدّم",
+"pl": "Zaawansowany",
+"he": "מתקדמים",
+"zh": "高级",
+"ja": "上級"
 }
 },
 "html": {
@@ -1322,7 +1847,10 @@ window.THYMIO_I18N = {
 "it": "<b>Suggerimento:</b> attacca un adesivo dello stesso colore su ogni robot e sulla sua chiavetta, così gli alunni trovano la loro coppia.",
 "es": "<b>Consejo:</b> pon una pegatina del mismo color en cada robot y su adaptador para que el alumnado encuentre su pareja.",
 "ar": "<b>نصيحة:</b> ألصق ملصقًا بنفس اللون على كل روبوت ودونجله ليجد التلاميذ زوجهم بسهولة.",
-"pl": "<b>Wskazówka:</b> naklej naklejkę w tym samym kolorze na robota i jego klucz, aby uczniowie łatwo znaleźli swoją parę."
+"pl": "<b>Wskazówka:</b> naklej naklejkę w tym samym kolorze na robota i jego klucz, aby uczniowie łatwo znaleźli swoją parę.",
+"he": "<b>טיפ:</b> הדביקו מדבקה באותו צבע על כל רובוט ועל הדונגל שלו, כדי שהתלמידים ימצאו את הזוג שלהם.",
+"zh": "<b>提示：</b>在每台机器人和它的接收器上贴相同颜色的贴纸，方便学生找到自己的一对。",
+"ja": "<b>ヒント：</b>ロボットとそのドングルに同じ色のシールを貼ると、児童・生徒が自分のペアを見つけやすくなります。"
 },
 "pairOnce": {
 "en": "A new wireless robot must be paired with the dongle once: use <b>Pair wireless robots</b> in the menu.",
@@ -1331,7 +1859,10 @@ window.THYMIO_I18N = {
 "it": "Un nuovo robot wireless va associato una volta alla chiavetta: usa <b>Associa robot wireless</b> nel menu.",
 "es": "Un robot inalámbrico nuevo debe emparejarse una vez con el adaptador: usa <b>Emparejar robots inalámbricos</b> en el menú.",
 "ar": "يجب إقران الروبوت اللاسلكي الجديد بالدونجل مرة واحدة: استخدم <b>إقران الروبوتات اللاسلكية</b> في القائمة.",
-"pl": "Nowego robota bezprzewodowego trzeba raz sparować z kluczem: użyj opcji <b>Parowanie robotów bezprzewodowych</b> w menu."
+"pl": "Nowego robota bezprzewodowego trzeba raz sparować z kluczem: użyj opcji <b>Parowanie robotów bezprzewodowych</b> w menu.",
+"he": "רובוט אלחוטי חדש צריך להיות מצומד לדונגל פעם אחת: השתמשו ב<b>צימוד רובוטים אלחוטיים</b> בתפריט.",
+"zh": "新的无线机器人需要先与接收器配对一次：请使用菜单中的<b>配对无线机器人</b>。",
+"ja": "新しいワイヤレスロボットは一度だけドングルとペアリングが必要です：メニューの<b>ワイヤレスロボットのペアリング</b>を使ってください。"
 },
 "labLead": {
 "en": "Open your web browser and start coding. <b>Zero installation</b>, nothing to update, and it works on the computers and tablets you already have.",
@@ -1340,7 +1871,10 @@ window.THYMIO_I18N = {
 "it": "Apri il browser e inizia a programmare. <b>Zero installazioni</b>, niente da aggiornare, e funziona sui computer e tablet che hai già.",
 "es": "Abre tu navegador y empieza a programar. <b>Sin instalación</b>, nada que actualizar, y funciona en los ordenadores y tabletas que ya tienes.",
 "ar": "افتح متصفحك وابدأ البرمجة. <b>دون أي تثبيت</b>، ولا شيء لتحديثه، ويعمل على الحواسيب والأجهزة اللوحية التي لديك.",
-"pl": "Otwórz przeglądarkę i zacznij programować. <b>Bez instalacji</b>, bez aktualizacji, działa na komputerach i tabletach, które już masz."
+"pl": "Otwórz przeglądarkę i zacznij programować. <b>Bez instalacji</b>, bez aktualizacji, działa na komputerach i tabletach, które już masz.",
+"he": "פתחו את הדפדפן והתחילו לתכנת. <b>בלי שום התקנה</b>, בלי עדכונים, וזה עובד על המחשבים והטאבלטים שכבר יש לכם.",
+"zh": "打开浏览器即可开始编程。<b>无需安装</b>，无需更新，在你现有的电脑和平板上都能使用。",
+"ja": "ブラウザを開いてすぐにプログラミング。<b>インストール不要</b>、更新も不要で、今あるパソコンやタブレットで使えます。"
 },
 "labT3": {
 "en": "<b>Made for Thymio 3</b>, and your <b>Thymio II</b> is ready to go",
@@ -1349,7 +1883,10 @@ window.THYMIO_I18N = {
 "it": "<b>Pensato per Thymio 3</b>, e il tuo <b>Thymio II</b> è pronto all’uso",
 "es": "<b>Hecho para Thymio 3</b>, y tu <b>Thymio II</b> está listo para usar",
 "ar": "<b>مصمّم لـ Thymio 3</b>، و<b>Thymio II</b> الخاص بك جاهز للاستخدام",
-"pl": "<b>Stworzone dla Thymio 3</b>, a twój <b>Thymio II</b> jest gotowy do pracy"
+"pl": "<b>Stworzone dla Thymio 3</b>, a twój <b>Thymio II</b> jest gotowy do pracy",
+"he": "<b>נבנה עבור Thymio 3</b>, וה-<b>Thymio II</b> שלכם מוכן לעבודה",
+"zh": "<b>专为 Thymio 3 打造</b>，你的 <b>Thymio II</b> 也可直接使用",
+"ja": "<b>Thymio 3 向けに設計</b>、お持ちの <b>Thymio II</b> もすぐに使えます"
 }
 },
 "details": {
@@ -1359,7 +1896,10 @@ window.THYMIO_I18N = {
 "it": "<p><b>VPL è un linguaggio di programmazione a blocchi che permette di imparare la logica della programmazione.</b></p><ul><li>Il modo più semplice per iniziare a programmare Thymio</li><li>Non serve saper leggere per usare VPL</li><li>Trascina e rilascia le icone per programmare</li><li>Non serve una connessione internet</li></ul>",
 "es": "<p><b>VPL es un lenguaje de programación por bloques que permite aprender la lógica de la programación.</b></p><ul><li>La forma más sencilla de empezar a programar Thymio</li><li>No hace falta saber leer para usar VPL</li><li>Arrastra y suelta iconos para programar</li><li>No necesita conexión a internet</li></ul>",
 "ar": "<p><b>VPL لغة برمجة بالكتل تتيح تعلّم منطق البرمجة.</b></p><ul><li>أبسط طريقة لبدء برمجة ثيميو</li><li>لا يحتاج التلاميذ إلى معرفة القراءة لاستخدام VPL</li><li>اسحب الأيقونات وأفلتها للبرمجة</li><li>لا حاجة إلى اتصال بالإنترنت</li></ul>",
-"pl": "<p><b>VPL to blokowy język programowania, który uczy logiki programowania.</b></p><ul><li>Najprostszy sposób, by zacząć programować Thymio</li><li>Uczniowie nie muszą umieć czytać, by używać VPL</li><li>Programujesz, przeciągając ikony</li><li>Nie potrzeba internetu</li></ul>"
+"pl": "<p><b>VPL to blokowy język programowania, który uczy logiki programowania.</b></p><ul><li>Najprostszy sposób, by zacząć programować Thymio</li><li>Uczniowie nie muszą umieć czytać, by używać VPL</li><li>Programujesz, przeciągając ikony</li><li>Nie potrzeba internetu</li></ul>",
+"he": "<p><b>VPL היא שפת תכנות בבלוקים שמאפשרת ללמוד את ההיגיון של התכנות.</b></p><ul><li>הדרך הפשוטה ביותר להתחיל לתכנת את תימיו</li><li>לא צריך לדעת לקרוא כדי להשתמש ב-VPL</li><li>גוררים ומשחררים סמלים כדי לתכנת</li><li>אין צורך בחיבור לאינטרנט</li></ul>",
+"zh": "<p><b>VPL 是一种积木式编程语言，帮助学习编程的逻辑。</b></p><ul><li>开始给 Thymio 编程的最简单方式</li><li>不会认字也能使用 VPL</li><li>拖放图标即可编程</li><li>无需联网</li></ul>",
+"ja": "<p><b>VPL はブロックを使うプログラミング言語で、プログラミングの考え方を学べます。</b></p><ul><li>Thymio のプログラミングを始めるいちばん簡単な方法</li><li>字が読めなくても VPL は使えます</li><li>アイコンをドラッグ＆ドロップしてプログラム</li><li>インターネット接続は不要</li></ul>"
 },
 "vpl3": {
 "fr": "<p><b>VPL 3 est un langage de programmation par blocs qui permet d’apprendre la logique de la programmation.</b></p><ul><li>La façon la plus simple de commencer à programmer Thymio</li><li>Pas besoin de savoir lire pour utiliser VPL</li><li>Glisser-déposer des icônes pour coder</li><li>Du premier programme jusqu’aux variables et aux boucles</li><li>Pas besoin de connexion internet</li></ul>",
@@ -1367,7 +1907,10 @@ window.THYMIO_I18N = {
 "it": "<p><b>VPL 3 è un linguaggio di programmazione a blocchi che permette di imparare la logica della programmazione.</b></p><ul><li>Il modo più semplice per iniziare a programmare Thymio</li><li>Non serve saper leggere per usare VPL</li><li>Trascina e rilascia le icone per programmare</li><li>Dal primo programma fino a variabili e cicli</li><li>Non serve una connessione internet</li></ul>",
 "es": "<p><b>VPL 3 es un lenguaje de programación por bloques que permite aprender la lógica de la programación.</b></p><ul><li>La forma más sencilla de empezar a programar Thymio</li><li>No hace falta saber leer para usar VPL</li><li>Arrastra y suelta iconos para programar</li><li>Desde el primer programa hasta las variables y los bucles</li><li>No necesita conexión a internet</li></ul>",
 "ar": "<p><b>VPL 3 لغة برمجة بالكتل تتيح تعلّم منطق البرمجة.</b></p><ul><li>أبسط طريقة لبدء برمجة ثيميو</li><li>لا يحتاج التلاميذ إلى معرفة القراءة لاستخدام VPL</li><li>اسحب الأيقونات وأفلتها للبرمجة</li><li>من البرنامج الأول حتى فهم المتغيّرات والحلقات</li><li>لا حاجة إلى اتصال بالإنترنت</li></ul>",
-"pl": "<p><b>VPL 3 to blokowy język programowania, który uczy logiki programowania.</b></p><ul><li>Najprostszy sposób, by zacząć programować Thymio</li><li>Uczniowie nie muszą umieć czytać, by używać VPL</li><li>Programujesz, przeciągając ikony</li><li>Od pierwszego programu aż do zmiennych i pętli</li><li>Nie potrzeba internetu</li></ul>"
+"pl": "<p><b>VPL 3 to blokowy język programowania, który uczy logiki programowania.</b></p><ul><li>Najprostszy sposób, by zacząć programować Thymio</li><li>Uczniowie nie muszą umieć czytać, by używać VPL</li><li>Programujesz, przeciągając ikony</li><li>Od pierwszego programu aż do zmiennych i pętli</li><li>Nie potrzeba internetu</li></ul>",
+"he": "<p><b>VPL 3 היא שפת תכנות בבלוקים שמאפשרת ללמוד את ההיגיון של התכנות.</b></p><ul><li>הדרך הפשוטה ביותר להתחיל לתכנת את תימיו</li><li>לא צריך לדעת לקרוא כדי להשתמש ב-VPL</li><li>גוררים ומשחררים סמלים כדי לתכנת</li><li>מהתוכנית הראשונה ועד משתנים ולולאות</li><li>אין צורך בחיבור לאינטרנט</li></ul>",
+"zh": "<p><b>VPL 3 是一种积木式编程语言，帮助学习编程的逻辑。</b></p><ul><li>开始给 Thymio 编程的最简单方式</li><li>不会认字也能使用 VPL</li><li>拖放图标即可编程</li><li>从第一个程序一直学到变量和循环</li><li>无需联网</li></ul>",
+"ja": "<p><b>VPL 3 はブロックを使うプログラミング言語で、プログラミングの考え方を学べます。</b></p><ul><li>Thymio のプログラミングを始めるいちばん簡単な方法</li><li>字が読めなくても VPL は使えます</li><li>アイコンをドラッグ＆ドロップしてプログラム</li><li>最初のプログラムから変数やループまで</li><li>インターネット接続は不要</li></ul>"
 },
 "scratch": {
 "fr": "<p><b>Scratch permet de créer des interactions entre le monde réel, avec Thymio, et ton écran, grâce aux « scènes » et aux « lutins » de Scratch.</b></p><p>Par exemple, tu peux créer une histoire interactive, ou même un jeu vidéo piloté par Thymio. La seule limite est ta créativité.</p><ul><li>Crée des interactions entre ton robot et l’écran de ton ordinateur</li><li>Glisse-dépose des blocs pour programmer Thymio et les lutins Scratch</li><li>Pas besoin de connexion internet</li></ul><p>Les Thymio sans fil sont le meilleur choix avec Scratch. Un Thymio avec câble doit rester branché.</p>",
@@ -1375,7 +1918,10 @@ window.THYMIO_I18N = {
 "it": "<p><b>Scratch ti permette di creare interazioni tra il mondo reale, con Thymio, e il tuo schermo, usando lo «Stage» e gli «Sprite» di Scratch.</b></p><p>Per esempio puoi creare una storia interattiva, o perfino un videogioco comandato da Thymio. L’unico limite è la creatività.</p><ul><li>Crea interazioni tra il robot e lo schermo del computer</li><li>Trascina e rilascia i blocchi per programmare Thymio e gli sprite di Scratch</li><li>Non serve una connessione internet</li></ul><p>Con Scratch i Thymio wireless sono la scelta migliore. Un Thymio con cavo deve restare collegato.</p>",
 "es": "<p><b>Scratch te permite crear interacciones entre el mundo real, con Thymio, y tu pantalla, usando el «escenario» y los «objetos» de Scratch.</b></p><p>Por ejemplo, puedes crear una historia interactiva o incluso un videojuego controlado por Thymio. El único límite es tu creatividad.</p><ul><li>Crea interacción entre tu robot y la pantalla del ordenador</li><li>Arrastra y suelta bloques para programar Thymio y los objetos de Scratch</li><li>No necesita conexión a internet</li></ul><p>Los Thymio inalámbricos son la mejor opción con Scratch. Un Thymio con cable debe quedarse conectado.</p>",
 "ar": "<p><b>يتيح Scratch إنشاء تفاعلات بين العالم الحقيقي، مع ثيميو، وشاشتك، باستخدام «المنصة» و«الكائنات» في Scratch.</b></p><p>مثلًا، يمكنك إنشاء قصة تفاعلية، أو حتى لعبة فيديو يتحكّم بها ثيميو. الإبداع هو الحدّ الوحيد.</p><ul><li>أنشئ تفاعلًا بين الروبوت وشاشة حاسوبك</li><li>اسحب الكتل وأفلتها لبرمجة ثيميو وكائنات Scratch</li><li>لا حاجة إلى اتصال بالإنترنت</li></ul><p>روبوتات ثيميو اللاسلكية هي الخيار الأفضل مع Scratch. أما ثيميو السلكي فيجب أن يبقى موصولًا.</p>",
-"pl": "<p><b>Scratch pozwala łączyć prawdziwy świat, z Thymio, z ekranem komputera, za pomocą „sceny” i „duszków” Scratcha.</b></p><p>Możesz na przykład stworzyć interaktywną historię albo grę sterowaną przez Thymio. Jedynym ograniczeniem jest wyobraźnia.</p><ul><li>Twórz interakcje między robotem a ekranem komputera</li><li>Przeciągaj bloki, by programować Thymio i duszki Scratcha</li><li>Nie potrzeba internetu</li></ul><p>Do Scratcha najlepiej nadają się bezprzewodowe Thymio. Thymio na kablu musi pozostać podłączony.</p>"
+"pl": "<p><b>Scratch pozwala łączyć prawdziwy świat, z Thymio, z ekranem komputera, za pomocą „sceny” i „duszków” Scratcha.</b></p><p>Możesz na przykład stworzyć interaktywną historię albo grę sterowaną przez Thymio. Jedynym ograniczeniem jest wyobraźnia.</p><ul><li>Twórz interakcje między robotem a ekranem komputera</li><li>Przeciągaj bloki, by programować Thymio i duszki Scratcha</li><li>Nie potrzeba internetu</li></ul><p>Do Scratcha najlepiej nadają się bezprzewodowe Thymio. Thymio na kablu musi pozostać podłączony.</p>",
+"he": "<p><b>Scratch מאפשרת ליצור אינטראקציה בין העולם האמיתי, עם תימיו, לבין המסך, בעזרת ה\"במה\" וה\"דמויות\" של Scratch.</b></p><p>למשל, אפשר ליצור סיפור אינטראקטיבי, או אפילו משחק וידאו שתימיו שולט בו. הגבול היחיד הוא היצירתיות.</p><ul><li>צרו אינטראקציה בין הרובוט למסך המחשב</li><li>גוררים ומשחררים בלוקים כדי לתכנת את תימיו ואת הדמויות</li><li>אין צורך בחיבור לאינטרנט</li></ul><p>רובוטים אלחוטיים הם הבחירה הטובה ביותר עם Scratch. תימיו עם כבל צריך להישאר מחובר.</p>",
+"zh": "<p><b>Scratch 能让现实世界里的 Thymio 与屏幕互动，借助 Scratch 的“舞台”和“角色”。</b></p><p>例如，你可以制作一个互动故事，甚至一个由 Thymio 控制的电子游戏。唯一的限制就是你的创造力。</p><ul><li>让机器人与电脑屏幕互动</li><li>拖放积木，为 Thymio 和 Scratch 角色编程</li><li>无需联网</li></ul><p>使用 Scratch 时，无线 Thymio 是最佳选择。有线 Thymio 需要一直保持连接。</p>",
+"ja": "<p><b>Scratch では、Scratch の「ステージ」と「スプライト」を使って、現実の Thymio と画面をつなげることができます。</b></p><p>たとえば、インタラクティブな物語や、Thymio で操作するゲームも作れます。限界はあなたの創造力だけです。</p><ul><li>ロボットとパソコンの画面をつなげよう</li><li>ブロックをドラッグ＆ドロップして Thymio とスプライトをプログラム</li><li>インターネット接続は不要</li></ul><p>Scratch にはワイヤレスの Thymio がいちばん向いています。有線の Thymio はつないだままにしてください。</p>"
 },
 "blockly": {
 "fr": "<p><b>Fais un premier pas vers une syntaxe de programmation plus exigeante, avec davantage de notions d’informatique.</b></p><ul><li>Pour les enfants qui savent lire et sont plus à l’aise avec l’ordinateur</li><li>Premier pas du langage visuel vers le langage texte</li><li>Glisse-dépose des blocs de texte pour programmer Thymio</li><li>Plus de possibilités qu’avec VPL, avec une logique proche de Scratch</li><li>Pour enseigner ou découvrir des notions d’informatique</li><li>Pas besoin de connexion internet</li></ul>",
@@ -1383,7 +1929,10 @@ window.THYMIO_I18N = {
 "it": "<p><b>Fai un primo passo verso una sintassi di programmazione più impegnativa, con più concetti di informatica.</b></p><ul><li>Adatto a bambini che sanno leggere e hanno più familiarità con il computer</li><li>Primo passo dal linguaggio visuale a quello testuale</li><li>Trascina e rilascia blocchi di testo per programmare Thymio</li><li>Più possibilità di VPL, con una logica simile a Scratch</li><li>Utile per insegnare o scoprire concetti di informatica</li><li>Non serve una connessione internet</li></ul>",
 "es": "<p><b>Da un primer paso hacia una sintaxis de programación más exigente, con más conceptos de informática.</b></p><ul><li>Para niños que saben leer y están más familiarizados con el ordenador</li><li>Primer paso del lenguaje visual al lenguaje de texto</li><li>Arrastra y suelta bloques de texto para programar Thymio</li><li>Más posibilidades que VPL, con una lógica parecida a Scratch</li><li>Sirve para enseñar o descubrir conceptos de informática</li><li>No necesita conexión a internet</li></ul>",
 "ar": "<p><b>خطوة أولى نحو صياغة برمجية أكثر تحدّيًا تتضمّن مفاهيم أكثر في علوم الحاسوب.</b></p><ul><li>مناسبة للأطفال الذين يجيدون القراءة ولديهم ألفة أكبر بالحاسوب</li><li>الخطوة الأولى من البرمجة المرئية إلى البرمجة النصية</li><li>اسحب كتل النص وأفلتها لبرمجة ثيميو</li><li>إمكانيات أكثر من VPL بمنطق برمجي يشبه Scratch</li><li>لتعليم مفاهيم علوم الحاسوب أو اكتشافها</li><li>لا حاجة إلى اتصال بالإنترنت</li></ul>",
-"pl": "<p><b>Pierwszy krok w stronę trudniejszej składni programowania, z większą liczbą pojęć informatycznych.</b></p><ul><li>Dla dzieci, które umieją czytać i lepiej znają komputer</li><li>Pierwszy krok od języka wizualnego do tekstowego</li><li>Przeciągaj bloki tekstu, by programować Thymio</li><li>Więcej możliwości niż w VPL, z logiką podobną do Scratcha</li><li>Do nauczania lub odkrywania pojęć informatyki</li><li>Nie potrzeba internetu</li></ul>"
+"pl": "<p><b>Pierwszy krok w stronę trudniejszej składni programowania, z większą liczbą pojęć informatycznych.</b></p><ul><li>Dla dzieci, które umieją czytać i lepiej znają komputer</li><li>Pierwszy krok od języka wizualnego do tekstowego</li><li>Przeciągaj bloki tekstu, by programować Thymio</li><li>Więcej możliwości niż w VPL, z logiką podobną do Scratcha</li><li>Do nauczania lub odkrywania pojęć informatyki</li><li>Nie potrzeba internetu</li></ul>",
+"he": "<p><b>צעד ראשון לעבר תחביר תכנות מאתגר יותר, עם יותר מושגים במדעי המחשב.</b></p><ul><li>מתאים לילדים שיודעים לקרוא ומכירים יותר את המחשב</li><li>צעד ראשון משפה חזותית לשפה טקסטואלית</li><li>גוררים ומשחררים בלוקי טקסט כדי לתכנת את תימיו</li><li>יותר אפשרויות מ-VPL, עם היגיון דומה ל-Scratch</li><li>ללמד או לגלות מושגים במדעי המחשב</li><li>אין צורך בחיבור לאינטרנט</li></ul>",
+"zh": "<p><b>迈向更有挑战的编程语法的第一步，涉及更多计算机科学概念。</b></p><ul><li>适合会认字、熟悉电脑的孩子</li><li>从图形化编程走向文字编程的第一步</li><li>拖放文字积木为 Thymio 编程</li><li>比 VPL 功能更多，逻辑与 Scratch 相似</li><li>用于教授或探索计算机科学概念</li><li>无需联网</li></ul>",
+"ja": "<p><b>より本格的なプログラミングの書き方と、コンピューターサイエンスの考え方への第一歩。</b></p><ul><li>字が読めて、パソコンに慣れた子どもに</li><li>ビジュアル言語からテキスト言語への第一歩</li><li>テキストのブロックをドラッグ＆ドロップして Thymio をプログラム</li><li>VPL より多くのことができ、考え方は Scratch に近い</li><li>コンピューターサイエンスを教える・学ぶのに</li><li>インターネット接続は不要</li></ul>"
 },
 "studio": {
 "fr": "<p><b>Aseba est un langage de programmation texte complet pour robots, qui donne un contrôle précis de tout ce qui se trouve dans ton Thymio.</b></p><ul><li>Découvre la programmation en texte</li><li>Prends le contrôle complet de ton robot Thymio</li><li>Regarde les valeurs des capteurs changer en direct pendant que ton programme tourne</li><li>Connecte plusieurs Thymio à un dongle et fais-les interagir (un onglet par robot)</li><li>Ouvre et enregistre les fichiers Aseba Studio (.aesl) : les programmes faits avec Thymio Suite 2.4.0 fonctionnent toujours</li><li>Pas besoin de connexion internet</li></ul>",
@@ -1391,7 +1940,10 @@ window.THYMIO_I18N = {
 "it": "<p><b>Aseba è un linguaggio di programmazione testuale completo per robot, che ti dà un controllo preciso di tutto ciò che c’è nel tuo Thymio.</b></p><ul><li>Scopri la programmazione testuale</li><li>Prendi il pieno controllo del tuo robot Thymio</li><li>Guarda i valori dei sensori cambiare in tempo reale mentre il programma gira</li><li>Collega più Thymio a una chiavetta e falli interagire (una scheda per robot)</li><li>Apre e salva i file di Aseba Studio (.aesl): i programmi fatti con Thymio Suite 2.4.0 funzionano ancora</li><li>Non serve una connessione internet</li></ul>",
 "es": "<p><b>Aseba es un lenguaje de programación de texto completo para robots, que te da un control preciso de todo lo que hay en tu Thymio.</b></p><ul><li>Descubre la programación con texto</li><li>Toma el control total de tu robot Thymio</li><li>Mira cómo cambian los valores de los sensores en directo mientras corre tu programa</li><li>Conecta varios Thymio a un adaptador y haz que interactúen (una pestaña por robot)</li><li>Abre y guarda archivos de Aseba Studio (.aesl): los programas hechos con Thymio Suite 2.4.0 siguen funcionando</li><li>No necesita conexión a internet</li></ul>",
 "ar": "<p><b>Aseba لغة برمجة نصية كاملة للروبوتات تمنحك تحكّمًا دقيقًا في كل ما بداخل روبوت ثيميو.</b></p><ul><li>اكتشف البرمجة النصية</li><li>تحكّم تحكّمًا كاملًا في روبوت ثيميو</li><li>شاهد قيم المستشعرات تتغيّر مباشرةً أثناء تشغيل برنامجك</li><li>صل عدة روبوتات ثيميو بدونجل واحد واجعلها تتفاعل معًا (تبويب لكل روبوت)</li><li>يفتح ملفات Aseba Studio (‎.aesl) ويحفظها، فتبقى البرامج المصنوعة بـ Thymio Suite 2.4.0 صالحة</li><li>لا حاجة إلى اتصال بالإنترنت</li></ul>",
-"pl": "<p><b>Aseba to pełny tekstowy język programowania robotów, który daje precyzyjną kontrolę nad wszystkim w twoim Thymio.</b></p><ul><li>Poznaj programowanie tekstowe</li><li>Przejmij pełną kontrolę nad robotem Thymio</li><li>Obserwuj na żywo zmiany wartości czujników podczas działania programu</li><li>Podłącz kilka Thymio do jednego klucza i spraw, by współpracowały (jedna karta na robota)</li><li>Otwiera i zapisuje pliki Aseba Studio (.aesl), więc programy z Thymio Suite 2.4.0 nadal działają</li><li>Nie potrzeba internetu</li></ul>"
+"pl": "<p><b>Aseba to pełny tekstowy język programowania robotów, który daje precyzyjną kontrolę nad wszystkim w twoim Thymio.</b></p><ul><li>Poznaj programowanie tekstowe</li><li>Przejmij pełną kontrolę nad robotem Thymio</li><li>Obserwuj na żywo zmiany wartości czujników podczas działania programu</li><li>Podłącz kilka Thymio do jednego klucza i spraw, by współpracowały (jedna karta na robota)</li><li>Otwiera i zapisuje pliki Aseba Studio (.aesl), więc programy z Thymio Suite 2.4.0 nadal działają</li><li>Nie potrzeba internetu</li></ul>",
+"he": "<p><b>Aseba היא שפת תכנות טקסטואלית מלאה לרובוטים, שנותנת שליטה מדויקת בכל מה שיש בתוך תימיו.</b></p><ul><li>גלו תכנות בטקסט</li><li>קחו שליטה מלאה ברובוט תימיו</li><li>צפו בערכי החיישנים משתנים בזמן אמת בזמן שהתוכנית רצה</li><li>חברו כמה רובוטים לדונגל אחד ותנו להם לעבוד יחד (לשונית לכל רובוט)</li><li>פותח ושומר קובצי Aseba Studio ‏(‎.aesl), כך שתוכניות מ-Thymio Suite 2.4.0 ממשיכות לעבוד</li><li>אין צורך בחיבור לאינטרנט</li></ul>",
+"zh": "<p><b>Aseba 是一种完整的机器人文字编程语言，可以精确控制 Thymio 里的一切。</b></p><ul><li>探索文字编程</li><li>全面掌控你的 Thymio 机器人</li><li>程序运行时实时查看传感器数值变化</li><li>将多台 Thymio 连接到同一个接收器，让它们协作（每台机器人一个标签页）</li><li>可打开和保存 Aseba Studio 文件（.aesl），用 Thymio Suite 2.4.0 编写的程序依然可用</li><li>无需联网</li></ul>",
+"ja": "<p><b>Aseba はロボット用の本格的なテキストプログラミング言語で、Thymio のすべてを細かく制御できます。</b></p><ul><li>テキストでのプログラミングを体験</li><li>Thymio を完全にコントロール</li><li>プログラムの実行中にセンサーの値の変化をリアルタイムで確認</li><li>複数の Thymio を1つのドングルにつないで連携させる（ロボットごとにタブ）</li><li>Aseba Studio のファイル（.aesl）を開いて保存できるので、Thymio Suite 2.4.0 で作ったプログラムもそのまま使えます</li><li>インターネット接続は不要</li></ul>"
 },
 "thonny": {
 "fr": "<p><b>Thonny est un éditeur Python conçu pour apprendre à programmer.</b></p><ul><li>Programme Thymio en Python grâce au module Thymio de Thonny</li><li>Le code Python est traduit en Aseba</li><li>Charge le code directement dans le robot</li><li>Plusieurs robots sur un même dongle peuvent être programmés ensemble</li></ul><p><b>Utilisation :</b> écris ton programme, puis choisis <b>Thymio › Run on Thymio</b> (ou Ctrl+Maj+R). Pour choisir le robot, ouvre <b>View › Thymio Robots</b>.</p><p>Thonny est développé par Aivar Annamaa sous licence MIT.</p>",
@@ -1399,7 +1951,10 @@ window.THYMIO_I18N = {
 "it": "<p><b>Thonny è un editor Python pensato per imparare a programmare.</b></p><ul><li>Programma Thymio in Python con il plug-in Thymio di Thonny</li><li>Il codice Python viene tradotto in Aseba</li><li>Carica il codice direttamente sul robot</li><li>Più robot sulla stessa chiavetta possono essere programmati insieme</li></ul><p><b>Come si usa:</b> scrivi il programma, poi scegli <b>Thymio › Run on Thymio</b> (o Ctrl+Maiusc+R). Per scegliere il robot apri <b>View › Thymio Robots</b>.</p><p>Thonny è sviluppato da Aivar Annamaa con licenza MIT.</p>",
 "es": "<p><b>Thonny es un editor de Python pensado para aprender a programar.</b></p><ul><li>Programa Thymio en Python con el complemento Thymio de Thonny</li><li>El código Python se traduce a Aseba</li><li>Carga el código directamente en el robot</li><li>Se pueden programar juntos varios robots en un mismo adaptador</li></ul><p><b>Cómo se usa:</b> escribe tu programa y elige <b>Thymio › Run on Thymio</b> (o Ctrl+Mayús+R). Para elegir el robot, abre <b>View › Thymio Robots</b>.</p><p>Thonny está desarrollado por Aivar Annamaa con licencia MIT.</p>",
 "ar": "<p><b>Thonny محرّر Python مصمّم لتعلّم البرمجة.</b></p><ul><li>برمج ثيميو بلغة Python باستخدام إضافة Thymio في Thonny</li><li>تُترجم شيفرة Python إلى Aseba</li><li>حمّل الشيفرة مباشرةً إلى الروبوت</li><li>يمكن برمجة عدة روبوتات على دونجل واحد معًا</li></ul><p><b>طريقة الاستخدام:</b> اكتب برنامجك ثم اختر <b>Thymio › Run on Thymio</b> (أو Ctrl+Shift+R). لاختيار الروبوت، افتح <b>View › Thymio Robots</b>.</p><p>طوّر Aivar Annamaa برنامج Thonny بترخيص MIT.</p>",
-"pl": "<p><b>Thonny to edytor Pythona stworzony do nauki programowania.</b></p><ul><li>Programuj Thymio w Pythonie dzięki wtyczce Thymio w Thonny</li><li>Kod Pythona jest tłumaczony na Asebę</li><li>Wgrywaj kod bezpośrednio do robota</li><li>Kilka robotów na jednym kluczu można programować razem</li></ul><p><b>Jak używać:</b> napisz program, a potem wybierz <b>Thymio › Run on Thymio</b> (lub Ctrl+Shift+R). Aby wybrać robota, otwórz <b>View › Thymio Robots</b>.</p><p>Thonny rozwija Aivar Annamaa na licencji MIT.</p>"
+"pl": "<p><b>Thonny to edytor Pythona stworzony do nauki programowania.</b></p><ul><li>Programuj Thymio w Pythonie dzięki wtyczce Thymio w Thonny</li><li>Kod Pythona jest tłumaczony na Asebę</li><li>Wgrywaj kod bezpośrednio do robota</li><li>Kilka robotów na jednym kluczu można programować razem</li></ul><p><b>Jak używać:</b> napisz program, a potem wybierz <b>Thymio › Run on Thymio</b> (lub Ctrl+Shift+R). Aby wybrać robota, otwórz <b>View › Thymio Robots</b>.</p><p>Thonny rozwija Aivar Annamaa na licencji MIT.</p>",
+"he": "<p><b>Thonny הוא עורך Python שנועד ללמידת תכנות.</b></p><ul><li>תכנתו את תימיו ב-Python בעזרת התוסף Thymio של Thonny</li><li>קוד ה-Python מתורגם ל-Aseba</li><li>טוענים את הקוד ישירות לרובוט</li><li>אפשר לתכנת יחד כמה רובוטים על אותו דונגל</li></ul><p><b>איך משתמשים:</b> כתבו את התוכנית, ואז בחרו <b>Thymio › Run on Thymio</b> (או Ctrl+Shift+R). כדי לבחור רובוט, פתחו את <b>View › Thymio Robots</b>.</p><p>את Thonny מפתח Aivar Annamaa ברישיון MIT.</p>",
+"zh": "<p><b>Thonny 是专为学习编程设计的 Python 编辑器。</b></p><ul><li>借助 Thonny 的 Thymio 插件，用 Python 给 Thymio 编程</li><li>Python 代码会被翻译成 Aseba</li><li>直接把代码下载到机器人</li><li>同一接收器上的多台机器人可以一起编程</li></ul><p><b>使用方法：</b>写好程序后，选择 <b>Thymio › Run on Thymio</b>（或按 Ctrl+Shift+R）。要选择机器人，请打开 <b>View › Thymio Robots</b>。</p><p>Thonny 由 Aivar Annamaa 开发，采用 MIT 许可证。</p>",
+"ja": "<p><b>Thonny はプログラミング学習のために作られた Python エディターです。</b></p><ul><li>Thonny の Thymio プラグインで、Python を使って Thymio をプログラム</li><li>Python のコードは Aseba に変換されます</li><li>コードをロボットに直接書き込み</li><li>同じドングルの複数のロボットをまとめてプログラムできます</li></ul><p><b>使い方：</b>プログラムを書いたら <b>Thymio › Run on Thymio</b>（または Ctrl+Shift+R）を選びます。ロボットを選ぶには <b>View › Thymio Robots</b> を開きます。</p><p>Thonny は Aivar Annamaa が MIT ライセンスで開発しています。</p>"
 }
 }
 };

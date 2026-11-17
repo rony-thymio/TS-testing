@@ -42,7 +42,8 @@
     renderHints();
   }
 
-  window.addEventListener('thymio-lang', () => { if (activity) render(); });
+  let currentEntry = null;
+  window.addEventListener('thymio-lang', () => { if (currentEntry) { activity = window.ActivityMd.parse(currentEntry); render(); } });
   $('cw-next-hint').addEventListener('click', () => { shown = Math.min(shown + 1, activity.hints.length); renderHints(); });
   function confirmReplace() {
     const d = $('confirm-dialog');
@@ -72,6 +73,7 @@
   invoke('list_activities').then((list) => {
     const entry = list.find((e) => e.lang === lang && e.id === id);
     if (!entry) { $('cw-title').textContent = T('Activity not found'); return; }
+    currentEntry = entry;
     activity = window.ActivityMd.parse(entry);
     render();
   }).catch((e) => { $('cw-title').textContent = String(e); });
