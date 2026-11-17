@@ -1,6 +1,6 @@
 [package]
 name = "thymio-suite-next"
-version = "0.14.0"
+version = "0.15.0"
 description = "Launcher for Thymio II programming environments"
 authors = ["Mobsya"]
 license = "LGPL-3.0-only"
