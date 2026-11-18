@@ -47,9 +47,11 @@ struct EditorInfo {
 }
 
 fn editors(app: &tauri::AppHandle) -> Vec<EditorInfo> {
-    let mut map = app.state::<RobotWindows>().0.lock().unwrap();
+    let windows = app.state::<RobotWindows>();
+    let mut map = windows.0.lock().unwrap();
     map.retain(|_, (label, _)| app.get_webview_window(label.as_str()).is_some());
-    map.iter().map(|(robot, (_, mode))| EditorInfo { robot: robot.clone(), mode: mode.clone() }).collect()
+    let list: Vec<EditorInfo> = map.iter().map(|(robot, (_, mode))| EditorInfo { robot: robot.clone(), mode: mode.clone() }).collect();
+    list
 }
 
 fn editors_changed(app: &tauri::AppHandle) {
