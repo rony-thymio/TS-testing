@@ -23,17 +23,6 @@ window.THYMIO_I18N = {
 "zh": "活动库",
 "ja": "アクティビティ"
 },
-"Pair wireless robots": {
-"fr": "Appairer des robots sans fil",
-"de": "Drahtlose Roboter koppeln",
-"it": "Associa robot wireless",
-"es": "Emparejar robots inalámbricos",
-"ar": "إقران الروبوتات اللاسلكية",
-"pl": "Parowanie robotów bezprzewodowych",
-"he": "צימוד רובוטים אלחוטיים",
-"zh": "配对无线机器人",
-"ja": "ワイヤレスロボットのペアリング"
-},
 "Help": {
 "fr": "Aide",
 "de": "Hilfe",
@@ -199,17 +188,6 @@ window.THYMIO_I18N = {
 "zh": "该语言的活动将在后续版本中推出。目前，编辑器会打开一个小示例程序。",
 "ja": "この言語のアクティビティは次のバージョンで追加されます。それまでは小さなサンプルプログラムでエディターが開きます。"
 },
-"Link a robot to a dongle once, then it connects by itself every time.": {
-"fr": "Associe une fois un robot à un dongle, ensuite il se connecte tout seul à chaque fois.",
-"de": "Verbinde einen Roboter einmal mit einem Dongle, danach verbindet er sich jedes Mal von selbst.",
-"it": "Associa una volta un robot a una chiavetta: poi si collegherà da solo ogni volta.",
-"es": "Vincula un robot a un adaptador una vez y después se conectará solo cada vez.",
-"ar": "اربط الروبوت بالدونجل مرة واحدة، وبعدها يتصل تلقائيًا في كل مرة.",
-"pl": "Połącz robota z kluczem raz, a potem będzie łączył się sam za każdym razem.",
-"he": "צמדו רובוט לדונגל פעם אחת, ומאז הוא יתחבר לבד בכל פעם.",
-"zh": "只需将机器人与接收器配对一次，之后每次都会自动连接。",
-"ja": "ロボットとドングルを一度ペアリングすれば、次からは自動で接続します。"
-},
 "What do you want to do?": {
 "fr": "Que veux-tu faire ?",
 "de": "Was möchtest du tun?",
@@ -220,83 +198,6 @@ window.THYMIO_I18N = {
 "he": "מה תרצו לעשות?",
 "zh": "你想做什么？",
 "ja": "何をしますか？"
-},
-"One robot, one dongle": {
-"fr": "Un robot, un dongle",
-"de": "Ein Roboter, ein Dongle",
-"it": "Un robot, una chiavetta",
-"es": "Un robot, un adaptador",
-"ar": "روبوت واحد، دونجل واحد",
-"pl": "Jeden robot, jeden klucz",
-"he": "רובוט אחד, דונגל אחד",
-"zh": "一个机器人，一个接收器",
-"ja": "ロボット1台、ドングル1個"
-},
-"A private pair: this dongle only talks to this robot.": {
-"fr": "Une paire privée : ce dongle ne parle qu’à ce robot.",
-"de": "Ein privates Paar: Dieser Dongle spricht nur mit diesem Roboter.",
-"it": "Una coppia privata: questa chiavetta parla solo con questo robot.",
-"es": "Una pareja privada: este adaptador solo habla con este robot.",
-"ar": "زوج خاص: هذا الدونجل يتواصل مع هذا الروبوت فقط.",
-"pl": "Prywatna para: ten klucz rozmawia tylko z tym robotem.",
-"he": "זוג פרטי: הדונגל הזה מדבר רק עם הרובוט הזה.",
-"zh": "专属配对：这个接收器只与这台机器人通信。",
-"ja": "専用ペア：このドングルはこのロボットとだけ通信します。"
-},
-"A classroom case: each robot with its own dongle": {
-"fr": "Une valise de classe : chaque robot avec son propre dongle",
-"de": "Ein Klassenkoffer: jeder Roboter mit eigenem Dongle",
-"it": "Una valigetta di classe: ogni robot con la sua chiavetta",
-"es": "Un maletín de clase: cada robot con su propio adaptador",
-"ar": "حقيبة صفّية: لكل روبوت دونجل خاص به",
-"pl": "Zestaw klasowy: każdy robot z własnym kluczem",
-"he": "ערכת כיתה: לכל רובוט דונגל משלו",
-"zh": "教室套装：每台机器人配一个接收器",
-"ja": "クラスセット：ロボットごとに専用ドングル"
-},
-"Robot 1 with dongle 1, robot 2 with dongle 2… Each pair gets its own network.": {
-"fr": "Robot 1 avec dongle 1, robot 2 avec dongle 2… Chaque paire a son propre réseau.",
-"de": "Roboter 1 mit Dongle 1, Roboter 2 mit Dongle 2 … Jedes Paar bekommt sein eigenes Netz.",
-"it": "Robot 1 con chiavetta 1, robot 2 con chiavetta 2… Ogni coppia ha la sua rete.",
-"es": "Robot 1 con adaptador 1, robot 2 con adaptador 2… Cada pareja tiene su propia red.",
-"ar": "الروبوت 1 مع الدونجل 1، والروبوت 2 مع الدونجل 2… لكل زوج شبكته الخاصة.",
-"pl": "Robot 1 z kluczem 1, robot 2 z kluczem 2… Każda para ma własną sieć.",
-"he": "רובוט 1 עם דונגל 1, רובוט 2 עם דונגל 2… לכל זוג רשת משלו.",
-"zh": "机器人 1 配接收器 1，机器人 2 配接收器 2……每一对都有自己的网络。",
-"ja": "ロボット1とドングル1、ロボット2とドングル2… ペアごとに専用のネットワークになります。"
-},
-"Several robots on one dongle": {
-"fr": "Plusieurs robots sur un dongle",
-"de": "Mehrere Roboter an einem Dongle",
-"it": "Più robot su una chiavetta",
-"es": "Varios robots en un adaptador",
-"ar": "عدة روبوتات على دونجل واحد",
-"pl": "Kilka robotów na jednym kluczu",
-"he": "כמה רובוטים על דונגל אחד",
-"zh": "多台机器人共用一个接收器",
-"ja": "複数のロボットを1つのドングルで"
-},
-"All robots join the dongle's network, so one computer sees them all (Aseba, Python).": {
-"fr": "Tous les robots rejoignent le réseau du dongle : un seul ordinateur les voit tous (Aseba, Python).",
-"de": "Alle Roboter treten dem Netz des Dongles bei, so sieht ein Computer sie alle (Aseba, Python).",
-"it": "Tutti i robot entrano nella rete della chiavetta: un solo computer li vede tutti (Aseba, Python).",
-"es": "Todos los robots se unen a la red del adaptador, así un ordenador los ve a todos (Aseba, Python).",
-"ar": "تنضم كل الروبوتات إلى شبكة الدونجل، فيراها حاسوب واحد كلها (Aseba وPython).",
-"pl": "Wszystkie roboty dołączają do sieci klucza, więc jeden komputer widzi je wszystkie (Aseba, Python).",
-"he": "כל הרובוטים מצטרפים לרשת של הדונגל, כך שמחשב אחד רואה את כולם (Aseba, Python).",
-"zh": "所有机器人加入同一个接收器网络，一台电脑即可看到全部机器人（Aseba、Python）。",
-"ja": "すべてのロボットがドングルのネットワークに入り、1台のパソコンで全部を扱えます（Aseba、Python）。"
-},
-"Pair a wireless robot": {
-"fr": "Appairer un robot sans fil",
-"de": "Einen drahtlosen Roboter koppeln",
-"it": "Associa un robot wireless",
-"es": "Emparejar un robot inalámbrico",
-"ar": "إقران روبوت لاسلكي",
-"pl": "Sparuj robota bezprzewodowego",
-"he": "צימוד רובוט אלחוטי",
-"zh": "配对无线机器人",
-"ja": "ワイヤレスロボットをペアリング"
 },
 "Advanced: choose channel and network yourself": {
 "fr": "Avancé : choisir soi-même le canal et le réseau",
@@ -352,17 +253,6 @@ window.THYMIO_I18N = {
 "he": "צימוד",
 "zh": "配对",
 "ja": "ペアリング"
-},
-"While this screen is open, wireless robots are disconnected from the programming apps.": {
-"fr": "Tant que cet écran est ouvert, les robots sans fil sont déconnectés des applications de programmation.",
-"de": "Solange dieser Bildschirm offen ist, sind drahtlose Roboter von den Programmier-Apps getrennt.",
-"it": "Finché questa schermata è aperta, i robot wireless sono scollegati dalle app di programmazione.",
-"es": "Mientras esta pantalla esté abierta, los robots inalámbricos están desconectados de las aplicaciones de programación.",
-"ar": "ما دامت هذه الشاشة مفتوحة، تكون الروبوتات اللاسلكية مفصولة عن تطبيقات البرمجة.",
-"pl": "Dopóki ten ekran jest otwarty, roboty bezprzewodowe są odłączone od aplikacji do programowania.",
-"he": "כל עוד המסך הזה פתוח, הרובוטים האלחוטיים מנותקים מיישומי התכנות.",
-"zh": "此页面打开期间，无线机器人会与编程应用断开连接。",
-"ja": "この画面を開いている間、ワイヤレスロボットはプログラミングアプリから切断されます。"
 },
 "Starting the device manager…": {
 "fr": "Démarrage du gestionnaire d’appareils…",
@@ -1607,50 +1497,6 @@ window.THYMIO_I18N = {
 "zh": "已找到接收器（网络 {net}，频道 {ch}）。",
 "ja": "ドングルが見つかりました（ネットワーク {net}、チャンネル {ch}）。"
 },
-"Plug the wireless robot into this computer with its USB cable, and switch it on.": {
-"fr": "Branche le robot sans fil à cet ordinateur avec son câble USB, et allume-le.",
-"de": "Schließe den drahtlosen Roboter mit seinem USB-Kabel an diesen Computer an und schalte ihn ein.",
-"it": "Collega il robot wireless a questo computer con il cavo USB e accendilo.",
-"es": "Conecta el robot inalámbrico a este ordenador con su cable USB y enciéndelo.",
-"ar": "وصّل الروبوت اللاسلكي بهذا الحاسوب بكابل USB وشغّله.",
-"pl": "Podłącz robota bezprzewodowego do tego komputera kablem USB i włącz go.",
-"he": "חברו את הרובוט האלחוטי למחשב הזה בכבל ה-USB שלו והדליקו אותו.",
-"zh": "用 USB 线把无线机器人连接到这台电脑，并打开它。",
-"ja": "ワイヤレスロボットを USB ケーブルでこのパソコンにつなぎ、電源を入れてください。"
-},
-"{n} robots are plugged in by cable. Keep only one.": {
-"fr": "{n} robots sont branchés par câble. N’en garde qu’un.",
-"de": "{n} Roboter sind per Kabel angeschlossen. Lass nur einen angeschlossen.",
-"it": "Sono collegati via cavo {n} robot. Lasciane solo uno.",
-"es": "Hay {n} robots conectados por cable. Deja solo uno.",
-"ar": "هناك {n} روبوتات موصولة بالكابل. أبقِ واحدًا فقط.",
-"pl": "Kablem podłączono robotów: {n}. Zostaw tylko jednego.",
-"he": "מחוברים בכבל {n} רובוטים. השאירו רק אחד.",
-"zh": "有 {n} 台机器人通过 USB 线连接。请只保留一台。",
-"ja": "USB で {n} 台のロボットがつながっています。1台だけにしてください。"
-},
-"{name} is already paired. Plug in the next robot.": {
-"fr": "{name} est déjà appairé. Branche le robot suivant.",
-"de": "{name} ist schon gekoppelt. Schließe den nächsten Roboter an.",
-"it": "{name} è già associato. Collega il robot successivo.",
-"es": "{name} ya está emparejado. Conecta el siguiente robot.",
-"ar": "{name} مقترن بالفعل. وصّل الروبوت التالي.",
-"pl": "{name} jest już sparowany. Podłącz następnego robota.",
-"he": "{name} כבר צומד. חברו את הרובוט הבא.",
-"zh": "{name} 已配对。请连接下一台机器人。",
-"ja": "{name} はペアリング済みです。次のロボットをつないでください。"
-},
-"Robot {name} plugged in by cable.": {
-"fr": "Robot {name} branché par câble.",
-"de": "Roboter {name} per Kabel angeschlossen.",
-"it": "Robot {name} collegato via cavo.",
-"es": "Robot {name} conectado por cable.",
-"ar": "الروبوت {name} موصول بالكابل.",
-"pl": "Robot {name} podłączony kablem.",
-"he": "הרובוט {name} מחובר בכבל.",
-"zh": "机器人 {name} 已通过 USB 线连接。",
-"ja": "ロボット {name} が USB でつながりました。"
-},
 "Firmware {v} is too old for pairing. Update it first (button on the robot in the main screen).": {
 "fr": "Le firmware {v} est trop ancien pour l’appairage. Mets-le d’abord à jour (bouton sur le robot dans l’écran principal).",
 "de": "Firmware {v} ist zu alt zum Koppeln. Aktualisiere sie zuerst (Knopf beim Roboter auf dem Hauptbildschirm).",
@@ -1684,17 +1530,6 @@ window.THYMIO_I18N = {
 "zh": "需要固件 13 或更高版本。",
 "ja": "ファームウェア 13 以降が必要です。"
 },
-"Pair robot #{n}": {
-"fr": "Appairer le robot n° {n}",
-"de": "Roboter Nr. {n} koppeln",
-"it": "Associa il robot n. {n}",
-"es": "Emparejar el robot n.º {n}",
-"ar": "إقران الروبوت رقم {n}",
-"pl": "Sparuj robota nr {n}",
-"he": "צימוד רובוט מס' {n}",
-"zh": "配对第 {n} 台机器人",
-"ja": "ロボット {n} 台目をペアリング"
-},
 "Enter a network of 4 characters (0–9, A–F).": {
 "fr": "Saisis un réseau de 4 caractères (0–9, A–F).",
 "de": "Gib ein Netz mit 4 Zeichen ein (0–9, A–F).",
@@ -1717,39 +1552,6 @@ window.THYMIO_I18N = {
 "zh": "正在配对…请保持两者都已连接。",
 "ja": "ペアリング中… 両方つないだままにしてください。"
 },
-"Unplug the cable: the robot now talks through the dongle.": {
-"fr": "Débranche le câble : le robot passe maintenant par le dongle.",
-"de": "Zieh das Kabel ab: Der Roboter spricht jetzt über den Dongle.",
-"it": "Scollega il cavo: ora il robot comunica tramite la chiavetta.",
-"es": "Desconecta el cable: el robot ahora habla a través del adaptador.",
-"ar": "افصل الكابل: يتواصل الروبوت الآن عبر الدونجل.",
-"pl": "Odłącz kabel: robot komunikuje się teraz przez klucz.",
-"he": "נתקו את הכבל: הרובוט מדבר עכשיו דרך הדונגל.",
-"zh": "拔下 USB 线：机器人现在通过接收器通信。",
-"ja": "ケーブルを外してください：ロボットはドングル経由で通信します。"
-},
-"Unplug this robot and dongle (stick matching stickers), then plug in the next pair.": {
-"fr": "Débranche ce robot et ce dongle (colle des gommettes assorties), puis branche la paire suivante.",
-"de": "Zieh diesen Roboter und Dongle ab (gleiche Aufkleber anbringen), dann schließe das nächste Paar an.",
-"it": "Scollega questo robot e questa chiavetta (attacca adesivi uguali), poi collega la coppia successiva.",
-"es": "Desconecta este robot y este adaptador (pon pegatinas iguales) y conecta la siguiente pareja.",
-"ar": "افصل هذا الروبوت والدونجل (ألصق ملصقين متطابقين)، ثم وصّل الزوج التالي.",
-"pl": "Odłącz tego robota i klucz (naklej pasujące naklejki), a potem podłącz kolejną parę.",
-"he": "נתקו את הרובוט והדונגל האלה (הדביקו מדבקות תואמות), ואז חברו את הזוג הבא.",
-"zh": "拔下这台机器人和接收器（贴上相同的贴纸），然后连接下一对。",
-"ja": "このロボットとドングルを外し（おそろいのシールを貼りましょう）、次のペアをつないでください。"
-},
-"Unplug this robot and plug in the next one.": {
-"fr": "Débranche ce robot et branche le suivant.",
-"de": "Zieh diesen Roboter ab und schließe den nächsten an.",
-"it": "Scollega questo robot e collega il successivo.",
-"es": "Desconecta este robot y conecta el siguiente.",
-"ar": "افصل هذا الروبوت ووصّل التالي.",
-"pl": "Odłącz tego robota i podłącz następnego.",
-"he": "נתקו את הרובוט הזה וחברו את הבא.",
-"zh": "拔下这台机器人，然后连接下一台。",
-"ja": "このロボットを外して、次のロボットをつないでください。"
-},
 "Paired: network {net}, channel {ch}.": {
 "fr": "Appairé : réseau {net}, canal {ch}.",
 "de": "Gekoppelt: Netz {net}, Kanal {ch}.",
@@ -1771,28 +1573,6 @@ window.THYMIO_I18N = {
 "he": "לא ניתן לכתוב את ההגדרות לדונגל. נתקו וחברו אותו מחדש, ונסו שוב.",
 "zh": "无法将设置写入接收器。请拔下后重新插入，再试一次。",
 "ja": "ドングルに設定を書き込めませんでした。抜き差ししてもう一度試してください。"
-},
-"Could not write the settings to the robot. Check the cable and that the robot is on, then try again.": {
-"fr": "Impossible d’écrire les réglages dans le robot. Vérifie le câble et que le robot est allumé, puis réessaie.",
-"de": "Die Einstellungen konnten nicht auf den Roboter geschrieben werden. Prüfe das Kabel und ob der Roboter an ist, und versuche es erneut.",
-"it": "Impossibile scrivere le impostazioni sul robot. Controlla il cavo e che il robot sia acceso, poi riprova.",
-"es": "No se pudieron escribir los ajustes en el robot. Revisa el cable y que el robot esté encendido, e inténtalo de nuevo.",
-"ar": "تعذّرت كتابة الإعدادات على الروبوت. تحقّق من الكابل ومن أن الروبوت مشغّل، ثم حاول مجددًا.",
-"pl": "Nie udało się zapisać ustawień w robocie. Sprawdź kabel i czy robot jest włączony, a potem spróbuj ponownie.",
-"he": "לא ניתן לכתוב את ההגדרות לרובוט. בדקו את הכבל ושהרובוט דולק, ונסו שוב.",
-"zh": "无法将设置写入机器人。请检查 USB 线并确认机器人已开机，再试一次。",
-"ja": "ロボットに設定を書き込めませんでした。ケーブルと電源を確認して、もう一度試してください。"
-},
-"Pairing failed. Unplug and replug the robot and dongle, then try again.": {
-"fr": "L’appairage a échoué. Débranche et rebranche le robot et le dongle, puis réessaie.",
-"de": "Die Kopplung ist fehlgeschlagen. Zieh Roboter und Dongle ab, steck sie wieder ein und versuche es erneut.",
-"it": "Associazione non riuscita. Scollega e ricollega robot e chiavetta, poi riprova.",
-"es": "El emparejamiento falló. Desconecta y vuelve a conectar el robot y el adaptador, e inténtalo de nuevo.",
-"ar": "فشل الإقران. افصل الروبوت والدونجل وأعد توصيلهما، ثم حاول مجددًا.",
-"pl": "Parowanie się nie powiodło. Odłącz i podłącz ponownie robota i klucz, a potem spróbuj jeszcze raz.",
-"he": "הצימוד נכשל. נתקו וחברו מחדש את הרובוט והדונגל, ונסו שוב.",
-"zh": "配对失败。请重新插拔机器人和接收器，再试一次。",
-"ja": "ペアリングに失敗しました。ロボットとドングルを抜き差しして、もう一度試してください。"
 },
 "ch {n}": {
 "fr": "canal {n}",
@@ -1969,32 +1749,439 @@ window.THYMIO_I18N = {
 "he": "יחליף את {app} ב-{name}",
 "zh": "将替换 {name} 上的 {app}",
 "ja": "{name} の {app} と入れ替わります"
+},
+"Pair your Thymio II": {
+"fr": "Appairer tes Thymio II",
+"de": "Deine Thymio II koppeln",
+"it": "Associa i tuoi Thymio II",
+"es": "Emparejar tus Thymio II",
+"ar": "إقران روبوتات Thymio II",
+"pl": "Sparuj swoje Thymio II",
+"he": "צימוד ה-Thymio II שלכם",
+"zh": "配对你的 Thymio II",
+"ja": "Thymio II をペアリング"
+},
+"Pair wireless Thymio II": {
+"fr": "Appairer des Thymio II sans fil",
+"de": "Drahtlose Thymio II koppeln",
+"it": "Associa Thymio II wireless",
+"es": "Emparejar Thymio II inalámbricos",
+"ar": "إقران Thymio II اللاسلكية",
+"pl": "Parowanie bezprzewodowych Thymio II",
+"he": "צימוד Thymio II אלחוטיים",
+"zh": "配对无线 Thymio II",
+"ja": "ワイヤレス Thymio II のペアリング"
+},
+"Link a Thymio II to a dongle once, then it connects by itself every time.": {
+"fr": "Associe une fois un Thymio II à un dongle, ensuite il se connecte tout seul à chaque fois.",
+"de": "Verbinde einen Thymio II einmal mit einem Dongle, danach verbindet er sich jedes Mal von selbst.",
+"it": "Associa una volta un Thymio II a una chiavetta: poi si collegherà da solo ogni volta.",
+"es": "Vincula un Thymio II a un adaptador una vez y después se conectará solo cada vez.",
+"ar": "اربط Thymio II بالدونجل مرة واحدة، وبعدها يتصل تلقائيًا في كل مرة.",
+"pl": "Połącz Thymio II z kluczem raz, a potem będzie łączył się sam za każdym razem.",
+"he": "צמדו Thymio II לדונגל פעם אחת, ומאז הוא יתחבר לבד בכל פעם.",
+"zh": "只需将 Thymio II 与接收器配对一次，之后每次都会自动连接。",
+"ja": "Thymio II とドングルを一度ペアリングすれば、次からは自動で接続します。"
+},
+"One Thymio II, one dongle": {
+"fr": "Un Thymio II, un dongle",
+"de": "Ein Thymio II, ein Dongle",
+"it": "Un Thymio II, una chiavetta",
+"es": "Un Thymio II, un adaptador",
+"ar": "Thymio II واحد، دونجل واحد",
+"pl": "Jeden Thymio II, jeden klucz",
+"he": "Thymio II אחד, דונגל אחד",
+"zh": "一台 Thymio II，一个接收器",
+"ja": "Thymio II 1台、ドングル1個"
+},
+"A private pair: this dongle only talks to this Thymio II.": {
+"fr": "Une paire privée : ce dongle ne parle qu’à ce Thymio II.",
+"de": "Ein privates Paar: Dieser Dongle spricht nur mit diesem Thymio II.",
+"it": "Una coppia privata: questa chiavetta parla solo con questo Thymio II.",
+"es": "Una pareja privada: este adaptador solo habla con este Thymio II.",
+"ar": "زوج خاص: هذا الدونجل يتواصل مع هذا الـ Thymio II فقط.",
+"pl": "Prywatna para: ten klucz rozmawia tylko z tym Thymio II.",
+"he": "זוג פרטי: הדונגל הזה מדבר רק עם ה-Thymio II הזה.",
+"zh": "专属配对：这个接收器只与这台 Thymio II 通信。",
+"ja": "専用ペア：このドングルはこの Thymio II とだけ通信します。"
+},
+"A classroom case: each Thymio II with its own dongle": {
+"fr": "Une valise de classe : chaque Thymio II avec son propre dongle",
+"de": "Ein Klassenkoffer: jeder Thymio II mit eigenem Dongle",
+"it": "Una valigetta di classe: ogni Thymio II con la sua chiavetta",
+"es": "Un maletín de clase: cada Thymio II con su propio adaptador",
+"ar": "حقيبة صفّية: لكل Thymio II دونجل خاص به",
+"pl": "Zestaw klasowy: każdy Thymio II z własnym kluczem",
+"he": "ערכת כיתה: לכל Thymio II דונגל משלו",
+"zh": "教室套装：每台 Thymio II 配一个接收器",
+"ja": "クラスセット：Thymio II ごとに専用ドングル"
+},
+"Thymio II no. 1 with dongle 1, no. 2 with dongle 2… Each pair gets its own network.": {
+"fr": "Thymio II n° 1 avec dongle 1, n° 2 avec dongle 2… Chaque paire a son propre réseau.",
+"de": "Thymio II Nr. 1 mit Dongle 1, Nr. 2 mit Dongle 2 … Jedes Paar bekommt sein eigenes Netz.",
+"it": "Thymio II n. 1 con chiavetta 1, n. 2 con chiavetta 2… Ogni coppia ha la sua rete.",
+"es": "Thymio II n.º 1 con adaptador 1, n.º 2 con adaptador 2… Cada pareja tiene su propia red.",
+"ar": "Thymio II رقم 1 مع الدونجل 1، ورقم 2 مع الدونجل 2… لكل زوج شبكته الخاصة.",
+"pl": "Thymio II nr 1 z kluczem 1, nr 2 z kluczem 2… Każda para ma własną sieć.",
+"he": "Thymio II מס' 1 עם דונגל 1, מס' 2 עם דונגל 2… לכל זוג רשת משלו.",
+"zh": "1 号 Thymio II 配接收器 1，2 号配接收器 2……每一对都有自己的网络。",
+"ja": "Thymio II 1号とドングル1、2号とドングル2… ペアごとに専用のネットワークになります。"
+},
+"Several Thymio II on one dongle": {
+"fr": "Plusieurs Thymio II sur un dongle",
+"de": "Mehrere Thymio II an einem Dongle",
+"it": "Più Thymio II su una chiavetta",
+"es": "Varios Thymio II en un adaptador",
+"ar": "عدة Thymio II على دونجل واحد",
+"pl": "Kilka Thymio II na jednym kluczu",
+"he": "כמה Thymio II על דונגל אחד",
+"zh": "多台 Thymio II 共用一个接收器",
+"ja": "複数の Thymio II を1つのドングルで"
+},
+"All Thymio II join the dongle's network, so one computer sees them all (Aseba, Python).": {
+"fr": "Tous les Thymio II rejoignent le réseau du dongle : un seul ordinateur les voit tous (Aseba, Python).",
+"de": "Alle Thymio II treten dem Netz des Dongles bei, so sieht ein Computer sie alle (Aseba, Python).",
+"it": "Tutti i Thymio II entrano nella rete della chiavetta: un solo computer li vede tutti (Aseba, Python).",
+"es": "Todos los Thymio II se unen a la red del adaptador, así un ordenador los ve a todos (Aseba, Python).",
+"ar": "تنضم كل Thymio II إلى شبكة الدونجل، فيراها حاسوب واحد كلها (Aseba وPython).",
+"pl": "Wszystkie Thymio II dołączają do sieci klucza, więc jeden komputer widzi je wszystkie (Aseba, Python).",
+"he": "כל ה-Thymio II מצטרפים לרשת של הדונגל, כך שמחשב אחד רואה את כולם (Aseba, Python).",
+"zh": "所有 Thymio II 加入同一个接收器网络，一台电脑即可看到全部（Aseba、Python）。",
+"ja": "すべての Thymio II がドングルのネットワークに入り、1台のパソコンで全部を扱えます（Aseba、Python）。"
+},
+"Pair a wireless Thymio II": {
+"fr": "Appairer un Thymio II sans fil",
+"de": "Einen drahtlosen Thymio II koppeln",
+"it": "Associa un Thymio II wireless",
+"es": "Emparejar un Thymio II inalámbrico",
+"ar": "إقران Thymio II لاسلكي",
+"pl": "Sparuj bezprzewodowego Thymio II",
+"he": "צימוד Thymio II אלחוטי",
+"zh": "配对无线 Thymio II",
+"ja": "ワイヤレス Thymio II をペアリング"
+},
+"While this screen is open, wireless Thymio II are disconnected from the programming apps.": {
+"fr": "Tant que cet écran est ouvert, les Thymio II sans fil sont déconnectés des applications de programmation.",
+"de": "Solange dieser Bildschirm offen ist, sind drahtlose Thymio II von den Programmier-Apps getrennt.",
+"it": "Finché questa schermata è aperta, i Thymio II wireless sono scollegati dalle app di programmazione.",
+"es": "Mientras esta pantalla esté abierta, los Thymio II inalámbricos están desconectados de las aplicaciones de programación.",
+"ar": "ما دامت هذه الشاشة مفتوحة، تكون Thymio II اللاسلكية مفصولة عن تطبيقات البرمجة.",
+"pl": "Dopóki ten ekran jest otwarty, bezprzewodowe Thymio II są odłączone od aplikacji do programowania.",
+"he": "כל עוד המסך הזה פתוח, ה-Thymio II האלחוטיים מנותקים מיישומי התכנות.",
+"zh": "此页面打开期间，无线 Thymio II 会与编程应用断开连接。",
+"ja": "この画面を開いている間、ワイヤレス Thymio II はプログラミングアプリから切断されます。"
+},
+"Plug the wireless Thymio II into this computer with its USB cable, and switch it on.": {
+"fr": "Branche le Thymio II sans fil à cet ordinateur avec son câble USB, et allume-le.",
+"de": "Schließe den drahtlosen Thymio II mit seinem USB-Kabel an diesen Computer an und schalte ihn ein.",
+"it": "Collega il Thymio II wireless a questo computer con il cavo USB e accendilo.",
+"es": "Conecta el Thymio II inalámbrico a este ordenador con su cable USB y enciéndelo.",
+"ar": "وصّل Thymio II اللاسلكي بهذا الحاسوب بكابل USB وشغّله.",
+"pl": "Podłącz bezprzewodowego Thymio II do tego komputera kablem USB i włącz go.",
+"he": "חברו את ה-Thymio II האלחוטי למחשב הזה בכבל ה-USB שלו והדליקו אותו.",
+"zh": "用 USB 线把无线 Thymio II 连接到这台电脑，并打开它。",
+"ja": "ワイヤレス Thymio II を USB ケーブルでこのパソコンにつなぎ、電源を入れてください。"
+},
+"{n} Thymio II are plugged in by cable. Keep only one.": {
+"fr": "{n} Thymio II sont branchés par câble. N’en garde qu’un.",
+"de": "{n} Thymio II sind per Kabel angeschlossen. Lass nur einen angeschlossen.",
+"it": "Sono collegati via cavo {n} Thymio II. Lasciane solo uno.",
+"es": "Hay {n} Thymio II conectados por cable. Deja solo uno.",
+"ar": "هناك {n} من Thymio II موصولة بالكابل. أبقِ واحدًا فقط.",
+"pl": "Kablem podłączono Thymio II: {n}. Zostaw tylko jednego.",
+"he": "מחוברים בכבל {n} Thymio II. השאירו רק אחד.",
+"zh": "有 {n} 台 Thymio II 通过 USB 线连接。请只保留一台。",
+"ja": "USB で {n} 台の Thymio II がつながっています。1台だけにしてください。"
+},
+"{name} is already paired. Plug in the next Thymio II.": {
+"fr": "{name} est déjà appairé. Branche le Thymio II suivant.",
+"de": "{name} ist schon gekoppelt. Schließe den nächsten Thymio II an.",
+"it": "{name} è già associato. Collega il Thymio II successivo.",
+"es": "{name} ya está emparejado. Conecta el siguiente Thymio II.",
+"ar": "{name} مقترن بالفعل. وصّل الـ Thymio II التالي.",
+"pl": "{name} jest już sparowany. Podłącz następnego Thymio II.",
+"he": "{name} כבר צומד. חברו את ה-Thymio II הבא.",
+"zh": "{name} 已配对。请连接下一台 Thymio II。",
+"ja": "{name} はペアリング済みです。次の Thymio II をつないでください。"
+},
+"{name} plugged in by cable.": {
+"fr": "{name} branché par câble.",
+"de": "{name} per Kabel angeschlossen.",
+"it": "{name} collegato via cavo.",
+"es": "{name} conectado por cable.",
+"ar": "{name} موصول بالكابل.",
+"pl": "{name} podłączony kablem.",
+"he": "{name} מחובר בכבל.",
+"zh": "{name} 已通过 USB 线连接。",
+"ja": "{name} が USB でつながりました。"
+},
+"Pair Thymio II no. {n}": {
+"fr": "Appairer le Thymio II n° {n}",
+"de": "Thymio II Nr. {n} koppeln",
+"it": "Associa il Thymio II n. {n}",
+"es": "Emparejar el Thymio II n.º {n}",
+"ar": "إقران Thymio II رقم {n}",
+"pl": "Sparuj Thymio II nr {n}",
+"he": "צימוד Thymio II מס' {n}",
+"zh": "配对第 {n} 台 Thymio II",
+"ja": "{n} 台目の Thymio II をペアリング"
+},
+"Unplug the cable: the Thymio II now talks through the dongle.": {
+"fr": "Débranche le câble : le Thymio II passe maintenant par le dongle.",
+"de": "Zieh das Kabel ab: Der Thymio II spricht jetzt über den Dongle.",
+"it": "Scollega il cavo: ora il Thymio II comunica tramite la chiavetta.",
+"es": "Desconecta el cable: el Thymio II ahora habla a través del adaptador.",
+"ar": "افصل الكابل: يتواصل Thymio II الآن عبر الدونجل.",
+"pl": "Odłącz kabel: Thymio II komunikuje się teraz przez klucz.",
+"he": "נתקו את הכבל: ה-Thymio II מדבר עכשיו דרך הדונגל.",
+"zh": "拔下 USB 线：Thymio II 现在通过接收器通信。",
+"ja": "ケーブルを外してください：Thymio II はドングル経由で通信します。"
+},
+"Unplug this Thymio II and dongle (stick matching stickers), then plug in the next pair.": {
+"fr": "Débranche ce Thymio II et ce dongle (colle des gommettes assorties), puis branche la paire suivante.",
+"de": "Zieh diesen Thymio II und Dongle ab (gleiche Aufkleber anbringen), dann schließe das nächste Paar an.",
+"it": "Scollega questo Thymio II e questa chiavetta (attacca adesivi uguali), poi collega la coppia successiva.",
+"es": "Desconecta este Thymio II y este adaptador (pon pegatinas iguales) y conecta la siguiente pareja.",
+"ar": "افصل هذا الـ Thymio II والدونجل (ألصق ملصقين متطابقين)، ثم وصّل الزوج التالي.",
+"pl": "Odłącz tego Thymio II i klucz (naklej pasujące naklejki), a potem podłącz kolejną parę.",
+"he": "נתקו את ה-Thymio II והדונגל האלה (הדביקו מדבקות תואמות), ואז חברו את הזוג הבא.",
+"zh": "拔下这台 Thymio II 和接收器（贴上相同的贴纸），然后连接下一对。",
+"ja": "この Thymio II とドングルを外し（おそろいのシールを貼りましょう）、次のペアをつないでください。"
+},
+"Unplug this Thymio II and plug in the next one.": {
+"fr": "Débranche ce Thymio II et branche le suivant.",
+"de": "Zieh diesen Thymio II ab und schließe den nächsten an.",
+"it": "Scollega questo Thymio II e collega il successivo.",
+"es": "Desconecta este Thymio II y conecta el siguiente.",
+"ar": "افصل هذا الـ Thymio II ووصّل التالي.",
+"pl": "Odłącz tego Thymio II i podłącz następnego.",
+"he": "נתקו את ה-Thymio II הזה וחברו את הבא.",
+"zh": "拔下这台 Thymio II，然后连接下一台。",
+"ja": "この Thymio II を外して、次のものをつないでください。"
+},
+"Could not write the settings to the Thymio II. Check the cable and that it is on, then try again.": {
+"fr": "Impossible d’écrire les réglages dans le Thymio II. Vérifie le câble et qu’il est allumé, puis réessaie.",
+"de": "Die Einstellungen konnten nicht auf den Thymio II geschrieben werden. Prüfe das Kabel und ob er an ist, und versuche es erneut.",
+"it": "Impossibile scrivere le impostazioni sul Thymio II. Controlla il cavo e che sia acceso, poi riprova.",
+"es": "No se pudieron escribir los ajustes en el Thymio II. Revisa el cable y que esté encendido, e inténtalo de nuevo.",
+"ar": "تعذّرت كتابة الإعدادات على Thymio II. تحقّق من الكابل ومن أنه مشغّل، ثم حاول مجددًا.",
+"pl": "Nie udało się zapisać ustawień w Thymio II. Sprawdź kabel i czy jest włączony, a potem spróbuj ponownie.",
+"he": "לא ניתן לכתוב את ההגדרות ל-Thymio II. בדקו את הכבל ושהוא דולק, ונסו שוב.",
+"zh": "无法将设置写入 Thymio II。请检查 USB 线并确认它已开机，再试一次。",
+"ja": "Thymio II に設定を書き込めませんでした。ケーブルと電源を確認して、もう一度試してください。"
+},
+"Pairing failed. Unplug and replug the Thymio II and dongle, then try again.": {
+"fr": "L’appairage a échoué. Débranche et rebranche le Thymio II et le dongle, puis réessaie.",
+"de": "Die Kopplung ist fehlgeschlagen. Zieh Thymio II und Dongle ab, steck sie wieder ein und versuche es erneut.",
+"it": "Associazione non riuscita. Scollega e ricollega Thymio II e chiavetta, poi riprova.",
+"es": "El emparejamiento falló. Desconecta y vuelve a conectar el Thymio II y el adaptador, e inténtalo de nuevo.",
+"ar": "فشل الإقران. افصل Thymio II والدونجل وأعد توصيلهما، ثم حاول مجددًا.",
+"pl": "Parowanie się nie powiodło. Odłącz i podłącz ponownie Thymio II i klucz, a potem spróbuj jeszcze raz.",
+"he": "הצימוד נכשל. נתקו וחברו מחדש את ה-Thymio II והדונגל, ונסו שוב.",
+"zh": "配对失败。请重新插拔 Thymio II 和接收器，再试一次。",
+"ja": "ペアリングに失敗しました。Thymio II とドングルを抜き差しして、もう一度試してください。"
+},
+"Colour of {name}": {
+"fr": "Couleur de {name}",
+"de": "Farbe von {name}",
+"it": "Colore di {name}",
+"es": "Color de {name}",
+"ar": "لون {name}",
+"pl": "Kolor robota {name}",
+"he": "הצבע של {name}",
+"zh": "{name} 的颜色",
+"ja": "{name} の色"
+},
+"Change the colour": {
+"fr": "Changer la couleur",
+"de": "Farbe ändern",
+"it": "Cambia il colore",
+"es": "Cambiar el color",
+"ar": "تغيير اللون",
+"pl": "Zmień kolor",
+"he": "שינוי הצבע",
+"zh": "更改颜色",
+"ja": "色を変える"
+},
+"Remembered for this Thymio II on this computer.": {
+"fr": "Mémorisée pour ce Thymio II sur cet ordinateur.",
+"de": "Für diesen Thymio II auf diesem Computer gespeichert.",
+"it": "Memorizzato per questo Thymio II su questo computer.",
+"es": "Se recuerda para este Thymio II en este ordenador.",
+"ar": "يُحفظ لهذا الـ Thymio II على هذا الحاسوب.",
+"pl": "Zapamiętany dla tego Thymio II na tym komputerze.",
+"he": "נשמר עבור ה-Thymio II הזה במחשב הזה.",
+"zh": "在这台电脑上为这台 Thymio II 保存。",
+"ja": "このパソコンでこの Thymio II 用に保存されます。"
+},
+"Red": {
+"fr": "Rouge",
+"de": "Rot",
+"it": "Rosso",
+"es": "Rojo",
+"ar": "أحمر",
+"pl": "Czerwony",
+"he": "אדום",
+"zh": "红色",
+"ja": "赤"
+},
+"Orange": {
+"fr": "Orange",
+"de": "Orange",
+"it": "Arancione",
+"es": "Naranja",
+"ar": "برتقالي",
+"pl": "Pomarańczowy",
+"he": "כתום",
+"zh": "橙色",
+"ja": "オレンジ"
+},
+"Yellow": {
+"fr": "Jaune",
+"de": "Gelb",
+"it": "Giallo",
+"es": "Amarillo",
+"ar": "أصفر",
+"pl": "Żółty",
+"he": "צהוב",
+"zh": "黄色",
+"ja": "黄色"
+},
+"Lime": {
+"fr": "Citron vert",
+"de": "Hellgrün",
+"it": "Lime",
+"es": "Lima",
+"ar": "ليموني",
+"pl": "Limonkowy",
+"he": "ירוק ליים",
+"zh": "青柠色",
+"ja": "黄緑"
+},
+"Green": {
+"fr": "Vert",
+"de": "Grün",
+"it": "Verde",
+"es": "Verde",
+"ar": "أخضر",
+"pl": "Zielony",
+"he": "ירוק",
+"zh": "绿色",
+"ja": "緑"
+},
+"Turquoise": {
+"fr": "Turquoise",
+"de": "Türkis",
+"it": "Turchese",
+"es": "Turquesa",
+"ar": "فيروزي",
+"pl": "Turkusowy",
+"he": "טורקיז",
+"zh": "青绿色",
+"ja": "ターコイズ"
+},
+"Sky blue": {
+"fr": "Bleu ciel",
+"de": "Himmelblau",
+"it": "Azzurro",
+"es": "Celeste",
+"ar": "أزرق سماوي",
+"pl": "Błękitny",
+"he": "תכלת",
+"zh": "天蓝色",
+"ja": "空色"
+},
+"Blue": {
+"fr": "Bleu",
+"de": "Blau",
+"it": "Blu",
+"es": "Azul",
+"ar": "أزرق",
+"pl": "Niebieski",
+"he": "כחול",
+"zh": "蓝色",
+"ja": "青"
+},
+"Violet": {
+"fr": "Violet",
+"de": "Violett",
+"it": "Viola",
+"es": "Violeta",
+"ar": "بنفسجي",
+"pl": "Fioletowy",
+"he": "סגול",
+"zh": "紫色",
+"ja": "紫"
+},
+"Pink": {
+"fr": "Rose",
+"de": "Rosa",
+"it": "Rosa",
+"es": "Rosa",
+"ar": "وردي",
+"pl": "Różowy",
+"he": "ורוד",
+"zh": "粉色",
+"ja": "ピンク"
+},
+"Brown": {
+"fr": "Marron",
+"de": "Braun",
+"it": "Marrone",
+"es": "Marrón",
+"ar": "بني",
+"pl": "Brązowy",
+"he": "חום",
+"zh": "棕色",
+"ja": "茶色"
+},
+"Grey": {
+"fr": "Gris",
+"de": "Grau",
+"it": "Grigio",
+"es": "Gris",
+"ar": "رمادي",
+"pl": "Szary",
+"he": "אפור",
+"zh": "灰色",
+"ja": "グレー"
+},
+"Opened": {
+"fr": "Ouvert",
+"de": "Geöffnet",
+"it": "Aperto",
+"es": "Abierto",
+"ar": "مفتوح",
+"pl": "Otwarty",
+"he": "פתוח",
+"zh": "已打开",
+"ja": "開いています"
 }
 },
 "html": {
 "pairTip": {
-"en": "<b>Tip:</b> put a sticker of the same colour on each robot and its dongle so pupils can find their pair.",
-"fr": "<b>Astuce :</b> colle une gommette de la même couleur sur chaque robot et son dongle pour que les élèves retrouvent leur paire.",
-"de": "<b>Tipp:</b> Klebe auf jeden Roboter und seinen Dongle einen Aufkleber derselben Farbe, damit die Kinder ihr Paar finden.",
-"it": "<b>Suggerimento:</b> attacca un adesivo dello stesso colore su ogni robot e sulla sua chiavetta, così gli alunni trovano la loro coppia.",
-"es": "<b>Consejo:</b> pon una pegatina del mismo color en cada robot y su adaptador para que el alumnado encuentre su pareja.",
-"ar": "<b>نصيحة:</b> ألصق ملصقًا بنفس اللون على كل روبوت ودونجله ليجد التلاميذ زوجهم بسهولة.",
-"pl": "<b>Wskazówka:</b> naklej naklejkę w tym samym kolorze na robota i jego klucz, aby uczniowie łatwo znaleźli swoją parę.",
-"he": "<b>טיפ:</b> הדביקו מדבקה באותו צבע על כל רובוט ועל הדונגל שלו, כדי שהתלמידים ימצאו את הזוג שלהם.",
-"zh": "<b>提示：</b>在每台机器人和它的接收器上贴相同颜色的贴纸，方便学生找到自己的一对。",
-"ja": "<b>ヒント：</b>ロボットとそのドングルに同じ色のシールを貼ると、児童・生徒が自分のペアを見つけやすくなります。"
+"en": "<b>Tip:</b> put a sticker of the same colour on each Thymio II and its dongle so pupils can find their pair.",
+"fr": "<b>Astuce :</b> colle une gommette de la même couleur sur chaque Thymio II et son dongle pour que les élèves retrouvent leur paire.",
+"de": "<b>Tipp:</b> Klebe auf jeden Thymio II und seinen Dongle einen Aufkleber derselben Farbe, damit die Kinder ihr Paar finden.",
+"it": "<b>Suggerimento:</b> attacca un adesivo dello stesso colore su ogni Thymio II e sulla sua chiavetta, così gli alunni trovano la loro coppia.",
+"es": "<b>Consejo:</b> pon una pegatina del mismo color en cada Thymio II y su adaptador para que el alumnado encuentre su pareja.",
+"ar": "<b>نصيحة:</b> ألصق ملصقًا بنفس اللون على كل Thymio II ودونجله ليجد التلاميذ زوجهم بسهولة.",
+"pl": "<b>Wskazówka:</b> naklej naklejkę w tym samym kolorze na Thymio II i jego klucz, aby uczniowie łatwo znaleźli swoją parę.",
+"he": "<b>טיפ:</b> הדביקו מדבקה באותו צבע על כל Thymio II ועל הדונגל שלו, כדי שהתלמידים ימצאו את הזוג שלהם.",
+"zh": "<b>提示：</b>在每台 Thymio II 和它的接收器上贴相同颜色的贴纸，方便学生找到自己的一对。",
+"ja": "<b>ヒント：</b>Thymio II とそのドングルに同じ色のシールを貼ると、児童・生徒が自分のペアを見つけやすくなります。"
 },
 "pairOnce": {
-"en": "A new wireless robot must be paired with the dongle once: use <b>Pair wireless robots</b> in the menu.",
-"fr": "Un nouveau robot sans fil doit être appairé une fois avec le dongle : utilise <b>Appairer des robots sans fil</b> dans le menu.",
-"de": "Ein neuer drahtloser Roboter muss einmal mit dem Dongle gekoppelt werden: Nutze <b>Drahtlose Roboter koppeln</b> im Menü.",
-"it": "Un nuovo robot wireless va associato una volta alla chiavetta: usa <b>Associa robot wireless</b> nel menu.",
-"es": "Un robot inalámbrico nuevo debe emparejarse una vez con el adaptador: usa <b>Emparejar robots inalámbricos</b> en el menú.",
-"ar": "يجب إقران الروبوت اللاسلكي الجديد بالدونجل مرة واحدة: استخدم <b>إقران الروبوتات اللاسلكية</b> في القائمة.",
-"pl": "Nowego robota bezprzewodowego trzeba raz sparować z kluczem: użyj opcji <b>Parowanie robotów bezprzewodowych</b> w menu.",
-"he": "רובוט אלחוטי חדש צריך להיות מצומד לדונגל פעם אחת: השתמשו ב<b>צימוד רובוטים אלחוטיים</b> בתפריט.",
-"zh": "新的无线机器人需要先与接收器配对一次：请使用菜单中的<b>配对无线机器人</b>。",
-"ja": "新しいワイヤレスロボットは一度だけドングルとペアリングが必要です：メニューの<b>ワイヤレスロボットのペアリング</b>を使ってください。"
+"en": "A new wireless Thymio II must be paired with the dongle once: use <b>Pair your Thymio II</b> in the menu.",
+"fr": "Un nouveau Thymio II sans fil doit être appairé une fois avec le dongle : utilise <b>Appairer tes Thymio II</b> dans le menu.",
+"de": "Ein neuer drahtloser Thymio II muss einmal mit dem Dongle gekoppelt werden: Nutze <b>Deine Thymio II koppeln</b> im Menü.",
+"it": "Un nuovo Thymio II wireless va associato una volta alla chiavetta: usa <b>Associa i tuoi Thymio II</b> nel menu.",
+"es": "Un Thymio II inalámbrico nuevo debe emparejarse una vez con el adaptador: usa <b>Emparejar tus Thymio II</b> en el menú.",
+"ar": "يجب إقران Thymio II اللاسلكي الجديد بالدونجل مرة واحدة: استخدم <b>إقران روبوتات Thymio II</b> في القائمة.",
+"pl": "Nowego bezprzewodowego Thymio II trzeba raz sparować z kluczem: użyj opcji <b>Sparuj swoje Thymio II</b> w menu.",
+"he": "יש לצמד Thymio II אלחוטי חדש לדונגל פעם אחת: השתמשו ב<b>צימוד ה-Thymio II שלכם</b> בתפריט.",
+"zh": "新的无线 Thymio II 需要先与接收器配对一次：请使用菜单中的<b>配对你的 Thymio II</b>。",
+"ja": "新しいワイヤレス Thymio II は一度だけドングルとペアリングが必要です：メニューの<b>Thymio II をペアリング</b>を使ってください。"
 },
 "labLead": {
 "en": "Open your web browser and start coding. <b>Zero installation</b>, nothing to update, and it works on the computers and tablets you already have.",

@@ -34,10 +34,10 @@
     else if (mode() === 'case' && session.usedDongles.has(dongles[0].id)) { setCheck('pc-dongle', false, T('This dongle is already paired. Unplug it and plug in the next one.')); ok = false; }
     else { dongle = dongles[0]; setCheck('pc-dongle', true, T('Dongle found (network {net}, channel {ch}).', { net: hex4(dongle.networkId), ch: dongle.channel + 1 })); }
 
-    if (usbRobots.length === 0) { setCheck('pc-robot', false, T('Plug the wireless robot into this computer with its USB cable, and switch it on.')); ok = false; }
-    else if (usbRobots.length > 1) { setCheck('pc-robot', false, T('{n} robots are plugged in by cable. Keep only one.', { n: usbRobots.length })); ok = false; }
-    else if (mode() !== 'single' && session.usedRobots.has(usbRobots[0].id)) { setCheck('pc-robot', false, T('{name} is already paired. Plug in the next robot.', { name: usbRobots[0].name })); ok = false; }
-    else { robot = usbRobots[0]; setCheck('pc-robot', true, T('Robot {name} plugged in by cable.', { name: robot.name || 'Thymio' })); }
+    if (usbRobots.length === 0) { setCheck('pc-robot', false, T('Plug the wireless Thymio II into this computer with its USB cable, and switch it on.')); ok = false; }
+    else if (usbRobots.length > 1) { setCheck('pc-robot', false, T('{n} Thymio II are plugged in by cable. Keep only one.', { n: usbRobots.length })); ok = false; }
+    else if (mode() !== 'single' && session.usedRobots.has(usbRobots[0].id)) { setCheck('pc-robot', false, T('{name} is already paired. Plug in the next Thymio II.', { name: usbRobots[0].name })); ok = false; }
+    else { robot = usbRobots[0]; setCheck('pc-robot', true, T('{name} plugged in by cable.', { name: robot.name || 'Thymio' })); }
 
     if (robot && app().fwNum(robot.fwVersion) < 13) {
       setCheck('pc-fw', false, T('Firmware {v} is too old for pairing. Update it first (button on the robot in the main screen).', { v: robot.fwVersion })); ok = false;
@@ -45,7 +45,7 @@
     else setCheck('pc-fw', false, T('Firmware 13 or newer is needed.'));
 
     $('pair-go').disabled = !ok || session.busy;
-    $('pair-go').textContent = mode() === 'single' ? T('Pair') : T('Pair robot #{n}', { n: session.paired.length + 1 });
+    $('pair-go').textContent = mode() === 'single' ? T('Pair') : T('Pair Thymio II no. {n}', { n: session.paired.length + 1 });
     return ok ? { dongle, robot } : null;
   }
 
@@ -82,15 +82,15 @@
       const res = await app().state.client.pair(ready.dongle.id, ready.robot.id, settings.networkId, settings.channel);
       session.paired.push({ name: ready.robot.name || 'Thymio', networkId: res.networkId, channel: res.channel });
       session.usedRobots.add(ready.robot.id); session.usedDongles.add(ready.dongle.id); session.usedNetworks.add(res.networkId);
-      const next = T(mode() === 'single' ? 'Unplug the cable: the robot now talks through the dongle.'
-        : mode() === 'case' ? 'Unplug this robot and dongle (stick matching stickers), then plug in the next pair.'
-        : 'Unplug this robot and plug in the next one.');
+      const next = T(mode() === 'single' ? 'Unplug the cable: the Thymio II now talks through the dongle.'
+        : mode() === 'case' ? 'Unplug this Thymio II and dongle (stick matching stickers), then plug in the next pair.'
+        : 'Unplug this Thymio II and plug in the next one.');
       $('pair-status').textContent = `${T('Paired: network {net}, channel {ch}.', { net: hex4(res.networkId), ch: res.channel + 1 })} ${next}`;
       renderPaired();
     } catch (e) {
       $('pair-status').textContent = String(e).endsWith(' 5') ? T('Could not write the settings to the dongle. Unplug and replug it, then try again.')
-        : String(e).endsWith(' 6') ? T('Could not write the settings to the robot. Check the cable and that the robot is on, then try again.')
-        : T('Pairing failed. Unplug and replug the robot and dongle, then try again.');
+        : String(e).endsWith(' 6') ? T('Could not write the settings to the Thymio II. Check the cable and that it is on, then try again.')
+        : T('Pairing failed. Unplug and replug the Thymio II and dongle, then try again.');
     } finally { session.busy = false; evaluate(); }
   }
 

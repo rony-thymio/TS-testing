@@ -31,7 +31,7 @@
       <button type="button" class="nav-item" data-view="library">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h6v15H4z"/><path d="M14 5h6v15h-6z"/></svg>Activity library</button>
       <button type="button" class="nav-item" data-view="pairing" id="pair-btn">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a7 7 0 0 1 14 0"/><path d="M8.5 12.5a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="16" r="1.5"/></svg>Pair wireless robots</button>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5a7 7 0 0 1 14 0"/><path d="M8.5 12.5a3.5 3.5 0 0 1 7 0"/><circle cx="12" cy="16" r="1.5"/></svg>Pair your Thymio II</button>
       <button type="button" class="nav-item" id="help-btn">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14"/><path d="M12 17.5v.01"/></svg>Help</button>
     </nav>
@@ -64,7 +64,7 @@
             <li id="check-tdm"><span class="dot"></span><span>Connecting to the device manager…</span></li>
             <li><span class="dot todo">!</span><span>Plug the robot in with its USB cable, or plug in the wireless dongle.</span></li>
             <li><span class="dot todo">!</span><span>Switch the robot on: press the centre button until the lights turn on. Wireless robots can take up to 20 seconds to appear.</span></li>
-            <li><span class="dot todo">!</span><span data-i18n-html="pairOnce">A new wireless robot must be paired with the dongle once: use <b>Pair wireless robots</b> in the menu.</span></li>
+            <li><span class="dot todo">!</span><span data-i18n-html="pairOnce">A new wireless Thymio II must be paired with the dongle once: use <b>Pair your Thymio II</b> in the menu.</span></li>
           </ol>
         </div>
         <div id="fw-note" class="note warn" hidden></div>
@@ -92,25 +92,25 @@
 
     <main class="view pairing" id="pairing-view" hidden>
       <header class="view-head">
-        <h1>Pair wireless robots</h1>
-        <p>Link a robot to a dongle once, then it connects by itself every time.</p>
+        <h1>Pair wireless Thymio II</h1>
+        <p>Link a Thymio II to a dongle once, then it connects by itself every time.</p>
       </header>
       <div class="pair-layout">
         <section class="pair-modes" aria-labelledby="pair-mode-title">
           <h2 id="pair-mode-title" class="eyebrow">What do you want to do?</h2>
           <div role="radiogroup" aria-labelledby="pair-mode-title" class="pair-mode-list">
             <label class="pair-mode"><input type="radio" name="pair-mode" value="single" checked>
-              <span><b>One robot, one dongle</b><small>A private pair: this dongle only talks to this robot.</small></span></label>
+              <span><b>One Thymio II, one dongle</b><small>A private pair: this dongle only talks to this Thymio II.</small></span></label>
             <label class="pair-mode"><input type="radio" name="pair-mode" value="case">
-              <span><b>A classroom case: each robot with its own dongle</b><small>Robot 1 with dongle 1, robot 2 with dongle 2… Each pair gets its own network.</small></span></label>
+              <span><b>A classroom case: each Thymio II with its own dongle</b><small>Thymio II no. 1 with dongle 1, no. 2 with dongle 2… Each pair gets its own network.</small></span></label>
             <label class="pair-mode"><input type="radio" name="pair-mode" value="shared">
-              <span><b>Several robots on one dongle</b><small>All robots join the dongle's network, so one computer sees them all (Aseba, Python).</small></span></label>
+              <span><b>Several Thymio II on one dongle</b><small>All Thymio II join the dongle's network, so one computer sees them all (Aseba, Python).</small></span></label>
           </div>
-          <p class="note tip" data-i18n-html="pairTip"><b>Tip:</b> put a sticker of the same colour on each robot and its dongle so pupils can find their pair.</p>
+          <p class="note tip" data-i18n-html="pairTip"><b>Tip:</b> put a sticker of the same colour on each Thymio II and its dongle so pupils can find their pair.</p>
         </section>
 
         <section class="card pair-main" aria-labelledby="pair-title">
-          <h2 id="pair-title">Pair a wireless robot</h2>
+          <h2 id="pair-title">Pair a wireless Thymio II</h2>
           <ol class="checklist pair-checks">
             <li id="pc-dongle"><span class="dot"></span><span></span></li>
             <li id="pc-robot"><span class="dot"></span><span></span></li>
@@ -132,7 +132,7 @@
             <span id="pair-status" class="muted" role="status" aria-live="polite"></span>
           </div>
           <div id="pair-done" class="paired-list" hidden></div>
-          <p class="muted small">While this screen is open, wireless robots are disconnected from the programming apps.</p>
+          <p class="muted small">While this screen is open, wireless Thymio II are disconnected from the programming apps.</p>
         </section>
       </div>
     </main>

@@ -20,17 +20,43 @@
   invoke('list_editors').then(setEditors).catch(() => {});
   if (tauri && tauri.event) tauri.event.listen('editors-changed', (e) => setEditors(e.payload));
 
-  // Each robot gets a colour, repeated in the title of its programming window (as an emoji).
-  const ROBOT_COLOURS = [['#FF8A3D', '🟠'], ['#3D7BFF', '🔵'], ['#2FB67C', '🟢'], ['#9B5CFF', '🟣'], ['#E5484D', '🔴'], ['#F5B400', '🟡'], ['#8B5E3C', '🟤']];
-  const colourIndex = {};
+  // Each robot gets a colour (the teacher can change it), repeated in the title of its programming
+  // window as the nearest coloured-circle emoji. Choices are remembered on this computer.
+  const ROBOT_COLOURS = [
+    ['#E5484D', '🔴', 'Red'], ['#E58A4E', '🟠', 'Orange'], ['#F5B400', '🟡', 'Yellow'], ['#9BCB3C', '🟢', 'Lime'],
+    ['#2FB67C', '🟢', 'Green'], ['#14B8A6', '🔵', 'Turquoise'], ['#38A3E8', '🔵', 'Sky blue'], ['#3D6BFF', '🔵', 'Blue'],
+    ['#9B5CFF', '🟣', 'Violet'], ['#E85BA8', '🟣', 'Pink'], ['#8B5E3C', '🟤', 'Brown'], ['#8A879A', '⚪', 'Grey']];
+  const COLOUR_KEY = 'thymio-robot-colours';
+  let colourIndex = {};
+  try { colourIndex = JSON.parse(localStorage.getItem(COLOUR_KEY)) || {}; } catch (e) { colourIndex = {}; }
+  const saveColours = () => { try { localStorage.setItem(COLOUR_KEY, JSON.stringify(colourIndex)); } catch (e) {} };
   function robotColour(id) {
     if (!(id in colourIndex)) {
-      const used = new Set(Object.values(colourIndex));
+      // First colour not used by the robots on screen.
+      const used = new Set(state.robots.filter((r) => r.id !== id && r.id in colourIndex).map((r) => colourIndex[r.id]));
       let i = 0; while (used.has(i) && i < ROBOT_COLOURS.length - 1) i++;
-      colourIndex[id] = used.size >= ROBOT_COLOURS.length ? Object.keys(colourIndex).length % ROBOT_COLOURS.length : i;
+      colourIndex[id] = i; saveColours();
     }
-    return ROBOT_COLOURS[colourIndex[id]];
+    return ROBOT_COLOURS[colourIndex[id]] || ROBOT_COLOURS[0];
   }
+  function colourPicker(r) {
+    const box = document.createElement('div'); box.className = 'colour-picker'; box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-label', T('Colour of {name}', { name: r.name || 'Thymio' }));
+    const title = document.createElement('div'); title.className = 'colour-title'; title.textContent = T('Colour of {name}', { name: r.name || 'Thymio' });
+    const grid = document.createElement('div'); grid.className = 'colour-grid';
+    ROBOT_COLOURS.forEach(([hex, , name], i) => {
+      const b = document.createElement('button'); b.type = 'button'; b.className = 'swatch' + (colourIndex[r.id] === i ? ' current' : '');
+      b.style.background = hex; b.setAttribute('aria-label', T(name)); b.title = T(name);
+      b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); colourIndex[r.id] = i; saveColours(); state.picking = null; renderRobots(); });
+      grid.append(b);
+    });
+    const note = document.createElement('div'); note.className = 'colour-note'; note.textContent = T('Remembered for this Thymio II on this computer.');
+    box.append(title, grid, note);
+    box.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); });
+    return box;
+  }
+  document.addEventListener('click', () => { if (state.picking) { state.picking = null; renderRobots(); } });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && state.picking) { state.picking = null; renderRobots(); } });
   const windowTitle = (robot, text) => `${robotColour(robot.id)[1]} ${text}`;
 
   // A choice dialog: resolves with the value of the button pressed ('' when cancelled).
@@ -224,8 +250,11 @@
       } else {
         name = document.createElement('div'); name.className = 'robot-name'; name.textContent = r.name || 'Thymio';
       }
-      const dot = document.createElement('span'); dot.className = 'robot-dot'; dot.style.background = robotColour(r.id)[0];
+      const dot = document.createElement('button'); dot.type = 'button'; dot.className = 'robot-dot'; dot.style.background = robotColour(r.id)[0];
+      dot.setAttribute('aria-label', T('Change the colour')); dot.title = T('Change the colour');
+      dot.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); state.picking = state.picking === r.id ? null : r.id; renderRobots(); });
       const nameRow = document.createElement('div'); nameRow.className = 'robot-name-row'; nameRow.append(dot, name);
+      if (state.picking === r.id) nameRow.append(colourPicker(r));
       const sub = document.createElement('div'); sub.className = 'robot-sub';
       sub.textContent = T(r.type === 'Thymio2Wireless' ? 'Wireless' : r.type === 'SimulatedThymio2' ? 'Simulated' : 'USB cable')
         + (r.fwVersion ? ' · ' + T('firmware {v}', { v: r.fwVersion }) : '');
@@ -317,7 +346,7 @@
         b.querySelector('.mode-text').append(soon);
       } else if (openId === m.id) {
         b.classList.add('is-open');
-        age.textContent = T('Open'); age.className = 'age open';
+        age.textContent = T('Opened'); age.className = 'age open';
         const n = document.createElement('span'); n.className = 'mode-note open'; n.textContent = T('Already open for {name} · click to switch to it', { name: robot.name || 'Thymio' });
         b.querySelector('.mode-text').append(n);
       } else if (openId && m.needsRobot !== false) {
