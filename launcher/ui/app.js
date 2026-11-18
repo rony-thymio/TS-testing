@@ -7,7 +7,63 @@
   const $ = (id) => document.getElementById(id);
   const T = (text, vars) => window.I18N.T(text, vars);
 
-  const state = { client: null, connected: false, robots: [], selected: null, pass: '' };
+  const state = { client: null, connected: false, robots: [], selected: null, pass: '', editors: {} };
+
+  // ---------- which robot has which programming window open --------------------------------
+  // One programming window per robot: a robot runs one program at a time.
+  const modeById = (id) => window.THYMIO_MODES.find((m) => m.id === id);
+  function setEditors(list) {
+    state.editors = {};
+    for (const e of list || []) state.editors[e.robot] = e.mode;
+    renderRobots(); renderModes();
+  }
+  invoke('list_editors').then(setEditors).catch(() => {});
+  if (tauri && tauri.event) tauri.event.listen('editors-changed', (e) => setEditors(e.payload));
+
+  // Each robot gets a colour, repeated in the title of its programming window (as an emoji).
+  const ROBOT_COLOURS = [['#FF8A3D', '🟠'], ['#3D7BFF', '🔵'], ['#2FB67C', '🟢'], ['#9B5CFF', '🟣'], ['#E5484D', '🔴'], ['#F5B400', '🟡'], ['#8B5E3C', '🟤']];
+  const colourIndex = {};
+  function robotColour(id) {
+    if (!(id in colourIndex)) {
+      const used = new Set(Object.values(colourIndex));
+      let i = 0; while (used.has(i) && i < ROBOT_COLOURS.length - 1) i++;
+      colourIndex[id] = used.size >= ROBOT_COLOURS.length ? Object.keys(colourIndex).length % ROBOT_COLOURS.length : i;
+    }
+    return ROBOT_COLOURS[colourIndex[id]];
+  }
+  const windowTitle = (robot, text) => `${robotColour(robot.id)[1]} ${text}`;
+
+  // A choice dialog: resolves with the value of the button pressed ('' when cancelled).
+  function choose(title, text, buttons) {
+    const d = $('choice-dialog');
+    $('choice-title').textContent = title; $('choice-text').textContent = text;
+    const row = $('choice-actions'); row.textContent = '';
+    for (const b of [{ value: '', label: T('Cancel') }, ...buttons]) {
+      const el = document.createElement('button'); el.type = 'submit'; el.value = b.value;
+      el.className = 'btn' + (b.primary ? ' primary' : ''); el.textContent = b.label; row.append(el);
+    }
+    return new Promise((resolve) => {
+      d.addEventListener('close', () => resolve(d.returnValue || ''), { once: true });
+      d.returnValue = ''; d.showModal();
+    });
+  }
+  // Before opening a programming window for a robot: if one is already open, switch to it or replace it.
+  // Resolves true when the new window may open.
+  function freeRobotFor(robot, mode) {
+    const openId = state.editors[robot.id];
+    if (!openId) return Promise.resolve(true);
+    const open = modeById(openId) || { name: openId };
+    const name = robot.name || 'Thymio';
+    return choose(T('{name} is already open in {app}', { name, app: T(open.name) }),
+      T('A robot runs one program at a time. Switch to the open editor, or close it and open {new}. Unsaved work in {app} will be lost.', { new: T(mode.name), app: T(open.name) }),
+      [{ value: 'switch', label: T('Switch to {app}', { app: T(open.name) }) },
+        { value: 'replace', label: T('Close it and open {new}', { new: T(mode.name) }), primary: true }])
+      .then((v) => {
+        if (v === 'switch') { invoke('focus_editor', { robot: robot.id }); return false; }
+        if (v === 'replace') return invoke('close_editor', { robot: robot.id }).then(() => true);
+        return false;
+      });
+  }
 
   // ---------- device manager connection --------------------------------------------------
   // One connection attempt at a time; retries back off up to 5 s. (Test version 0.1 started two
@@ -22,7 +78,12 @@
     if (connecting || state.client) return;
     connecting = true;
     const c = new window.TdmClient(TDM_URL);
-    c.onNodesChanged = (nodes) => { state.robots = nodes.filter((n) => n.type !== 'DummyNode'); renderRobots(); setTimeout(pollBattery, 1500); };
+    c.onNodesChanged = (nodes) => {
+      // Devices still starting up (a dongle right after pairing shows as "USB Serial Device",
+      // firmware 0, for a few seconds) are hidden until they are identified as robots.
+      state.robots = nodes.filter((n) => n.type !== 'DummyNode' && !(n.status === 'connected' && !(parseInt(n.fwVersion, 10) > 0)));
+      renderRobots(); renderModes(); setTimeout(pollBattery, 1500);
+    };
     c.onVariablesChanged = onRobotVariables;
     c.onConnectionChanged = (up) => {
       state.connected = up;
@@ -122,9 +183,15 @@
   const usable = (r) => r.status === 'available' || r.status === 'ready';
   const fwNum = (s) => parseInt(s, 10) || 0;
 
+  let redrawing = false;
   function renderRobots() {
     const list = $('robot-list');
+    // Keep what is being typed in the rename box: the cards are redrawn when the battery updates.
+    const typing = document.activeElement && document.activeElement.classList.contains('rename-input') ? document.activeElement : null;
+    const draft = typing ? { value: typing.value, start: typing.selectionStart, end: typing.selectionEnd } : null;
+    redrawing = true;
     list.textContent = '';
+    redrawing = false;
     if (state.selected && !state.robots.some((r) => r.id === state.selected)) state.selected = null;
     if (!state.selected) { const first = state.robots.find(usable); state.selected = first ? first.id : null; }
 
@@ -136,11 +203,11 @@
       const input = document.createElement('input');
       input.type = 'radio'; input.name = 'robot'; input.value = r.id;
       input.checked = r.id === state.selected; input.disabled = !usable(r);
-      input.addEventListener('change', () => { state.selected = r.id; renderRobots(); });
+      input.addEventListener('change', () => { state.selected = r.id; renderRobots(); renderModes(); });
       const main = document.createElement('div'); main.className = 'robot-main';
       let name;
       if (state.renaming === r.id) {
-        name = document.createElement('input'); name.className = 'rename-input'; name.value = r.name || '';
+        name = document.createElement('input'); name.className = 'rename-input'; name.value = draft ? draft.value : r.name || '';
         name.maxLength = 20; name.setAttribute('aria-label', T('New robot name'));
         const finish = (save) => {
           const value = name.value.trim(); state.renaming = null;
@@ -150,12 +217,15 @@
           renderRobots();
         };
         name.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); finish(true); } if (e.key === 'Escape') finish(false); });
-        name.addEventListener('blur', () => finish(true));
+        name.addEventListener('blur', () => { if (!redrawing) finish(true); });
         name.addEventListener('click', (e) => e.preventDefault());
-        setTimeout(() => { name.focus(); name.select(); }, 0);
+        if (draft) { name.focus(); name.setSelectionRange(draft.start, draft.end); }
+        else setTimeout(() => { name.focus(); name.select(); }, 0);
       } else {
         name = document.createElement('div'); name.className = 'robot-name'; name.textContent = r.name || 'Thymio';
       }
+      const dot = document.createElement('span'); dot.className = 'robot-dot'; dot.style.background = robotColour(r.id)[0];
+      const nameRow = document.createElement('div'); nameRow.className = 'robot-name-row'; nameRow.append(dot, name);
       const sub = document.createElement('div'); sub.className = 'robot-sub';
       sub.textContent = T(r.type === 'Thymio2Wireless' ? 'Wireless' : r.type === 'SimulatedThymio2' ? 'Simulated' : 'USB cable')
         + (r.fwVersion ? ' · ' + T('firmware {v}', { v: r.fwVersion }) : '');
@@ -167,26 +237,50 @@
           ? '<svg class="battery-bolt" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>'
           : '<span class="battery-icon" aria-hidden="true"><i></i><i></i><i></i></span>';
         b.append(document.createTextNode(T(BATTERY_TEXT[bat.level])));
-        main.append(name, sub, b);
-      } else main.append(name, sub);
+        main.append(nameRow, sub, b);
+      } else main.append(nameRow, sub);
+      // The programming window open for this robot, with Show and Close.
+      const openId = state.editors[r.id];
+      const openMode = openId && modeById(openId);
+      if (openMode) {
+        const chip = document.createElement('div'); chip.className = 'robot-editor';
+        const icon = document.createElement('img'); icon.src = openMode.icon; icon.alt = '';
+        const txt = document.createElement('span'); txt.textContent = T('{app} is open', { app: T(openMode.name) });
+        chip.append(icon, txt); main.append(chip);
+      }
+      if (r.status === 'busy' && !openMode) {
+        const note = document.createElement('div'); note.className = 'robot-note'; note.textContent = T('Used by another program or computer');
+        main.append(note);
+      }
       const actions = document.createElement('div'); actions.className = 'robot-actions';
       const canRename = (r.capabilities & 1) && usable(r);
       const outdated = r.latestFwVersion && fwNum(r.fwVersion) < fwNum(r.latestFwVersion);
       const canUpdate = (r.capabilities & 4) && r.status === 'available';
-      const addAction = (label, fn) => {
-        const b = document.createElement('button'); b.type = 'button'; b.className = 'mini'; b.textContent = label;
+      const addAction = (label, fn, primary) => {
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'mini' + (primary ? ' primary' : ''); b.textContent = label;
         b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); fn(); });
         actions.append(b);
       };
-      if (canRename && state.renaming !== r.id) addAction(T('Rename'), () => { state.renaming = r.id; renderRobots(); });
+      if (openMode) {
+        addAction(T('Show'), () => invoke('focus_editor', { robot: r.id }), true);
+        addAction(T('Close'), () => {
+          choose(T('Close {app} on {name}?', { app: T(openMode.name), name: r.name || 'Thymio' }), T('Unsaved work in {app} will be lost.', { app: T(openMode.name) }),
+            [{ value: 'close', label: T('Close'), primary: true }])
+            .then((v) => { if (v === 'close') invoke('close_editor', { robot: r.id }); });
+        });
+      }
+      if (canRename && state.renaming !== r.id && !openMode) addAction(T('Rename'), () => { state.renaming = r.id; renderRobots(); });
       if (canUpdate && outdated) addAction(T('Update firmware to {v}', { v: r.latestFwVersion }), () => showFirmware(r));
       else if (canUpdate && state.moreOpen === r.id) addAction(T('Reinstall firmware (repair)'), () => showFirmware(r));
       else if (canUpdate) addAction(T('⋯ More'), () => { state.moreOpen = r.id; renderRobots(); });
       if (actions.childElementCount) main.append(actions);
-      const badge = document.createElement('span'); badge.className = 'badge ' + tone; badge.textContent = label;
+      const badge = document.createElement('span');
+      badge.className = 'badge ' + (openMode ? 'open' : tone);
+      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : label;
       el.append(input, main, badge);
       list.append(el);
     }
+    if (draft) { const box = list.querySelector('.rename-input'); if (box) { box.focus(); box.setSelectionRange(draft.start, draft.end); } }
 
     const n = state.robots.length;
     $('robot-count').textContent = n > 1 ? T('· {n} found', { n }) : '';
@@ -216,11 +310,22 @@
       b.querySelector('.mode-name').textContent = T(m.name);
       const age = b.querySelector('.age'); age.textContent = window.I18N.ages(m.age); age.classList.add(m.tone);
       b.querySelector('.mode-desc').textContent = T(m.short);
+      const robot = state.robots.find((r) => r.id === state.selected);
+      const openId = robot && state.editors[robot.id];
       if (!m.available) {
         const soon = document.createElement('span'); soon.className = 'mode-soon'; soon.textContent = T('Coming in a later version');
         b.querySelector('.mode-text').append(soon);
+      } else if (openId === m.id) {
+        b.classList.add('is-open');
+        age.textContent = T('Open'); age.className = 'age open';
+        const n = document.createElement('span'); n.className = 'mode-note open'; n.textContent = T('Already open for {name} · click to switch to it', { name: robot.name || 'Thymio' });
+        b.querySelector('.mode-text').append(n);
+      } else if (openId && m.needsRobot !== false) {
+        const open = modeById(openId);
+        const n = document.createElement('span'); n.className = 'mode-note'; n.textContent = T('Will replace {app} on {name}', { app: T(open ? open.name : openId), name: robot.name || 'Thymio' });
+        b.querySelector('.mode-text').append(n);
       }
-      b.addEventListener('click', () => showDetails(m));
+      b.addEventListener('click', () => (openId === m.id ? invoke('focus_editor', { robot: robot.id }) : showDetails(m)));
       grid.append(b);
     }
   }
@@ -306,9 +411,12 @@
     const base = mode.url(robot, { ws: TDM_URL, pass: state.pass });
     const title = (what) => `${what} – ${mode.name} – ${robot.name || 'Thymio'}`;
     if (kind !== 'solution') {
-      invoke('open_app', { path: base, title: title(a.title), activity: key })
-        .then(() => openChallenge(a))
-        .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
+      freeRobotFor(robot, mode).then((go) => {
+        if (!go) return;
+        invoke('open_app', { path: base, title: windowTitle(robot, title(a.title)), activity: key, robot: robot.id, mode: mode.id })
+          .then(() => openChallenge(a))
+          .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
+      });
       return;
     }
     // Solution: load the first program into the editor opened by "Start" (after confirmation),
@@ -319,7 +427,9 @@
         const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
         const path = withReload(`${base}&activity=${encodeURIComponent(file)}`);
         const t = title(`${a.title} (${T('solution')}${part})`);
-        const fresh = () => invoke('open_app', { path, title: t, activity: i === 0 ? key : null });
+        const fresh = () => (i === 0
+          ? freeRobotFor(robot, mode).then((go) => go && invoke('open_app', { path, title: windowTitle(robot, t), activity: key, robot: robot.id, mode: mode.id }))
+          : invoke('open_app', { path, title: windowTitle(robot, t), activity: null }));
         (i === 0 ? invoke('load_into_activity_window', { activity: key, path, title: t }) : Promise.resolve(false))
           .then((loaded) => (loaded ? null : fresh()))
           .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
@@ -382,9 +492,13 @@
     }
     if (!current || !robot) return;
     const path = current.url(robot, { ws: TDM_URL, pass: state.pass });
-    invoke('open_app', { path, title: `${current.name} – ${robot.name || 'Thymio'}` })
-      .then(() => $('details').close())
-      .catch((e) => toast(T('Could not open {app}: {e}', { app: T(current.name), e })));
+    const mode = current;
+    $('details').close();
+    freeRobotFor(robot, mode).then((go) => {
+      if (!go) return;
+      invoke('open_app', { path, title: windowTitle(robot, `${T(mode.name)} – ${robot.name || 'Thymio'}`), robot: robot.id, mode: mode.id })
+        .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
+    });
   });
 
   // ---------- footer & header ------------------------------------------------------------

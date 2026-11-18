@@ -238,3 +238,16 @@ dialog::backdrop { background: rgba(28, 26, 41, .4); }
 :lang(ja) body, :lang(ja) button, :lang(ja) input, :lang(ja) select { font-family: Poppins, "Yu Gothic UI", "Yu Gothic", "Hiragino Sans", "Noto Sans CJK JP", "Noto Sans JP", sans-serif; }
 :lang(he) body, :lang(ar) body { font-family: Poppins, "Segoe UI", "Noto Sans Hebrew", "Noto Sans Arabic", Tahoma, sans-serif; }
 :lang(zh) .eyebrow, :lang(ja) .eyebrow, :lang(he) .eyebrow, :lang(ar) .eyebrow { letter-spacing: 0; }
+
+/* ---------- robot colour and its open programming window ---------- */
+.robot-name-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.robot-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.robot-editor { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding: 5px 8px; background: #F6F1FE; border: 1px solid #E4D6FB; border-radius: 10px; font-size: 12px; font-weight: 600; color: #4A23B0; }
+.robot-editor img { width: 26px; height: 22px; object-fit: contain; }
+.robot-note { margin-top: 6px; font-size: 12px; line-height: 1.4; color: var(--muted); }
+.badge.open { color: #6A0BB0; background: #F3E8FF; }
+.mini.primary { color: #fff; background: #9910FB; border-color: #9910FB; }
+.mode.is-open { border: 2px solid #9910FB; padding: 15px; }
+.age.open { color: #6A0BB0; background: #F3E8FF; }
+.mode-note { font-size: 11px; font-weight: 500; color: #8A4B00; }
+.mode-note.open { color: #6A0BB0; }

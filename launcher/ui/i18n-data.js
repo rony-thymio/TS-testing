@@ -1837,6 +1837,138 @@ window.THYMIO_I18N = {
 "he": "מתקדמים",
 "zh": "高级",
 "ja": "上級"
+},
+"In {app}": {
+"fr": "Dans {app}",
+"de": "In {app}",
+"it": "In {app}",
+"es": "En {app}",
+"ar": "في {app}",
+"pl": "W {app}",
+"he": "ב-{app}",
+"zh": "{app} 使用中",
+"ja": "{app} で使用中"
+},
+"{app} is open": {
+"fr": "{app} est ouvert",
+"de": "{app} ist geöffnet",
+"it": "{app} è aperto",
+"es": "{app} está abierto",
+"ar": "{app} مفتوح",
+"pl": "{app} jest otwarty",
+"he": "{app} פתוח",
+"zh": "{app} 已打开",
+"ja": "{app} が開いています"
+},
+"Show": {
+"fr": "Afficher",
+"de": "Zeigen",
+"it": "Mostra",
+"es": "Mostrar",
+"ar": "عرض",
+"pl": "Pokaż",
+"he": "הצגה",
+"zh": "显示",
+"ja": "表示"
+},
+"Used by another program or computer": {
+"fr": "Utilisé par un autre programme ou ordinateur",
+"de": "Von einem anderen Programm oder Computer benutzt",
+"it": "Usato da un altro programma o computer",
+"es": "En uso por otro programa u ordenador",
+"ar": "مستخدم من برنامج أو حاسوب آخر",
+"pl": "Używany przez inny program lub komputer",
+"he": "בשימוש של תוכנה או מחשב אחר",
+"zh": "正被其他程序或电脑使用",
+"ja": "別のプログラムまたはパソコンが使用中"
+},
+"Close {app} on {name}?": {
+"fr": "Fermer {app} sur {name} ?",
+"de": "{app} auf {name} schließen?",
+"it": "Chiudere {app} su {name}?",
+"es": "¿Cerrar {app} en {name}?",
+"ar": "هل تريد إغلاق {app} على {name}؟",
+"pl": "Zamknąć {app} na robocie {name}?",
+"he": "לסגור את {app} ב-{name}?",
+"zh": "关闭 {name} 上的 {app}？",
+"ja": "{name} の {app} を閉じますか？"
+},
+"Unsaved work in {app} will be lost.": {
+"fr": "Le travail non enregistré dans {app} sera perdu.",
+"de": "Nicht gespeicherte Arbeit in {app} geht verloren.",
+"it": "Il lavoro non salvato in {app} andrà perso.",
+"es": "Se perderá el trabajo no guardado en {app}.",
+"ar": "سيُفقد العمل غير المحفوظ في {app}.",
+"pl": "Niezapisana praca w {app} zostanie utracona.",
+"he": "עבודה שלא נשמרה ב-{app} תאבד.",
+"zh": "{app} 中未保存的内容将会丢失。",
+"ja": "{app} の保存していない作業は失われます。"
+},
+"{name} is already open in {app}": {
+"fr": "{name} est déjà ouvert dans {app}",
+"de": "{name} ist schon in {app} geöffnet",
+"it": "{name} è già aperto in {app}",
+"es": "{name} ya está abierto en {app}",
+"ar": "{name} مفتوح بالفعل في {app}",
+"pl": "{name} jest już otwarty w {app}",
+"he": "{name} כבר פתוח ב-{app}",
+"zh": "{name} 已在 {app} 中打开",
+"ja": "{name} はすでに {app} で開いています"
+},
+"A robot runs one program at a time. Switch to the open editor, or close it and open {new}. Unsaved work in {app} will be lost.": {
+"fr": "Un robot exécute un seul programme à la fois. Passe à l’éditeur ouvert, ou ferme-le et ouvre {new}. Le travail non enregistré dans {app} sera perdu.",
+"de": "Ein Roboter führt immer nur ein Programm aus. Wechsle zum offenen Editor oder schließ ihn und öffne {new}. Nicht gespeicherte Arbeit in {app} geht verloren.",
+"it": "Un robot esegue un solo programma alla volta. Passa all’editor aperto, oppure chiudilo e apri {new}. Il lavoro non salvato in {app} andrà perso.",
+"es": "Un robot ejecuta un solo programa a la vez. Cambia al editor abierto, o ciérralo y abre {new}. Se perderá el trabajo no guardado en {app}.",
+"ar": "يشغّل الروبوت برنامجًا واحدًا في كل مرة. انتقل إلى المحرّر المفتوح، أو أغلقه وافتح {new}. سيُفقد العمل غير المحفوظ في {app}.",
+"pl": "Robot wykonuje tylko jeden program naraz. Przejdź do otwartego edytora albo zamknij go i otwórz {new}. Niezapisana praca w {app} zostanie utracona.",
+"he": "רובוט מריץ תוכנית אחת בכל פעם. עברו לעורך הפתוח, או סגרו אותו ופתחו את {new}. עבודה שלא נשמרה ב-{app} תאבד.",
+"zh": "机器人一次只能运行一个程序。切换到已打开的编辑器，或关闭它并打开 {new}。{app} 中未保存的内容将会丢失。",
+"ja": "ロボットが一度に動かせるプログラムは1つだけです。開いているエディターに切り替えるか、閉じて {new} を開いてください。{app} の保存していない作業は失われます。"
+},
+"Switch to {app}": {
+"fr": "Passer à {app}",
+"de": "Zu {app} wechseln",
+"it": "Passa a {app}",
+"es": "Cambiar a {app}",
+"ar": "الانتقال إلى {app}",
+"pl": "Przejdź do {app}",
+"he": "מעבר ל-{app}",
+"zh": "切换到 {app}",
+"ja": "{app} に切り替え"
+},
+"Close it and open {new}": {
+"fr": "Le fermer et ouvrir {new}",
+"de": "Schließen und {new} öffnen",
+"it": "Chiudilo e apri {new}",
+"es": "Cerrarlo y abrir {new}",
+"ar": "أغلقه وافتح {new}",
+"pl": "Zamknij i otwórz {new}",
+"he": "לסגור ולפתוח את {new}",
+"zh": "关闭并打开 {new}",
+"ja": "閉じて {new} を開く"
+},
+"Already open for {name} · click to switch to it": {
+"fr": "Déjà ouvert pour {name} · clique pour y aller",
+"de": "Für {name} schon geöffnet · klicken zum Wechseln",
+"it": "Già aperto per {name} · clicca per andarci",
+"es": "Ya abierto para {name} · haz clic para ir",
+"ar": "مفتوح بالفعل لـ {name} · انقر للانتقال إليه",
+"pl": "Już otwarty dla {name} · kliknij, aby przejść",
+"he": "כבר פתוח עבור {name} · לחצו כדי לעבור אליו",
+"zh": "已为 {name} 打开 · 点击切换过去",
+"ja": "{name} で開いています · クリックで切り替え"
+},
+"Will replace {app} on {name}": {
+"fr": "Remplacera {app} sur {name}",
+"de": "Ersetzt {app} auf {name}",
+"it": "Sostituirà {app} su {name}",
+"es": "Sustituirá a {app} en {name}",
+"ar": "سيحلّ محل {app} على {name}",
+"pl": "Zastąpi {app} na robocie {name}",
+"he": "יחליף את {app} ב-{name}",
+"zh": "将替换 {name} 上的 {app}",
+"ja": "{name} の {app} と入れ替わります"
 }
 },
 "html": {

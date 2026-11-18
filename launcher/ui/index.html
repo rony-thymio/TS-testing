@@ -191,6 +191,14 @@
     </form>
   </dialog>
 
+  <dialog id="choice-dialog" aria-labelledby="choice-title">
+    <form method="dialog" class="dialog-body">
+      <h2 id="choice-title" data-i18n-skip></h2>
+      <p class="lead" id="choice-text" data-i18n-skip></p>
+      <div class="dialog-actions" id="choice-actions"></div>
+    </form>
+  </dialog>
+
   <dialog id="confirm-dialog" aria-labelledby="confirm-title">
     <form method="dialog" class="dialog-body">
       <h2 id="confirm-title">Show the solution?</h2>
@@ -234,7 +242,7 @@
 
   <script src="vendor/flatbuffers.js"></script>
   <script src="vendor/thymio_generated.js"></script>
-  <script>window.THYMIO_VERSION = "0.15";</script>
+  <script>window.THYMIO_VERSION = "0.16";</script>
   <script src="i18n-data.js"></script>
   <script src="i18n.js"></script>
   <script src="splash.js"></script>

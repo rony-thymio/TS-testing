@@ -36,6 +36,58 @@ struct WebApps {
 #[derive(Default)]
 struct ActivityWindows(Mutex<std::collections::HashMap<String, String>>);
 
+/// The programming window open for each robot: robot id -> (window label, programming language).
+#[derive(Default)]
+struct RobotWindows(Mutex<std::collections::HashMap<String, (String, String)>>);
+
+#[derive(serde::Serialize, Clone)]
+struct EditorInfo {
+    robot: String,
+    mode: String,
+}
+
+fn editors(app: &tauri::AppHandle) -> Vec<EditorInfo> {
+    let mut map = app.state::<RobotWindows>().0.lock().unwrap();
+    map.retain(|_, (label, _)| app.get_webview_window(label.as_str()).is_some());
+    map.iter().map(|(robot, (_, mode))| EditorInfo { robot: robot.clone(), mode: mode.clone() }).collect()
+}
+
+fn editors_changed(app: &tauri::AppHandle) {
+    let list = editors(app);
+    let _ = app.emit_to("main", "editors-changed", list);
+}
+
+/// Programming windows open on this computer, with their robot.
+#[tauri::command]
+fn list_editors(app: tauri::AppHandle, window: WebviewWindow) -> Result<Vec<EditorInfo>, String> {
+    require_main(&window)?;
+    Ok(editors(&app))
+}
+
+/// Brings the programming window of a robot to the front.
+#[tauri::command]
+fn focus_editor(app: tauri::AppHandle, window: WebviewWindow, robot: String) -> Result<bool, String> {
+    require_main(&window)?;
+    let label = app.state::<RobotWindows>().0.lock().unwrap().get(&robot).map(|(l, _)| l.clone());
+    let Some(w) = label.and_then(|l| app.get_webview_window(&l)) else { return Ok(false) };
+    let _ = w.unminimize();
+    let _ = w.set_focus();
+    Ok(true)
+}
+
+/// Closes the programming window of a robot, which frees the robot.
+#[tauri::command]
+fn close_editor(app: tauri::AppHandle, window: WebviewWindow, robot: String) -> Result<bool, String> {
+    require_main(&window)?;
+    let label = app.state::<RobotWindows>().0.lock().unwrap().remove(&robot).map(|(l, _)| l);
+    let closed = match label.and_then(|l| app.get_webview_window(&l)) {
+        Some(w) => w.destroy().is_ok(),
+        None => false,
+    };
+    editors_changed(&app);
+    Ok(closed)
+}
+
 #[derive(Default)]
 struct DeviceManager {
     child: Mutex<Option<Child>>,
@@ -304,7 +356,7 @@ fn require_main(window: &WebviewWindow) -> Result<(), String> {
 // Must be `async`: on Windows, creating a window from a synchronous command deadlocks
 // (Tauri known issue, wry#583). That was the blank, frozen VPL3 window in test versions 0.1-0.3.
 #[tauri::command]
-async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String, activity: Option<String>) -> Result<(), String> {
+async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String, activity: Option<String>, robot: Option<String>, mode: Option<String>) -> Result<(), String> {
     require_main(&window)?;
     let url = webapp_url(&app, &path)?;
     static NEXT_WINDOW: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
@@ -327,6 +379,10 @@ async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, ti
         .center()
         .build()
         .map_err(|e| e.to_string())?;
+    if let (Some(robot), Some(mode)) = (robot, mode) {
+        app.state::<RobotWindows>().0.lock().unwrap().insert(robot, (label_for_map.clone(), mode));
+        editors_changed(&app);
+    }
     if let Some(key) = activity {
         app.state::<ActivityWindows>().0.lock().unwrap().insert(key, label_for_map);
     }
@@ -676,7 +732,8 @@ fn main() {
         .manage(DeviceManager::default())
         .manage(WebApps::default())
         .manage(ActivityWindows::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .manage(RobotWindows::default())
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();
@@ -692,6 +749,14 @@ fn main() {
             if window.label() == "main" {
                 if let WindowEvent::CloseRequested { .. } = event {
                     window.app_handle().exit(0);
+                }
+            }
+            // A programming window closed: its robot is free again.
+            if window.label().starts_with("app-") {
+                if let WindowEvent::Destroyed = event {
+                    let app = window.app_handle();
+                    app.state::<RobotWindows>().0.lock().unwrap().retain(|_, (l, _)| l.as_str() != window.label());
+                    editors_changed(app);
                 }
             }
         })
