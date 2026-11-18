@@ -14,9 +14,6 @@ Thymio Suite 2.4.0 (2022) is still used by thousands of schools with Thymio II r
 - school IT security scanners flag it as lacking security updates
   (it bundles OpenSSL 1.0.2 and a 2020 Chromium engine through Qt 5.15.2).
 
-Mobsya now focuses on Thymio 3 and lab.thymio.org, but the main strength of Thymio Suite is that it
-**works offline**. This project keeps that.
-
 ## Goals
 
 - Same programming modes as 2.4.0: **VPL, VPL3, Blockly, Scratch, Aseba (text), Python via Thonny**.
