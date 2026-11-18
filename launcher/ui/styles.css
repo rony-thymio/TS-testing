@@ -261,3 +261,8 @@ button.robot-dot:hover, button.robot-dot:focus-visible { box-shadow: 0 0 0 2px v
 .swatch:hover, .swatch:focus-visible { box-shadow: 0 0 0 2px var(--accent); outline: none; }
 .swatch.current { box-shadow: 0 0 0 2px #1C1A29; }
 .colour-note { font-size: 11px; line-height: 1.4; color: var(--muted); font-weight: 400; }
+.library-bar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.lib-robot { display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 12px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; font-size: 13px; font-weight: 500; color: var(--muted); }
+.lib-robot .robot-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; }
+.lib-robot select { font: 600 14px Poppins, sans-serif; color: #6A0BB0; border: 0; background: transparent; padding: 4px 2px; cursor: pointer; max-width: 260px; }
+.lib-robot[hidden] { display: none; }

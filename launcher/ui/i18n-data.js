@@ -2156,6 +2156,61 @@ window.THYMIO_I18N = {
 "he": "פתוח",
 "zh": "已打开",
 "ja": "開いています"
+},
+"For:": {
+"fr": "Pour :",
+"de": "Für:",
+"it": "Per:",
+"es": "Para:",
+"ar": "لـ:",
+"pl": "Dla:",
+"he": "עבור:",
+"zh": "用于：",
+"ja": "対象："
+},
+"No robot": {
+"fr": "Aucun robot",
+"de": "Kein Roboter",
+"it": "Nessun robot",
+"es": "Ningún robot",
+"ar": "لا يوجد روبوت",
+"pl": "Brak robota",
+"he": "אין רובוט",
+"zh": "没有机器人",
+"ja": "ロボットなし"
+},
+"Replace the program in {app}?": {
+"fr": "Remplacer le programme dans {app} ?",
+"de": "Programm in {app} ersetzen?",
+"it": "Sostituire il programma in {app}?",
+"es": "¿Sustituir el programa en {app}?",
+"ar": "هل تريد استبدال البرنامج في {app}؟",
+"pl": "Zastąpić program w {app}?",
+"he": "להחליף את התוכנית ב-{app}?",
+"zh": "替换 {app} 中的程序？",
+"ja": "{app} のプログラムを置き換えますか？"
+},
+"It replaces the program open for {name}. Save your work first if you want to keep it.": {
+"fr": "Cela remplace le programme ouvert pour {name}. Enregistre d’abord ton travail si tu veux le garder.",
+"de": "Das ersetzt das für {name} geöffnete Programm. Speichere zuerst deine Arbeit, wenn du sie behalten willst.",
+"it": "Sostituisce il programma aperto per {name}. Salva prima il tuo lavoro se vuoi conservarlo.",
+"es": "Sustituye el programa abierto para {name}. Guarda primero tu trabajo si quieres conservarlo.",
+"ar": "سيحلّ محل البرنامج المفتوح لـ {name}. احفظ عملك أولًا إن أردت الاحتفاظ به.",
+"pl": "Zastąpi program otwarty dla {name}. Najpierw zapisz swoją pracę, jeśli chcesz ją zachować.",
+"he": "זה יחליף את התוכנית הפתוחה עבור {name}. שמרו קודם את העבודה אם תרצו לשמור אותה.",
+"zh": "这会替换为 {name} 打开的程序。如果想保留你的作品，请先保存。",
+"ja": "{name} で開いているプログラムが置き換わります。残したい場合は先に保存してください。"
+},
+"Start the activity": {
+"fr": "Commencer l’activité",
+"de": "Aktivität starten",
+"it": "Inizia l’attività",
+"es": "Empezar la actividad",
+"ar": "ابدأ النشاط",
+"pl": "Rozpocznij zadanie",
+"he": "התחלת הפעילות",
+"zh": "开始活动",
+"ja": "アクティビティを始める"
 }
 },
 "html": {

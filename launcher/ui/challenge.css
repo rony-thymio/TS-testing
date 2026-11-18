@@ -33,3 +33,5 @@ body.collapsed .cw-strip { display: flex; flex-direction: column; align-items: c
 .cw-tags span.lvl-1 { color: #1E6B43; background: #E3F4EA; }
 .cw-tags span.lvl-2 { color: #1D4E9E; background: #E3EEFF; }
 .cw-tags span.lvl-3 { color: #8A4B00; background: #FFEBD6; }
+.cw-robot { display: inline-flex; align-items: center; gap: 6px; margin-inline-start: 10px; padding-inline-start: 10px; border-inline-start: 1px solid var(--line, #E4E1EE); font-weight: 600; color: #6A0BB0; }
+.cw-robot .robot-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }

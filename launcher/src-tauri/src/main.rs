@@ -77,6 +77,25 @@ fn focus_editor(app: tauri::AppHandle, window: WebviewWindow, robot: String) -> 
     Ok(true)
 }
 
+/// Loads another program (an activity or a solution) into the programming window of a robot.
+/// Returns false when the robot has no window open.
+#[tauri::command]
+fn load_into_robot_window(app: tauri::AppHandle, window: WebviewWindow, robot: String, path: String, title: String, mode: String) -> Result<bool, String> {
+    require_main(&window)?;
+    let label = app.state::<RobotWindows>().0.lock().unwrap().get(&robot).map(|(l, _)| l.clone());
+    let Some(target) = label.clone().and_then(|l| app.get_webview_window(&l)) else { return Ok(false) };
+    let url = webapp_url(&app, &path)?;
+    target.navigate(url).map_err(|e| e.to_string())?;
+    let _ = target.set_title(&title);
+    let _ = target.unminimize();
+    let _ = target.set_focus();
+    if let Some(l) = label {
+        app.state::<RobotWindows>().0.lock().unwrap().insert(robot, (l, mode));
+    }
+    editors_changed(&app);
+    Ok(true)
+}
+
 /// Closes the programming window of a robot, which frees the robot.
 #[tauri::command]
 fn close_editor(app: tauri::AppHandle, window: WebviewWindow, robot: String) -> Result<bool, String> {
@@ -360,6 +379,13 @@ fn require_main(window: &WebviewWindow) -> Result<(), String> {
 #[tauri::command]
 async fn open_app(app: tauri::AppHandle, window: WebviewWindow, path: String, title: String, activity: Option<String>, robot: Option<String>, mode: Option<String>) -> Result<(), String> {
     require_main(&window)?;
+    // One programming window per robot: a robot runs one program at a time.
+    if let Some(r) = &robot {
+        let existing = app.state::<RobotWindows>().0.lock().unwrap().get(r).map(|(l, _)| l.clone());
+        if existing.and_then(|l| app.get_webview_window(&l)).is_some() {
+            return Err("already-open".into());
+        }
+    }
     let url = webapp_url(&app, &path)?;
     static NEXT_WINDOW: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(1);
     let label = format!(
@@ -735,7 +761,7 @@ fn main() {
         .manage(WebApps::default())
         .manage(ActivityWindows::default())
         .manage(RobotWindows::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();

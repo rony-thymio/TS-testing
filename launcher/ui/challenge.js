@@ -28,6 +28,11 @@
   function render() {
     const mode = (window.THYMIO_MODES || []).find((m) => m.id === activity.mode);
     if (mode) { $('cw-icon').src = mode.icon; $('cw-lang').textContent = T(mode.name); }
+    // The robot this challenge runs on (set by the launcher), with its colour.
+    let robot = null;
+    try { robot = JSON.parse(localStorage.getItem('thymio-challenge-robot')); } catch (e) { robot = null; }
+    $('cw-robot').hidden = !robot;
+    if (robot) { $('cw-robot-dot').style.background = robot.colour; $('cw-robot-name').textContent = robot.name; }
     $('cw-title').textContent = activity.title; document.title = `${T('Challenge')} – ${activity.title}`;
     $('cw-strip-title').textContent = `${mode ? T(mode.name) + ' · ' : ''}${activity.title}`;
     const tags = $('cw-tags'); tags.textContent = '';

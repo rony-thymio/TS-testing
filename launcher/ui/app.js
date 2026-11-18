@@ -73,6 +73,39 @@
       d.returnValue = ''; d.showModal();
     });
   }
+  // Opens a program on a robot, in its one programming window:
+  // - no window yet: a new window;
+  // - a window in the same language: the program is loaded into it (after asking, when askLabel is given);
+  // - a window in another language: switch to it, or close it and open the new one.
+  // Clicks are ignored while a window for this robot is opening. Resolves true when the program opened.
+  const opening = new Set();
+  function openOnRobot(robot, mode, path, title, askLabel) {
+    if (opening.has(robot.id)) return Promise.resolve(false);
+    const fullTitle = windowTitle(robot, title);
+    const fresh = () => {
+      opening.add(robot.id);
+      return invoke('open_app', { path, title: fullTitle, robot: robot.id, mode: mode.id })
+        .then(() => true)
+        .catch((e) => {
+          if (String(e) === 'already-open') { invoke('focus_editor', { robot: robot.id }); return false; }
+          toast(T('Could not open {app}: {e}', { app: T(mode.name), e })); return false;
+        })
+        .finally(() => setTimeout(() => opening.delete(robot.id), 1500));
+    };
+    const openId = state.editors[robot.id];
+    if (!openId) return fresh();
+    if (openId === mode.id) {
+      const ask = askLabel
+        ? choose(T('Replace the program in {app}?', { app: T(mode.name) }),
+          T('It replaces the program open for {name}. Save your work first if you want to keep it.', { name: robot.name || 'Thymio' }),
+          [{ value: 'ok', label: askLabel, primary: true }])
+        : Promise.resolve('ok');
+      return ask.then((v) => (v !== 'ok' ? false
+        : invoke('load_into_robot_window', { robot: robot.id, path, title: fullTitle, mode: mode.id })
+          .then((loaded) => (loaded ? true : fresh()))));
+    }
+    return freeRobotFor(robot, mode).then((go) => (go ? fresh() : false));
+  }
   // Before opening a programming window for a robot: if one is already open, switch to it or replace it.
   // Resolves true when the new window may open.
   function freeRobotFor(robot, mode) {
@@ -206,9 +239,26 @@
     available: ['Ready', 'ok'], ready: ['In use here', 'ok'], busy: ['Busy', 'warn'],
     connected: ['Connecting…', 'neutral'], unknown: ['Unknown', 'neutral']
   };
-  const usable = (r) => r.status === 'available' || r.status === 'ready';
+  // A robot can be chosen when free, or when one of our own programming windows uses it.
+  const usable = (r) => r.status === 'available' || r.status === 'ready' || !!state.editors[r.id];
   const fwNum = (s) => parseInt(s, 10) || 0;
 
+  // "For: ● Yellow" at the top of the library: the robot activities, challenges and solutions go to.
+  function renderLibraryRobot() {
+    const sel = $('lib-robot'); if (!sel) return;
+    sel.textContent = '';
+    const choices = state.robots.filter(usable);
+    for (const r of choices) {
+      const o = document.createElement('option'); o.value = r.id;
+      const openId = state.editors[r.id]; const m = openId && modeById(openId);
+      o.textContent = (r.name || 'Thymio') + (m ? ` · ${T('In {app}', { app: T(m.name) })}` : '');
+      sel.append(o);
+    }
+    if (!choices.length) { const o = document.createElement('option'); o.textContent = T('No robot'); o.value = ''; sel.append(o); }
+    sel.value = state.selected || '';
+    sel.disabled = !choices.length;
+    $('lib-robot-dot').style.background = state.selected ? robotColour(state.selected)[0] : '#C9C3DD';
+  }
   let redrawing = false;
   function renderRobots() {
     const list = $('robot-list');
@@ -271,18 +321,12 @@
       // The programming window open for this robot, with Show and Close.
       const openId = state.editors[r.id];
       const openMode = openId && modeById(openId);
-      if (openMode) {
-        const chip = document.createElement('div'); chip.className = 'robot-editor';
-        const icon = document.createElement('img'); icon.src = openMode.icon; icon.alt = '';
-        const txt = document.createElement('span'); txt.textContent = T('{app} is open', { app: T(openMode.name) });
-        chip.append(icon, txt); main.append(chip);
-      }
       if (r.status === 'busy' && !openMode) {
         const note = document.createElement('div'); note.className = 'robot-note'; note.textContent = T('Used by another program or computer');
         main.append(note);
       }
       const actions = document.createElement('div'); actions.className = 'robot-actions';
-      const canRename = (r.capabilities & 1) && usable(r);
+      const canRename = (r.capabilities & 1) && (r.status === 'available' || r.status === 'ready');
       const outdated = r.latestFwVersion && fwNum(r.fwVersion) < fwNum(r.latestFwVersion);
       const canUpdate = (r.capabilities & 4) && r.status === 'available';
       const addAction = (label, fn, primary) => {
@@ -309,6 +353,7 @@
       el.append(input, main, badge);
       list.append(el);
     }
+    renderLibraryRobot();
     if (draft) { const box = list.querySelector('.rename-input'); if (box) { box.focus(); box.setSelectionRange(draft.start, draft.end); } }
 
     const n = state.robots.length;
@@ -382,6 +427,7 @@
     renderLibrary();
   }
   function renderLibrary() {
+    $('lib-robot-wrap').hidden = libraryMode === 'thonny'; // Thonny chooses its robot itself
     document.querySelectorAll('#library-tabs .tab').forEach((t) => t.setAttribute('aria-selected', t.dataset.mode === libraryMode ? 'true' : 'false'));
     const grid = $('activity-grid'); grid.textContent = '';
     if (!activities) { loadActivities().then(renderLibrary); return; }
@@ -403,7 +449,7 @@
       card.querySelector('.activity-needs').textContent = a.needs;
       card.querySelector('[data-k=solution]').hidden = !a.solution;
       card.querySelectorAll('.activity-actions button').forEach((b) => b.addEventListener('click', () => {
-        if (b.dataset.k === 'read') openChallenge(a); else openActivity(mode, a, b.dataset.k);
+        if (b.dataset.k === 'read') openChallenge(a, state.robots.find((r) => r.id === state.selected)); else openActivity(mode, a, b.dataset.k);
       }));
       grid.append(card);
     }
@@ -411,7 +457,12 @@
     $('activity-source').textContent = [...new Set(list.map((a) => a.author).filter(Boolean))].join(' · ');
   }
   const plain = (md) => String(md).replace(/[*`]/g, '').replace(/\s+/g, ' ').trim();
-  function openChallenge(a) {
+  let challengeRobot = null; // the robot the open challenge window belongs to
+  function openChallenge(a, robot) {
+    challengeRobot = robot ? robot.id : null;
+    try {
+      localStorage.setItem('thymio-challenge-robot', JSON.stringify(robot ? { name: robot.name || 'Thymio', colour: robotColour(robot.id)[0] } : null));
+    } catch (e) {}
     return invoke('open_challenge', { lang: a.lang, id: a.id }).catch((e) => toast(T('Could not open the challenge: {e}', { e })));
   }
   // Asks before replacing the program in the editor (styled dialog, resolves true or false).
@@ -427,42 +478,31 @@
     const [main, hash] = path.split('#');
     return `${main}${main.includes('?') ? '&' : '?'}v=${Date.now()}${hash !== undefined ? '#' + hash : ''}`;
   };
-  function openActivity(mode, a, kind, confirmed) {
+  function openActivity(mode, a, kind, confirmed, robotId) {
     if (mode.launch === 'thonny') {
       invoke('open_python_activity', { id: a.id, kind })
         .then((path) => { if (kind === 'challenge') openChallenge(a); toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() })); })
         .catch((e) => toast(String(e)));
       return;
     }
-    const robot = state.robots.find((r) => r.id === state.selected);
+    // Activities go to the robot chosen at the top of the library (or the challenge's robot).
+    const robot = state.robots.find((r) => r.id === (robotId || state.selected));
     if (!robot) { toast(T('Choose a robot first, on the Home page.')); return; }
-    const key = `${a.lang}/${a.id}`;
     const base = mode.url(robot, { ws: TDM_URL, pass: state.pass });
-    const title = (what) => `${what} – ${mode.name} – ${robot.name || 'Thymio'}`;
+    const title = (what) => `${what} – ${T(mode.name)} – ${robot.name || 'Thymio'}`;
     if (kind !== 'solution') {
-      freeRobotFor(robot, mode).then((go) => {
-        if (!go) return;
-        invoke('open_app', { path: base, title: windowTitle(robot, title(a.title)), activity: key, robot: robot.id, mode: mode.id })
-          .then(() => openChallenge(a))
-          .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
-      });
+      openOnRobot(robot, mode, withReload(base), title(a.title), T('Start the activity'))
+        .then((ok) => { if (ok) openChallenge(a, robot); });
       return;
     }
-    // Solution: load the first program into the editor opened by "Start" (after confirmation),
-    // or into a new window; other programs (other robots) always get their own window.
-    invoke('activity_window_open', { activity: key }).then((open) => (open && !confirmed ? confirmReplace() : true)).then((go) => {
-      if (!go) return;
-      a.solutions.forEach((file, i) => {
-        const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
-        const path = withReload(`${base}&activity=${encodeURIComponent(file)}`);
-        const t = title(`${a.title} (${T('solution')}${part})`);
-        const fresh = () => (i === 0
-          ? freeRobotFor(robot, mode).then((go) => go && invoke('open_app', { path, title: windowTitle(robot, t), activity: key, robot: robot.id, mode: mode.id }))
-          : invoke('open_app', { path, title: windowTitle(robot, t), activity: null }));
-        (i === 0 ? invoke('load_into_activity_window', { activity: key, path, title: t }) : Promise.resolve(false))
-          .then((loaded) => (loaded ? null : fresh()))
-          .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
-      });
+    // Solution: the first program goes into the robot's window; extra programs (for other robots,
+    // e.g. the taxi of "Ambulance") open in their own windows.
+    a.solutions.forEach((file, i) => {
+      const part = a.solutions.length > 1 ? ` ${i + 1}/${a.solutions.length}` : '';
+      const path = withReload(`${base}&activity=${encodeURIComponent(file)}`);
+      const t = title(`${a.title} (${T('solution')}${part})`);
+      if (i === 0) openOnRobot(robot, mode, path, t, confirmed ? null : T('Replace with the solution'));
+      else invoke('open_app', { path, title: windowTitle(robot, t) }).catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
     });
   }
   // "Show the solution" in the challenge window.
@@ -470,7 +510,8 @@
     const { lang, id } = e.payload || {};
     const a = (activities || []).find((x) => x.lang === lang && x.id === id);
     const mode = a && window.THYMIO_MODES.find((m) => m.id === a.mode);
-    if (a && mode) openActivity(mode, a, 'solution', true); // already confirmed in the challenge window
+    const robot = state.robots.find((r) => r.id === challengeRobot);
+    if (a && mode) openActivity(mode, a, 'solution', true, robot && robot.id); // already confirmed in the challenge window
   });
 
   // ---------- views (sidebar) ------------------------------------------------------------
@@ -523,11 +564,7 @@
     const path = current.url(robot, { ws: TDM_URL, pass: state.pass });
     const mode = current;
     $('details').close();
-    freeRobotFor(robot, mode).then((go) => {
-      if (!go) return;
-      invoke('open_app', { path, title: windowTitle(robot, `${T(mode.name)} – ${robot.name || 'Thymio'}`), robot: robot.id, mode: mode.id })
-        .catch((e) => toast(T('Could not open {app}: {e}', { app: T(mode.name), e })));
-    });
+    openOnRobot(robot, mode, path, `${T(mode.name)} – ${robot.name || 'Thymio'}`, null);
   });
 
   // ---------- footer & header ------------------------------------------------------------
@@ -607,7 +644,9 @@
   });
 
   renderModes();
+  $('lib-robot').addEventListener('change', (e) => { state.selected = e.target.value || null; renderRobots(); renderModes(); });
   renderLibraryTabs();
   renderRobots();
   connect();
 })();
+

@@ -81,7 +81,14 @@
         <h1>Activity library</h1>
         <p>Ready-made programs to start from. Open one, run it, then change it.</p>
       </header>
-      <div class="tabs" role="tablist" aria-label="Language" id="library-tabs"></div>
+      <div class="library-bar">
+        <div class="tabs" role="tablist" aria-label="Language" id="library-tabs"></div>
+        <div class="lib-robot" id="lib-robot-wrap">
+          <span class="robot-dot" id="lib-robot-dot" aria-hidden="true"></span>
+          <label for="lib-robot">For:</label>
+          <select id="lib-robot" data-i18n-skip></select>
+        </div>
+      </div>
       <div id="activity-grid" class="activity-grid"></div>
       <div class="empty" id="activity-empty" hidden>
         <p class="empty-title">Activities are on their way</p>
