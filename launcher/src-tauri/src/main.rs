@@ -475,6 +475,44 @@ fn thonny_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
         .ok_or_else(|| "Thonny is not included in this version for this system yet.".to_string())
 }
 
+/// Processes of the bundled Thonny that are running (Thonny may hand files over to an
+/// instance that is already open, so the processes are found by their location).
+fn thonny_processes(app: &tauri::AppHandle) -> Vec<u32> {
+    let Ok(exe) = thonny_path(app) else { return Vec::new() };
+    let Some(dir) = exe.parent() else { return Vec::new() };
+    let mut sys = sysinfo::System::new();
+    sys.refresh_processes();
+    sys.processes()
+        .iter()
+        .filter(|(_, p)| p.exe().map(|e| e.starts_with(dir)).unwrap_or(false))
+        .map(|(pid, _)| pid.as_u32())
+        .collect()
+}
+
+/// True while the bundled Thonny is open.
+#[tauri::command]
+async fn thonny_running(app: tauri::AppHandle, window: WebviewWindow) -> Result<bool, String> {
+    require_main(&window)?;
+    Ok(!thonny_processes(&app).is_empty())
+}
+
+/// Asks Thonny to close, as if its window's × were clicked: Thonny still offers to save
+/// unsaved work. Used when the launcher closes.
+fn close_thonny(app: &tauri::AppHandle) {
+    for pid in thonny_processes(app) {
+        #[cfg(windows)]
+        {
+            use std::os::windows::process::CommandExt;
+            const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+            let _ = Command::new("taskkill").args(["/PID", &pid.to_string()]).creation_flags(CREATE_NO_WINDOW).spawn();
+        }
+        #[cfg(not(windows))]
+        {
+            let _ = Command::new("kill").args(["-TERM", &pid.to_string()]).spawn();
+        }
+    }
+}
+
 /// Starts Thonny. The plug-in connects to the device manager on localhost:8596 by itself.
 #[tauri::command]
 async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
@@ -761,7 +799,7 @@ fn main() {
         .manage(WebApps::default())
         .manage(ActivityWindows::default())
         .manage(RobotWindows::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, thonny_running, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();
@@ -776,6 +814,7 @@ fn main() {
             // Closing the launcher closes every programming window and the device manager.
             if window.label() == "main" {
                 if let WindowEvent::CloseRequested { .. } = event {
+                    close_thonny(window.app_handle());
                     window.app_handle().exit(0);
                 }
             }

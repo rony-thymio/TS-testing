@@ -81,6 +81,11 @@
   const opening = new Set();
   function openOnRobot(robot, mode, path, title, askLabel) {
     if (opening.has(robot.id)) return Promise.resolve(false);
+    // Ask the launcher which windows are open right now, so the decision never rests on an old list.
+    return invoke('list_editors').then(setEditors, () => {}).then(() => decideOpen(robot, mode, path, title, askLabel));
+  }
+  function decideOpen(robot, mode, path, title, askLabel) {
+    if (opening.has(robot.id)) return Promise.resolve(false);
     const fullTitle = windowTitle(robot, title);
     const fresh = () => {
       opening.add(robot.id);
@@ -210,7 +215,14 @@
     return 'empty';
   }
   const BATTERY_TEXT = { charging: 'Charging', full: 'Battery full', good: 'Battery good', low: 'Battery low', empty: 'Battery empty: charge it' };
+  let thonnyAt = 0;
+  function pollThonny() {
+    if (Date.now() - thonnyAt < 5000) return;
+    thonnyAt = Date.now();
+    invoke('thonny_running').then((on) => { if (!!on !== !!state.thonny) { state.thonny = !!on; renderRobots(); } }).catch(() => {});
+  }
   function pollBattery() {
+    pollThonny();
     const c = state.client;
     if (!c) return;
     const now = Date.now();
@@ -321,7 +333,8 @@
       // The programming window open for this robot, with Show and Close.
       const openId = state.editors[r.id];
       const openMode = openId && modeById(openId);
-      if (r.status === 'busy' && !openMode) {
+      const inThonny = r.status === 'busy' && !openMode && state.thonny;
+      if (r.status === 'busy' && !openMode && !inThonny) {
         const note = document.createElement('div'); note.className = 'robot-note'; note.textContent = T('Used by another program or computer');
         main.append(note);
       }
@@ -348,8 +361,8 @@
       else if (canUpdate) addAction(T('⋯ More'), () => { state.moreOpen = r.id; renderRobots(); });
       if (actions.childElementCount) main.append(actions);
       const badge = document.createElement('span');
-      badge.className = 'badge ' + (openMode ? 'open' : tone);
-      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : label;
+      badge.className = 'badge ' + (openMode || inThonny ? 'open' : tone);
+      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : inThonny ? T('In {app}', { app: 'Thonny' }) : label;
       el.append(input, main, badge);
       list.append(el);
     }
@@ -478,11 +491,29 @@
     const [main, hash] = path.split('#');
     return `${main}${main.includes('?') ? '&' : '?'}v=${Date.now()}${hash !== undefined ? '#' + hash : ''}`;
   };
+  // Thonny takes a free Thymio II by itself. When every robot has a programming window open,
+  // offer to close them first. Resolves false when cancelled.
+  function freeRobotsForThonny() {
+    return invoke('list_editors').then(setEditors, () => {}).then(() => {
+      const ids = Object.keys(state.editors);
+      if (!ids.length) return true;
+      const free = state.robots.some((r) => (r.status === 'available' || r.status === 'ready') && !state.editors[r.id]);
+      if (free) return true;
+      return choose(T('Thonny needs a free Thymio II'),
+        T('Your Thymio II are used by programming windows. Close them so Thonny can connect? Unsaved work in them will be lost.'),
+        [{ value: 'anyway', label: T('Open Thonny anyway') }, { value: 'close', label: T('Close them and open Thonny'), primary: true }])
+        .then((v) => {
+          if (v === 'close') return Promise.all(ids.map((id) => invoke('close_editor', { robot: id }).catch(() => {})))
+            .then(() => new Promise((ok) => setTimeout(() => ok(true), 1500)));
+          return v === 'anyway';
+        });
+    });
+  }
   function openActivity(mode, a, kind, confirmed, robotId) {
     if (mode.launch === 'thonny') {
-      invoke('open_python_activity', { id: a.id, kind })
+      freeRobotsForThonny().then((go) => go && invoke('open_python_activity', { id: a.id, kind })
         .then((path) => { if (kind === 'challenge') openChallenge(a); toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() })); })
-        .catch((e) => toast(String(e)));
+        .catch((e) => toast(String(e))));
       return;
     }
     // Activities go to the robot chosen at the top of the library (or the challenge's robot).
@@ -556,7 +587,7 @@
   $('details-open').addEventListener('click', () => {
     const robot = state.robots.find((r) => r.id === state.selected);
     if (current && current.launch === 'thonny') {
-      invoke('open_thonny').then(() => { $('details').close(); toast(T('Thonny is starting… (the first start can take a few seconds)')); })
+      freeRobotsForThonny().then((go) => go && invoke('open_thonny').then(() => { $('details').close(); toast(T('Thonny is starting… (the first start can take a few seconds)')); }))
         .catch((e) => toast(String(e)));
       return;
     }

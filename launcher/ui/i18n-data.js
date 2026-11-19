@@ -2211,6 +2211,50 @@ window.THYMIO_I18N = {
 "he": "התחלת הפעילות",
 "zh": "开始活动",
 "ja": "アクティビティを始める"
+},
+"Thonny needs a free Thymio II": {
+"fr": "Thonny a besoin d’un Thymio II libre",
+"de": "Thonny braucht einen freien Thymio II",
+"it": "Thonny ha bisogno di un Thymio II libero",
+"es": "Thonny necesita un Thymio II libre",
+"ar": "يحتاج Thonny إلى Thymio II غير مستخدم",
+"pl": "Thonny potrzebuje wolnego Thymio II",
+"he": "Thonny צריך Thymio II פנוי",
+"zh": "Thonny 需要一台空闲的 Thymio II",
+"ja": "Thonny には空いている Thymio II が必要です"
+},
+"Your Thymio II are used by programming windows. Close them so Thonny can connect? Unsaved work in them will be lost.": {
+"fr": "Tes Thymio II sont utilisés par des fenêtres de programmation. Les fermer pour que Thonny puisse se connecter ? Le travail non enregistré sera perdu.",
+"de": "Deine Thymio II werden von Programmierfenstern benutzt. Sollen sie geschlossen werden, damit Thonny sich verbinden kann? Nicht gespeicherte Arbeit geht verloren.",
+"it": "I tuoi Thymio II sono usati da finestre di programmazione. Chiuderle perché Thonny possa connettersi? Il lavoro non salvato andrà perso.",
+"es": "Tus Thymio II están en uso en ventanas de programación. ¿Cerrarlas para que Thonny pueda conectarse? Se perderá el trabajo no guardado.",
+"ar": "روبوتات Thymio II مستخدمة في نوافذ البرمجة. هل تريد إغلاقها ليتمكن Thonny من الاتصال؟ سيضيع العمل غير المحفوظ.",
+"pl": "Twoje Thymio II są używane przez okna programowania. Zamknąć je, aby Thonny mógł się połączyć? Niezapisana praca zostanie utracona.",
+"he": "ה-Thymio II שלכם בשימוש בחלונות תכנות. לסגור אותם כדי ש-Thonny יוכל להתחבר? עבודה שלא נשמרה תאבד.",
+"zh": "你的 Thymio II 正被编程窗口使用。关闭它们以便 Thonny 连接吗？未保存的作品将会丢失。",
+"ja": "Thymio II はプログラミングウィンドウで使用中です。Thonny が接続できるように閉じますか？保存していない作業は失われます。"
+},
+"Open Thonny anyway": {
+"fr": "Ouvrir Thonny quand même",
+"de": "Thonny trotzdem öffnen",
+"it": "Apri comunque Thonny",
+"es": "Abrir Thonny de todos modos",
+"ar": "افتح Thonny على أي حال",
+"pl": "Otwórz Thonny mimo to",
+"he": "לפתוח את Thonny בכל זאת",
+"zh": "仍然打开 Thonny",
+"ja": "このまま Thonny を開く"
+},
+"Close them and open Thonny": {
+"fr": "Les fermer et ouvrir Thonny",
+"de": "Schließen und Thonny öffnen",
+"it": "Chiudile e apri Thonny",
+"es": "Cerrarlas y abrir Thonny",
+"ar": "أغلقها وافتح Thonny",
+"pl": "Zamknij je i otwórz Thonny",
+"he": "לסגור אותם ולפתוח את Thonny",
+"zh": "关闭它们并打开 Thonny",
+"ja": "閉じて Thonny を開く"
 }
 },
 "html": {
