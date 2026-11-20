@@ -2255,6 +2255,50 @@ window.THYMIO_I18N = {
 "he": "לסגור אותם ולפתוח את Thonny",
 "zh": "关闭它们并打开 Thonny",
 "ja": "閉じて Thonny を開く"
+},
+"Thonny will ask you to save your work.": {
+"fr": "Thonny te demandera d’enregistrer ton travail.",
+"de": "Thonny fragt dich, ob du deine Arbeit speichern willst.",
+"it": "Thonny ti chiederà di salvare il tuo lavoro.",
+"es": "Thonny te pedirá que guardes tu trabajo.",
+"ar": "سيطلب منك Thonny حفظ عملك.",
+"pl": "Thonny poprosi cię o zapisanie pracy.",
+"he": "Thonny יבקש מכם לשמור את העבודה.",
+"zh": "Thonny 会提示你保存作品。",
+"ja": "Thonny が作業の保存を確認します。"
+},
+"A robot runs one program at a time. Switch to Thonny, or close Thonny and open {new}. Thonny will ask you to save your work.": {
+"fr": "Un robot exécute un seul programme à la fois. Passe à Thonny, ou ferme Thonny et ouvre {new}. Thonny te demandera d’enregistrer ton travail.",
+"de": "Ein Roboter führt immer nur ein Programm aus. Wechsle zu Thonny, oder schließe Thonny und öffne {new}. Thonny fragt dich, ob du deine Arbeit speichern willst.",
+"it": "Un robot esegue un solo programma alla volta. Passa a Thonny, oppure chiudi Thonny e apri {new}. Thonny ti chiederà di salvare il tuo lavoro.",
+"es": "Un robot ejecuta un solo programa a la vez. Cambia a Thonny, o cierra Thonny y abre {new}. Thonny te pedirá que guardes tu trabajo.",
+"ar": "يشغّل الروبوت برنامجًا واحدًا في كل مرة. انتقل إلى Thonny، أو أغلق Thonny وافتح {new}. سيطلب منك Thonny حفظ عملك.",
+"pl": "Robot wykonuje jeden program naraz. Przejdź do Thonny albo zamknij Thonny i otwórz {new}. Thonny poprosi cię o zapisanie pracy.",
+"he": "רובוט מריץ תוכנית אחת בכל פעם. עברו ל-Thonny, או סגרו את Thonny ופתחו את {new}. Thonny יבקש מכם לשמור את העבודה.",
+"zh": "机器人一次只能运行一个程序。切换到 Thonny，或关闭 Thonny 并打开 {new}。Thonny 会提示你保存作品。",
+"ja": "ロボットは一度に 1 つのプログラムしか実行できません。Thonny に切り替えるか、Thonny を閉じて {new} を開いてください。Thonny が作業の保存を確認します。"
+},
+"Closing Thonny… save your work if Thonny asks.": {
+"fr": "Fermeture de Thonny… enregistre ton travail si Thonny le demande.",
+"de": "Thonny wird geschlossen… speichere deine Arbeit, wenn Thonny fragt.",
+"it": "Chiusura di Thonny… salva il tuo lavoro se Thonny lo chiede.",
+"es": "Cerrando Thonny… guarda tu trabajo si Thonny lo pide.",
+"ar": "جارٍ إغلاق Thonny… احفظ عملك إذا طلب Thonny ذلك.",
+"pl": "Zamykanie Thonny… zapisz pracę, jeśli Thonny o to poprosi.",
+"he": "סוגרים את Thonny… שמרו את העבודה אם Thonny מבקש.",
+"zh": "正在关闭 Thonny… 如果 Thonny 询问，请保存你的作品。",
+"ja": "Thonny を閉じています… 確認されたら作業を保存してください。"
+},
+"Thonny is still using {name}.": {
+"fr": "Thonny utilise encore {name}.",
+"de": "Thonny benutzt {name} noch.",
+"it": "Thonny sta ancora usando {name}.",
+"es": "Thonny todavía está usando {name}.",
+"ar": "لا يزال Thonny يستخدم {name}.",
+"pl": "Thonny nadal używa {name}.",
+"he": "Thonny עדיין משתמש ב-{name}.",
+"zh": "Thonny 仍在使用 {name}。",
+"ja": "Thonny はまだ {name} を使っています。"
 }
 },
 "html": {

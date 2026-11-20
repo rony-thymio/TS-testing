@@ -480,11 +480,18 @@ fn thonny_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
 fn thonny_processes(app: &tauri::AppHandle) -> Vec<u32> {
     let Ok(exe) = thonny_path(app) else { return Vec::new() };
     let Some(dir) = exe.parent() else { return Vec::new() };
+    // Compared as text: Windows paths may come as "\\?\C:\…" from one side and "C:\…" from the other.
+    let plain = |p: &std::path::Path| {
+        let s = p.to_string_lossy().replace('/', "\\").to_lowercase();
+        s.strip_prefix(r"\\?\").map(str::to_string).unwrap_or(s)
+    };
+    let mut folder = plain(dir);
+    if !folder.ends_with('\\') { folder.push('\\'); }
     let mut sys = sysinfo::System::new();
     sys.refresh_processes();
     sys.processes()
         .iter()
-        .filter(|(_, p)| p.exe().map(|e| e.starts_with(dir)).unwrap_or(false))
+        .filter(|(_, p)| p.exe().map(|e| plain(e).starts_with(&folder)).unwrap_or(false))
         .map(|(pid, _)| pid.as_u32())
         .collect()
 }
@@ -494,6 +501,31 @@ fn thonny_processes(app: &tauri::AppHandle) -> Vec<u32> {
 async fn thonny_running(app: tauri::AppHandle, window: WebviewWindow) -> Result<bool, String> {
     require_main(&window)?;
     Ok(!thonny_processes(&app).is_empty())
+}
+
+/// Brings Thonny's window to the front.
+#[tauri::command]
+async fn focus_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
+    require_main(&window)?;
+    let pids = thonny_processes(&app);
+    if pids.is_empty() { return Err("not-running".into()); }
+    #[cfg(windows)]
+    {
+        use std::os::windows::process::CommandExt;
+        const CREATE_NO_WINDOW: u32 = 0x0800_0000;
+        let list = pids.iter().map(|p| p.to_string()).collect::<Vec<_>>().join(",");
+        let script = format!("$w = New-Object -ComObject WScript.Shell; foreach ($p in @({list})) {{ if ($w.AppActivate([int]$p)) {{ break }} }}");
+        let _ = Command::new("powershell").args(["-NoProfile", "-NonInteractive", "-Command", &script]).creation_flags(CREATE_NO_WINDOW).spawn();
+    }
+    Ok(())
+}
+
+/// Closes Thonny from the robot card (Thonny still offers to save).
+#[tauri::command]
+async fn quit_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
+    require_main(&window)?;
+    close_thonny(&app);
+    Ok(())
 }
 
 /// Asks Thonny to close, as if its window's × were clicked: Thonny still offers to save
@@ -799,7 +831,7 @@ fn main() {
         .manage(WebApps::default())
         .manage(ActivityWindows::default())
         .manage(RobotWindows::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, thonny_running, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, thonny_running, focus_thonny, quit_thonny, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();

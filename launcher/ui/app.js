@@ -86,6 +86,7 @@
   }
   function decideOpen(robot, mode, path, title, askLabel) {
     if (opening.has(robot.id)) return Promise.resolve(false);
+    if (inThonny(robot)) return freeRobotFromThonny(robot, mode).then((go) => (go ? decideOpen(robot, mode, path, title, askLabel) : false));
     const fullTitle = windowTitle(robot, title);
     const fresh = () => {
       opening.add(robot.id);
@@ -110,6 +111,32 @@
           .then((loaded) => (loaded ? true : fresh()))));
     }
     return freeRobotFor(robot, mode).then((go) => (go ? fresh() : false));
+  }
+  // The robot is used by Thonny: switch to Thonny, or close it (Thonny asks to save) and wait for the robot.
+  function freeRobotFromThonny(robot, mode) {
+    const name = robot.name || 'Thymio';
+    return choose(T('{name} is already open in {app}', { name, app: 'Thonny' }),
+      T('A robot runs one program at a time. Switch to Thonny, or close Thonny and open {new}. Thonny will ask you to save your work.', { new: T(mode.name) }),
+      [{ value: 'switch', label: T('Switch to {app}', { app: 'Thonny' }) },
+        { value: 'replace', label: T('Close it and open {new}', { new: T(mode.name) }), primary: true }])
+      .then((v) => {
+        if (v === 'switch') { invoke('focus_thonny').catch(() => {}); return false; }
+        if (v !== 'replace') return false;
+        toast(T('Closing Thonny… save your work if Thonny asks.'));
+        state.thonnyLaunched = false;
+        return invoke('quit_thonny').then(() => waitUntil(() => {
+          const r = state.robots.find((x) => x.id === robot.id);
+          return r && (r.status === 'available' || r.status === 'ready');
+        }, 60000)).then((free) => { if (!free) toast(T('Thonny is still using {name}.', { name })); return free; });
+      });
+  }
+  // Resolves true as soon as test() is true (checked every half second), false after the time limit.
+  function waitUntil(test, ms) {
+    return new Promise((ok) => {
+      const end = Date.now() + ms;
+      const tick = () => { if (test()) ok(true); else if (Date.now() > end) ok(false); else setTimeout(tick, 500); };
+      tick();
+    });
   }
   // Before opening a programming window for a robot: if one is already open, switch to it or replace it.
   // Resolves true when the new window may open.
@@ -216,10 +243,12 @@
   }
   const BATTERY_TEXT = { charging: 'Charging', full: 'Battery full', good: 'Battery good', low: 'Battery low', empty: 'Battery empty: charge it' };
   let thonnyAt = 0;
+  // Checks again soon (after Thonny is opened or closed).
+  function watchThonny() { state.thonnyLaunched = true; thonnyAt = 0; pollThonny(); setTimeout(() => { thonnyAt = 0; pollThonny(); }, 4000); setTimeout(() => { thonnyAt = 0; pollThonny(); }, 12000); }
   function pollThonny() {
     if (Date.now() - thonnyAt < 5000) return;
     thonnyAt = Date.now();
-    invoke('thonny_running').then((on) => { if (!!on !== !!state.thonny) { state.thonny = !!on; renderRobots(); } }).catch(() => {});
+    invoke('thonny_running').then((on) => { if (!!on !== !!state.thonny) { if (state.thonny && !on) state.thonnyLaunched = false; state.thonny = !!on; renderRobots(); renderModes(); } }).catch(() => {});
   }
   function pollBattery() {
     pollThonny();
@@ -252,7 +281,9 @@
     connected: ['Connecting…', 'neutral'], unknown: ['Unknown', 'neutral']
   };
   // A robot can be chosen when free, or when one of our own programming windows uses it.
-  const usable = (r) => r.status === 'available' || r.status === 'ready' || !!state.editors[r.id];
+  // A robot busy with none of our windows, while Thonny is open, is the one Thonny uses.
+  const inThonny = (r) => !!r && r.status === 'busy' && !state.editors[r.id] && !!(state.thonny || state.thonnyLaunched);
+  const usable = (r) => r.status === 'available' || r.status === 'ready' || !!state.editors[r.id] || inThonny(r);
   const fwNum = (s) => parseInt(s, 10) || 0;
 
   // "For: ● Yellow" at the top of the library: the robot activities, challenges and solutions go to.
@@ -263,7 +294,7 @@
     for (const r of choices) {
       const o = document.createElement('option'); o.value = r.id;
       const openId = state.editors[r.id]; const m = openId && modeById(openId);
-      o.textContent = (r.name || 'Thymio') + (m ? ` · ${T('In {app}', { app: T(m.name) })}` : '');
+      o.textContent = (r.name || 'Thymio') + (m ? ` · ${T('In {app}', { app: T(m.name) })}` : inThonny(r) ? ` · ${T('In {app}', { app: 'Thonny' })}` : '');
       sel.append(o);
     }
     if (!choices.length) { const o = document.createElement('option'); o.textContent = T('No robot'); o.value = ''; sel.append(o); }
@@ -333,8 +364,8 @@
       // The programming window open for this robot, with Show and Close.
       const openId = state.editors[r.id];
       const openMode = openId && modeById(openId);
-      const inThonny = r.status === 'busy' && !openMode && state.thonny;
-      if (r.status === 'busy' && !openMode && !inThonny) {
+      const thonnyHere = inThonny(r);
+      if (r.status === 'busy' && !openMode && !thonnyHere) {
         const note = document.createElement('div'); note.className = 'robot-note'; note.textContent = T('Used by another program or computer');
         main.append(note);
       }
@@ -355,14 +386,22 @@
             .then((v) => { if (v === 'close') invoke('close_editor', { robot: r.id }); });
         });
       }
+      if (thonnyHere) {
+        addAction(T('Show'), () => invoke('focus_thonny').catch(() => {}), true);
+        addAction(T('Close'), () => {
+          choose(T('Close {app} on {name}?', { app: 'Thonny', name: r.name || 'Thymio' }), T('Thonny will ask you to save your work.'),
+            [{ value: 'close', label: T('Close'), primary: true }])
+            .then((v) => { if (v === 'close') invoke('quit_thonny').then(() => { watchThonny(); state.thonnyLaunched = false; }); });
+        });
+      }
       if (canRename && state.renaming !== r.id && !openMode) addAction(T('Rename'), () => { state.renaming = r.id; renderRobots(); });
       if (canUpdate && outdated) addAction(T('Update firmware to {v}', { v: r.latestFwVersion }), () => showFirmware(r));
       else if (canUpdate && state.moreOpen === r.id) addAction(T('Reinstall firmware (repair)'), () => showFirmware(r));
       else if (canUpdate) addAction(T('⋯ More'), () => { state.moreOpen = r.id; renderRobots(); });
       if (actions.childElementCount) main.append(actions);
       const badge = document.createElement('span');
-      badge.className = 'badge ' + (openMode || inThonny ? 'open' : tone);
-      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : inThonny ? T('In {app}', { app: 'Thonny' }) : label;
+      badge.className = 'badge ' + (openMode || thonnyHere ? 'open' : tone);
+      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : thonnyHere ? T('In {app}', { app: 'Thonny' }) : label;
       el.append(input, main, badge);
       list.append(el);
     }
@@ -398,7 +437,7 @@
       const age = b.querySelector('.age'); age.textContent = window.I18N.ages(m.age); age.classList.add(m.tone);
       b.querySelector('.mode-desc').textContent = T(m.short);
       const robot = state.robots.find((r) => r.id === state.selected);
-      const openId = robot && state.editors[robot.id];
+      const openId = robot && (state.editors[robot.id] || (inThonny(robot) ? 'thonny' : null));
       if (!m.available) {
         const soon = document.createElement('span'); soon.className = 'mode-soon'; soon.textContent = T('Coming in a later version');
         b.querySelector('.mode-text').append(soon);
@@ -412,7 +451,7 @@
         const n = document.createElement('span'); n.className = 'mode-note'; n.textContent = T('Will replace {app} on {name}', { app: T(open ? open.name : openId), name: robot.name || 'Thymio' });
         b.querySelector('.mode-text').append(n);
       }
-      b.addEventListener('click', () => (openId === m.id ? invoke('focus_editor', { robot: robot.id }) : showDetails(m)));
+      b.addEventListener('click', () => (openId === m.id ? (m.id === 'thonny' ? invoke('focus_thonny').catch(() => {}) : invoke('focus_editor', { robot: robot.id })) : showDetails(m)));
       grid.append(b);
     }
   }
@@ -494,7 +533,10 @@
   // Thonny takes a free Thymio II by itself. When every robot has a programming window open,
   // offer to close them first. Resolves false when cancelled.
   function freeRobotsForThonny() {
-    return invoke('list_editors').then(setEditors, () => {}).then(() => {
+    // Thonny already open: files go to it, and it keeps the robot it has.
+    const running = invoke('thonny_running').catch(() => false);
+    return Promise.all([invoke('list_editors').then(setEditors, () => {}), running]).then(([, on]) => {
+      if (on) return true;
       const ids = Object.keys(state.editors);
       if (!ids.length) return true;
       const free = state.robots.some((r) => (r.status === 'available' || r.status === 'ready') && !state.editors[r.id]);
@@ -512,7 +554,7 @@
   function openActivity(mode, a, kind, confirmed, robotId) {
     if (mode.launch === 'thonny') {
       freeRobotsForThonny().then((go) => go && invoke('open_python_activity', { id: a.id, kind })
-        .then((path) => { if (kind === 'challenge') openChallenge(a); toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() })); })
+        .then((path) => { watchThonny(); if (kind === 'challenge') openChallenge(a); toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() })); })
         .catch((e) => toast(String(e))));
       return;
     }
@@ -587,7 +629,7 @@
   $('details-open').addEventListener('click', () => {
     const robot = state.robots.find((r) => r.id === state.selected);
     if (current && current.launch === 'thonny') {
-      freeRobotsForThonny().then((go) => go && invoke('open_thonny').then(() => { $('details').close(); toast(T('Thonny is starting… (the first start can take a few seconds)')); }))
+      freeRobotsForThonny().then((go) => go && invoke('open_thonny').then(() => { watchThonny(); $('details').close(); toast(T('Thonny is starting… (the first start can take a few seconds)')); }))
         .catch((e) => toast(String(e)));
       return;
     }
