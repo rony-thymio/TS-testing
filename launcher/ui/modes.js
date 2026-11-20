@@ -58,7 +58,7 @@ window.THYMIO_MODES = [
       <li>Opens and saves Aseba Studio files (.aesl), so programs made with Thymio Suite 2.4.0 still work</li><li>No need of an internet connection</li></ul>`
   },
   {
-    id: 'thonny', name: 'Python via Thonny', icon: 'img/thonny.png', age: 'Ages 14+', tone: 'purple',
+    id: 'thonny', name: 'Thonny', icon: 'img/thonny.png', age: 'Ages 14+', tone: 'purple',
     short: 'Real Python code, written in the Thonny editor.',
     available: true, groups: true, launch: 'thonny', needsRobot: false,
     details: `<p><b>Thonny is a Python editor meant for learning programming.</b></p>

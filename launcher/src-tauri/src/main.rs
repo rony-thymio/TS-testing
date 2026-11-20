@@ -477,7 +477,23 @@ fn thonny_path(app: &tauri::AppHandle) -> Result<PathBuf, String> {
 
 /// Processes of the bundled Thonny that are running (Thonny may hand files over to an
 /// instance that is already open, so the processes are found by their location).
+/// Thonny processes started by the launcher (kept as a second way to find Thonny).
+static THONNY_STARTED: std::sync::Mutex<Vec<u32>> = std::sync::Mutex::new(Vec::new());
+
 fn thonny_processes(app: &tauri::AppHandle) -> Vec<u32> {
+    let mut pids = thonny_processes_by_folder(app);
+    let started = THONNY_STARTED.lock().map(|v| v.clone()).unwrap_or_default();
+    if !started.is_empty() {
+        let mut sys = sysinfo::System::new();
+        sys.refresh_processes();
+        for pid in started {
+            if sys.process(sysinfo::Pid::from_u32(pid)).is_some() && !pids.contains(&pid) { pids.push(pid); }
+        }
+    }
+    pids
+}
+
+fn thonny_processes_by_folder(app: &tauri::AppHandle) -> Vec<u32> {
     let Ok(exe) = thonny_path(app) else { return Vec::new() };
     let Some(dir) = exe.parent() else { return Vec::new() };
     // Compared as text: Windows paths may come as "\\?\C:\…" from one side and "C:\…" from the other.
@@ -550,7 +566,9 @@ fn close_thonny(app: &tauri::AppHandle) {
 async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
     require_main(&window)?;
     let thonny = thonny_path(&app)?;
-    Command::new(&thonny).spawn().map(|_| ()).map_err(|e| e.to_string())
+    let child = Command::new(&thonny).spawn().map_err(|e| e.to_string())?;
+    if let Ok(mut v) = THONNY_STARTED.lock() { v.push(child.id()); }
+    Ok(())
 }
 
 /// Opens a Python activity of the library in Thonny. Files are copied to
@@ -602,7 +620,8 @@ async fn open_python_activity(app: tauri::AppHandle, window: WebviewWindow, id: 
         _ => return Err("unknown activity file".into()),
     }
     let thonny = thonny_path(&app)?;
-    Command::new(&thonny).args(&targets).spawn().map_err(|e| e.to_string())?;
+    let child = Command::new(&thonny).args(&targets).spawn().map_err(|e| e.to_string())?;
+    if let Ok(mut v) = THONNY_STARTED.lock() { v.push(child.id()); }
     Ok(targets[0].display().to_string())
 }
 
