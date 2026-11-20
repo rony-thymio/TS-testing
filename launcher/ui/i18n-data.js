@@ -2299,6 +2299,72 @@ window.THYMIO_I18N = {
 "he": "Thonny עדיין משתמש ב-{name}.",
 "zh": "Thonny 仍在使用 {name}。",
 "ja": "Thonny はまだ {name} を使っています。"
+},
+"A robot runs one program at a time. Switch to Thonny, or disconnect Thonny from {name} and open {new}. Your files stay open in Thonny.": {
+"fr": "Un robot exécute un seul programme à la fois. Passe à Thonny, ou déconnecte Thonny de {name} et ouvre {new}. Tes fichiers restent ouverts dans Thonny.",
+"de": "Ein Roboter führt immer nur ein Programm aus. Wechsle zu Thonny, oder trenne Thonny von {name} und öffne {new}. Deine Dateien bleiben in Thonny geöffnet.",
+"it": "Un robot esegue un solo programma alla volta. Passa a Thonny, oppure disconnetti Thonny da {name} e apri {new}. I tuoi file restano aperti in Thonny.",
+"es": "Un robot ejecuta un solo programa a la vez. Cambia a Thonny, o desconecta Thonny de {name} y abre {new}. Tus archivos siguen abiertos en Thonny.",
+"ar": "يشغّل الروبوت برنامجًا واحدًا في كل مرة. انتقل إلى Thonny، أو افصل Thonny عن {name} وافتح {new}. تبقى ملفاتك مفتوحة في Thonny.",
+"pl": "Robot wykonuje jeden program naraz. Przejdź do Thonny albo odłącz Thonny od {name} i otwórz {new}. Twoje pliki pozostaną otwarte w Thonny.",
+"he": "רובוט מריץ תוכנית אחת בכל פעם. עברו ל-Thonny, או נתקו את Thonny מ-{name} ופתחו את {new}. הקבצים שלכם נשארים פתוחים ב-Thonny.",
+"zh": "机器人一次只能运行一个程序。切换到 Thonny，或断开 Thonny 与 {name} 的连接并打开 {new}。你的文件仍在 Thonny 中打开。",
+"ja": "ロボットは一度に 1 つのプログラムしか実行できません。Thonny に切り替えるか、Thonny を {name} から切断して {new} を開いてください。ファイルは Thonny で開いたままです。"
+},
+"Disconnect Thonny and open {new}": {
+"fr": "Déconnecter Thonny et ouvrir {new}",
+"de": "Thonny trennen und {new} öffnen",
+"it": "Disconnetti Thonny e apri {new}",
+"es": "Desconectar Thonny y abrir {new}",
+"ar": "افصل Thonny وافتح {new}",
+"pl": "Odłącz Thonny i otwórz {new}",
+"he": "לנתק את Thonny ולפתוח את {new}",
+"zh": "断开 Thonny 并打开 {new}",
+"ja": "Thonny を切断して {new} を開く"
+},
+"Thonny is open for {name}": {
+"fr": "Thonny est ouvert pour {name}",
+"de": "Thonny ist für {name} geöffnet",
+"it": "Thonny è aperto per {name}",
+"es": "Thonny está abierto para {name}",
+"ar": "Thonny مفتوح لـ {name}",
+"pl": "Thonny jest otwarty dla {name}",
+"he": "Thonny פתוח עבור {name}",
+"zh": "Thonny 已为 {name} 打开",
+"ja": "Thonny は {name} 用に開いています"
+},
+"Thonny works with one robot at a time. Move Thonny to {name}? Your files stay open in Thonny.": {
+"fr": "Thonny fonctionne avec un seul robot à la fois. Passer Thonny sur {name} ? Tes fichiers restent ouverts dans Thonny.",
+"de": "Thonny arbeitet immer nur mit einem Roboter. Thonny zu {name} wechseln? Deine Dateien bleiben in Thonny geöffnet.",
+"it": "Thonny funziona con un robot alla volta. Spostare Thonny su {name}? I tuoi file restano aperti in Thonny.",
+"es": "Thonny funciona con un robot a la vez. ¿Pasar Thonny a {name}? Tus archivos siguen abiertos en Thonny.",
+"ar": "يعمل Thonny مع روبوت واحد في كل مرة. هل تريد نقل Thonny إلى {name}؟ تبقى ملفاتك مفتوحة في Thonny.",
+"pl": "Thonny działa z jednym robotem naraz. Przenieść Thonny na {name}? Twoje pliki pozostaną otwarte w Thonny.",
+"he": "Thonny עובד עם רובוט אחד בכל פעם. להעביר את Thonny ל-{name}? הקבצים שלכם נשארים פתוחים ב-Thonny.",
+"zh": "Thonny 一次只能连接一个机器人。将 Thonny 切换到 {name} 吗？你的文件仍在 Thonny 中打开。",
+"ja": "Thonny は一度に 1 台のロボットでしか動きません。Thonny を {name} に切り替えますか？ファイルは Thonny で開いたままです。"
+},
+"Move Thonny to {name}": {
+"fr": "Passer Thonny sur {name}",
+"de": "Thonny zu {name} wechseln",
+"it": "Sposta Thonny su {name}",
+"es": "Pasar Thonny a {name}",
+"ar": "انقل Thonny إلى {name}",
+"pl": "Przenieś Thonny na {name}",
+"he": "להעביר את Thonny ל-{name}",
+"zh": "将 Thonny 切换到 {name}",
+"ja": "Thonny を {name} に切り替える"
+},
+"Thonny is waiting for {name}: it is used by another program.": {
+"fr": "Thonny attend {name} : il est utilisé par un autre programme.",
+"de": "Thonny wartet auf {name}: Er wird von einem anderen Programm benutzt.",
+"it": "Thonny aspetta {name}: è usato da un altro programma.",
+"es": "Thonny espera a {name}: lo está usando otro programa.",
+"ar": "Thonny ينتظر {name}: إنه مستخدم من برنامج آخر.",
+"pl": "Thonny czeka na {name}: jest używany przez inny program.",
+"he": "Thonny ממתין ל-{name}: הוא בשימוש של תוכנית אחרת.",
+"zh": "Thonny 正在等待 {name}：它正被另一个程序使用。",
+"ja": "Thonny は {name} を待っています：別のプログラムが使用中です。"
 }
 },
 "html": {

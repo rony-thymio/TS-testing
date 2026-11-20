@@ -60,7 +60,7 @@ window.THYMIO_MODES = [
   {
     id: 'thonny', name: 'Thonny', icon: 'img/thonny.png', age: 'Ages 14+', tone: 'purple',
     short: 'Real Python code, written in the Thonny editor.',
-    available: true, groups: true, launch: 'thonny', needsRobot: false,
+    available: true, groups: true, launch: 'thonny',
     details: `<p><b>Thonny is a Python editor meant for learning programming.</b></p>
       <ul><li>Program Thymio with Python using the Thymio plug-in in Thonny</li>
       <li>Python code is translated to Aseba</li><li>Load code directly to the robot</li>

@@ -12,11 +12,15 @@
   // ---------- which robot has which programming window open --------------------------------
   // One programming window per robot: a robot runs one program at a time.
   const modeById = (id) => window.THYMIO_MODES.find((m) => m.id === id);
+  // Our programming windows (from the launcher) plus the robot Thonny holds (reported by Thonny).
   function setEditors(list) {
+    if (list) state.windows = list;
     state.editors = {};
-    for (const e of list || []) state.editors[e.robot] = e.mode;
+    for (const e of state.windows || []) state.editors[e.robot] = e.mode;
+    if (state.thonnyRobot && !state.editors[state.thonnyRobot]) state.editors[state.thonnyRobot] = 'thonny';
     renderRobots(); renderModes();
   }
+  const focusEditor = (robotId) => (state.editors[robotId] === 'thonny' ? invoke('focus_thonny') : invoke('focus_editor', { robot: robotId })).catch(() => {});
   invoke('list_editors').then(setEditors).catch(() => {});
   if (tauri && tauri.event) tauri.event.listen('editors-changed', (e) => setEditors(e.payload));
 
@@ -86,7 +90,6 @@
   }
   function decideOpen(robot, mode, path, title, askLabel) {
     if (opening.has(robot.id)) return Promise.resolve(false);
-    if (inThonny(robot)) return freeRobotFromThonny(robot, mode).then((go) => (go ? decideOpen(robot, mode, path, title, askLabel) : false));
     const fullTitle = windowTitle(robot, title);
     const fresh = () => {
       opening.add(robot.id);
@@ -112,24 +115,6 @@
     }
     return freeRobotFor(robot, mode).then((go) => (go ? fresh() : false));
   }
-  // The robot is used by Thonny: switch to Thonny, or close it (Thonny asks to save) and wait for the robot.
-  function freeRobotFromThonny(robot, mode) {
-    const name = robot.name || 'Thymio';
-    return choose(T('{name} is already open in {app}', { name, app: 'Thonny' }),
-      T('A robot runs one program at a time. Switch to Thonny, or close Thonny and open {new}. Thonny will ask you to save your work.', { new: T(mode.name) }),
-      [{ value: 'switch', label: T('Switch to {app}', { app: 'Thonny' }) },
-        { value: 'replace', label: T('Close it and open {new}', { new: T(mode.name) }), primary: true }])
-      .then((v) => {
-        if (v === 'switch') { invoke('focus_thonny').catch(() => {}); return false; }
-        if (v !== 'replace') return false;
-        toast(T('Closing Thonny… save your work if Thonny asks.'));
-        state.thonnyLaunched = false;
-        return invoke('quit_thonny').then(() => waitUntil(() => {
-          const r = state.robots.find((x) => x.id === robot.id);
-          return r && (r.status === 'available' || r.status === 'ready');
-        }, 60000)).then((free) => { if (!free) toast(T('Thonny is still using {name}.', { name })); return free; });
-      });
-  }
   // Resolves true as soon as test() is true (checked every half second), false after the time limit.
   function waitUntil(test, ms) {
     return new Promise((ok) => {
@@ -143,6 +128,7 @@
   function freeRobotFor(robot, mode) {
     const openId = state.editors[robot.id];
     if (!openId) return Promise.resolve(true);
+    if (openId === 'thonny') return freeRobotFromThonny(robot, mode);
     const open = modeById(openId) || { name: openId };
     const name = robot.name || 'Thymio';
     return choose(T('{name} is already open in {app}', { name, app: T(open.name) }),
@@ -154,6 +140,49 @@
         if (v === 'replace') return invoke('close_editor', { robot: robot.id }).then(() => true);
         return false;
       });
+  }
+
+  // Thonny holds the robot: switch to Thonny, or let Thonny release it (Thonny stays open with its files).
+  function freeRobotFromThonny(robot, mode) {
+    const name = robot.name || 'Thymio';
+    return choose(T('{name} is already open in {app}', { name, app: 'Thonny' }),
+      T('A robot runs one program at a time. Switch to Thonny, or disconnect Thonny from {name} and open {new}. Your files stay open in Thonny.', { name, new: T(mode.name) }),
+      [{ value: 'switch', label: T('Switch to {app}', { app: 'Thonny' }) },
+        { value: 'release', label: T('Disconnect Thonny and open {new}', { new: T(mode.name) }), primary: true }])
+      .then((v) => {
+        if (v === 'switch') { invoke('focus_thonny').catch(() => {}); return false; }
+        if (v !== 'release') return false;
+        state.thonnyWanted = null;
+        return invoke('thonny_use_robot', { robot: '', name: '' }).then(() => waitUntil(() => {
+          const r = state.robots.find((x) => x.id === robot.id);
+          return r && (r.status === 'available' || r.status === 'ready');
+        }, 10000)).then((free) => {
+          if (!free) { toast(T('Thonny is still using {name}.', { name })); return false; }
+          state.thonnyRobot = null; setEditors(); return true;
+        });
+      });
+  }
+  // Opens Thonny for a robot: frees the robot first if another window uses it, and moves Thonny
+  // when it is open for another robot. launch() starts Thonny (or opens a file in it).
+  function openThonnyOn(robot, launch) {
+    const name = robot.name || 'Thymio';
+    return Promise.all([invoke('list_editors').then(setEditors, () => {}), refreshThonny()]).then(() => {
+      const openId = state.editors[robot.id];
+      if (openId && openId !== 'thonny') return freeRobotFor(robot, modeById('thonny'));
+      if (state.thonny && state.thonnyRobot && state.thonnyRobot !== robot.id) {
+        const other = state.robots.find((r) => r.id === state.thonnyRobot);
+        return choose(T('Thonny is open for {name}', { name: (other && other.name) || 'Thymio' }),
+          T('Thonny works with one robot at a time. Move Thonny to {name}? Your files stay open in Thonny.', { name }),
+          [{ value: 'move', label: T('Move Thonny to {name}', { name }), primary: true }]).then((v) => v === 'move');
+      }
+      return true;
+    }).then((go) => {
+      if (!go) return false;
+      state.thonnyWanted = robot;
+      // Thonny already holds this robot: keep its connection (a running program goes on).
+      const tell = state.thonny && state.thonnyRobot === robot.id ? Promise.resolve() : invoke('thonny_use_robot', { robot: robot.id, name });
+      return tell.then(launch).then(() => { watchThonny(); return true; });
+    }).catch((e) => { toast(String(e)); return false; });
   }
 
   // ---------- device manager connection --------------------------------------------------
@@ -242,13 +271,27 @@
     return 'empty';
   }
   const BATTERY_TEXT = { charging: 'Charging', full: 'Battery full', good: 'Battery good', low: 'Battery low', empty: 'Battery empty: charge it' };
+  // Thonny: is it open, and which robot does it hold (reported by Thymio Suite's Thonny plug-in).
   let thonnyAt = 0;
-  // Checks again soon (after Thonny is opened or closed).
-  function watchThonny() { state.thonnyLaunched = true; thonnyAt = 0; pollThonny(); setTimeout(() => { thonnyAt = 0; pollThonny(); }, 4000); setTimeout(() => { thonnyAt = 0; pollThonny(); }, 12000); }
-  function pollThonny() {
-    if (Date.now() - thonnyAt < 5000) return;
-    thonnyAt = Date.now();
-    invoke('thonny_running').then((on) => { if (!!on !== !!state.thonny) { if (state.thonny && !on) state.thonnyLaunched = false; state.thonny = !!on; renderRobots(); renderModes(); } }).catch(() => {});
+  const plainId = (id) => String(id || '').toLowerCase().replace(/[^0-9a-f]/g, '');
+  function refreshThonny() { thonnyAt = Date.now(); return invoke('thonny_state').then(applyThonny).catch(() => {}); }
+  function pollThonny() { if (Date.now() - thonnyAt >= 3000) refreshThonny(); }
+  function watchThonny() { [1500, 4000, 8000].forEach((ms) => setTimeout(refreshThonny, ms)); }
+  function applyThonny(s) {
+    const running = !!(s && s.running);
+    const st = running && s.state;
+    let id = null;
+    if (st && st.id) {
+      const r = state.robots.find((x) => plainId(x.id) === plainId(st.id)) || state.robots.find((x) => st.name && x.name === st.name);
+      id = r ? r.id : null;
+    }
+    // Thonny could not take the robot chosen for it: say so once.
+    if (st && st.error && st.seq && st.seq !== state.thonnyWarned && state.thonnyWanted) {
+      state.thonnyWarned = st.seq;
+      toast(T('Thonny is waiting for {name}: it is used by another program.', { name: state.thonnyWanted.name || 'Thymio' }));
+    }
+    if (!running) state.thonnyWanted = null;
+    if (running !== !!state.thonny || id !== state.thonnyRobot) { state.thonny = running; state.thonnyRobot = id; setEditors(); }
   }
   function pollBattery() {
     pollThonny();
@@ -281,9 +324,7 @@
     connected: ['Connecting…', 'neutral'], unknown: ['Unknown', 'neutral']
   };
   // A robot can be chosen when free, or when one of our own programming windows uses it.
-  // A robot busy with none of our windows, while Thonny is open, is the one Thonny uses.
-  const inThonny = (r) => !!r && r.status === 'busy' && !state.editors[r.id] && !!(state.thonny || state.thonnyLaunched);
-  const usable = (r) => r.status === 'available' || r.status === 'ready' || !!state.editors[r.id] || inThonny(r);
+  const usable = (r) => r.status === 'available' || r.status === 'ready' || !!state.editors[r.id];
   const fwNum = (s) => parseInt(s, 10) || 0;
 
   // "For: ● Yellow" at the top of the library: the robot activities, challenges and solutions go to.
@@ -294,7 +335,7 @@
     for (const r of choices) {
       const o = document.createElement('option'); o.value = r.id;
       const openId = state.editors[r.id]; const m = openId && modeById(openId);
-      o.textContent = (r.name || 'Thymio') + (m ? ` · ${T('In {app}', { app: T(m.name) })}` : inThonny(r) ? ` · ${T('In {app}', { app: 'Thonny' })}` : '');
+      o.textContent = (r.name || 'Thymio') + (m ? ` · ${T('In {app}', { app: T(m.name) })}` : '');
       sel.append(o);
     }
     if (!choices.length) { const o = document.createElement('option'); o.textContent = T('No robot'); o.value = ''; sel.append(o); }
@@ -364,8 +405,7 @@
       // The programming window open for this robot, with Show and Close.
       const openId = state.editors[r.id];
       const openMode = openId && modeById(openId);
-      const thonnyHere = inThonny(r);
-      if (r.status === 'busy' && !openMode && !thonnyHere) {
+      if (r.status === 'busy' && !openMode) {
         const note = document.createElement('div'); note.className = 'robot-note'; note.textContent = T('Used by another program or computer');
         main.append(note);
       }
@@ -378,20 +418,19 @@
         b.addEventListener('click', (e) => { e.preventDefault(); e.stopPropagation(); fn(); });
         actions.append(b);
       };
-      if (openMode) {
+      if (openMode && openId === 'thonny') {
+        addAction(T('Show'), () => focusEditor(r.id), true);
+        addAction(T('Close'), () => {
+          choose(T('Close {app} on {name}?', { app: 'Thonny', name: r.name || 'Thymio' }), T('Thonny will ask you to save your work.'),
+            [{ value: 'close', label: T('Close'), primary: true }])
+            .then((v) => { if (v === 'close') invoke('quit_thonny').then(watchThonny); });
+        });
+      } else if (openMode) {
         addAction(T('Show'), () => invoke('focus_editor', { robot: r.id }), true);
         addAction(T('Close'), () => {
           choose(T('Close {app} on {name}?', { app: T(openMode.name), name: r.name || 'Thymio' }), T('Unsaved work in {app} will be lost.', { app: T(openMode.name) }),
             [{ value: 'close', label: T('Close'), primary: true }])
             .then((v) => { if (v === 'close') invoke('close_editor', { robot: r.id }); });
-        });
-      }
-      if (thonnyHere) {
-        addAction(T('Show'), () => invoke('focus_thonny').catch(() => {}), true);
-        addAction(T('Close'), () => {
-          choose(T('Close {app} on {name}?', { app: 'Thonny', name: r.name || 'Thymio' }), T('Thonny will ask you to save your work.'),
-            [{ value: 'close', label: T('Close'), primary: true }])
-            .then((v) => { if (v === 'close') invoke('quit_thonny').then(() => { watchThonny(); state.thonnyLaunched = false; }); });
         });
       }
       if (canRename && state.renaming !== r.id && !openMode) addAction(T('Rename'), () => { state.renaming = r.id; renderRobots(); });
@@ -400,8 +439,8 @@
       else if (canUpdate) addAction(T('⋯ More'), () => { state.moreOpen = r.id; renderRobots(); });
       if (actions.childElementCount) main.append(actions);
       const badge = document.createElement('span');
-      badge.className = 'badge ' + (openMode || thonnyHere ? 'open' : tone);
-      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : thonnyHere ? T('In {app}', { app: 'Thonny' }) : label;
+      badge.className = 'badge ' + (openMode ? 'open' : tone);
+      badge.textContent = openMode ? T('In {app}', { app: T(openMode.name) }) : label;
       el.append(input, main, badge);
       list.append(el);
     }
@@ -437,7 +476,7 @@
       const age = b.querySelector('.age'); age.textContent = window.I18N.ages(m.age); age.classList.add(m.tone);
       b.querySelector('.mode-desc').textContent = T(m.short);
       const robot = state.robots.find((r) => r.id === state.selected);
-      const openId = robot && (state.editors[robot.id] || (inThonny(robot) ? 'thonny' : null));
+      const openId = robot && state.editors[robot.id];
       if (!m.available) {
         const soon = document.createElement('span'); soon.className = 'mode-soon'; soon.textContent = T('Coming in a later version');
         b.querySelector('.mode-text').append(soon);
@@ -451,7 +490,7 @@
         const n = document.createElement('span'); n.className = 'mode-note'; n.textContent = T('Will replace {app} on {name}', { app: T(open ? open.name : openId), name: robot.name || 'Thymio' });
         b.querySelector('.mode-text').append(n);
       }
-      b.addEventListener('click', () => (openId === m.id ? (m.id === 'thonny' ? invoke('focus_thonny').catch(() => {}) : invoke('focus_editor', { robot: robot.id })) : showDetails(m)));
+      b.addEventListener('click', () => (openId === m.id ? focusEditor(robot.id) : showDetails(m)));
       grid.append(b);
     }
   }
@@ -479,7 +518,6 @@
     renderLibrary();
   }
   function renderLibrary() {
-    $('lib-robot-wrap').hidden = libraryMode === 'thonny'; // Thonny chooses its robot itself
     document.querySelectorAll('#library-tabs .tab').forEach((t) => t.setAttribute('aria-selected', t.dataset.mode === libraryMode ? 'true' : 'false'));
     const grid = $('activity-grid'); grid.textContent = '';
     if (!activities) { loadActivities().then(renderLibrary); return; }
@@ -530,32 +568,14 @@
     const [main, hash] = path.split('#');
     return `${main}${main.includes('?') ? '&' : '?'}v=${Date.now()}${hash !== undefined ? '#' + hash : ''}`;
   };
-  // Thonny takes a free Thymio II by itself. When every robot has a programming window open,
-  // offer to close them first. Resolves false when cancelled.
-  function freeRobotsForThonny() {
-    // Thonny already open: files go to it, and it keeps the robot it has.
-    const running = invoke('thonny_running').catch(() => false);
-    return Promise.all([invoke('list_editors').then(setEditors, () => {}), running]).then(([, on]) => {
-      if (on) return true;
-      const ids = Object.keys(state.editors);
-      if (!ids.length) return true;
-      const free = state.robots.some((r) => (r.status === 'available' || r.status === 'ready') && !state.editors[r.id]);
-      if (free) return true;
-      return choose(T('Thonny needs a free Thymio II'),
-        T('Your Thymio II are used by programming windows. Close them so Thonny can connect? Unsaved work in them will be lost.'),
-        [{ value: 'anyway', label: T('Open Thonny anyway') }, { value: 'close', label: T('Close them and open Thonny'), primary: true }])
-        .then((v) => {
-          if (v === 'close') return Promise.all(ids.map((id) => invoke('close_editor', { robot: id }).catch(() => {})))
-            .then(() => new Promise((ok) => setTimeout(() => ok(true), 1500)));
-          return v === 'anyway';
-        });
-    });
-  }
   function openActivity(mode, a, kind, confirmed, robotId) {
     if (mode.launch === 'thonny') {
-      freeRobotsForThonny().then((go) => go && invoke('open_python_activity', { id: a.id, kind })
-        .then((path) => { watchThonny(); if (kind === 'challenge') openChallenge(a); toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() })); })
-        .catch((e) => toast(String(e))));
+      const robot = state.robots.find((r) => r.id === (robotId || state.selected));
+      if (!robot) { toast(T('Choose a robot first, on the Home page.')); return; }
+      openThonnyOn(robot, () => invoke('open_python_activity', { id: a.id, kind }).then((path) => {
+        if (kind === 'challenge') openChallenge(a, robot);
+        toast(T('Thonny is opening {file} (in Documents › Thymio Suite › Activities)', { file: path.split(/[\\/]/).pop() }));
+      }));
       return;
     }
     // Activities go to the robot chosen at the top of the library (or the challenge's robot).
@@ -622,15 +642,16 @@
     $('details-warning').hidden = !warning;
     $('details-warning').textContent = warning;
     $('details-open').disabled = !!warning;
-    $('details-open').textContent = m.launch === 'thonny' ? T('Open Thonny') : robot ? T('Open with {name}', { name: robot.name || 'Thymio' }) : T('Open');
+    $('details-open').textContent = robot ? T('Open with {name}', { name: robot.name || 'Thymio' }) : T('Open');
     $('details').showModal();
   }
 
   $('details-open').addEventListener('click', () => {
     const robot = state.robots.find((r) => r.id === state.selected);
     if (current && current.launch === 'thonny') {
-      freeRobotsForThonny().then((go) => go && invoke('open_thonny').then(() => { watchThonny(); $('details').close(); toast(T('Thonny is starting… (the first start can take a few seconds)')); }))
-        .catch((e) => toast(String(e)));
+      if (!robot) return;
+      $('details').close();
+      openThonnyOn(robot, () => invoke('open_thonny').then(() => toast(T('Thonny is starting… (the first start can take a few seconds)'))));
       return;
     }
     if (!current || !robot) return;

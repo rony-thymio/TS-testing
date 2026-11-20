@@ -519,6 +519,38 @@ async fn thonny_running(app: tauri::AppHandle, window: WebviewWindow) -> Result<
     Ok(!thonny_processes(&app).is_empty())
 }
 
+/// Folder shared with the Thymio plug-in in Thonny (patches/tdmclient_ty): the launcher writes the
+/// robot to use in thonny-robot.json, the plug-in writes the robot it holds in thonny-state.json.
+fn thonny_link_dir() -> PathBuf {
+    std::env::var_os("LOCALAPPDATA").map(PathBuf::from).unwrap_or_else(std::env::temp_dir).join("ThymioSuiteNext")
+}
+
+/// Tells Thonny which robot to use (Thonny moves to it within a second, or uses it when it starts).
+#[tauri::command]
+async fn thonny_use_robot(window: WebviewWindow, robot: String, name: String) -> Result<(), String> {
+    require_main(&window)?;
+    let dir = thonny_link_dir();
+    fs::create_dir_all(&dir).map_err(|e| e.to_string())?;
+    let seq = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map(|d| d.as_millis()).unwrap_or(0);
+    let body = serde_json::json!({ "id": robot, "name": name, "seq": seq.to_string() });
+    let tmp = dir.join("thonny-robot.json.tmp");
+    fs::write(&tmp, body.to_string()).map_err(|e| e.to_string())?;
+    fs::rename(&tmp, dir.join("thonny-robot.json")).map_err(|e| e.to_string())
+}
+
+/// Whether Thonny is open, and the robot it holds (as reported by the plug-in).
+#[tauri::command]
+async fn thonny_state(app: tauri::AppHandle, window: WebviewWindow) -> Result<serde_json::Value, String> {
+    require_main(&window)?;
+    let running = !thonny_processes(&app).is_empty();
+    let reported = if running {
+        fs::read_to_string(thonny_link_dir().join("thonny-state.json")).ok()
+            .and_then(|t| serde_json::from_str::<serde_json::Value>(&t).ok())
+            .unwrap_or(serde_json::Value::Null)
+    } else { serde_json::Value::Null };
+    Ok(serde_json::json!({ "running": running, "state": reported }))
+}
+
 /// Brings Thonny's window to the front.
 #[tauri::command]
 async fn focus_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
@@ -566,7 +598,7 @@ fn close_thonny(app: &tauri::AppHandle) {
 async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(), String> {
     require_main(&window)?;
     let thonny = thonny_path(&app)?;
-    let child = Command::new(&thonny).spawn().map_err(|e| e.to_string())?;
+    let child = Command::new(&thonny).env("THYMIO_SUITE_LINK_DIR", thonny_link_dir()).spawn().map_err(|e| e.to_string())?;
     if let Ok(mut v) = THONNY_STARTED.lock() { v.push(child.id()); }
     Ok(())
 }
@@ -620,7 +652,7 @@ async fn open_python_activity(app: tauri::AppHandle, window: WebviewWindow, id: 
         _ => return Err("unknown activity file".into()),
     }
     let thonny = thonny_path(&app)?;
-    let child = Command::new(&thonny).args(&targets).spawn().map_err(|e| e.to_string())?;
+    let child = Command::new(&thonny).args(&targets).env("THYMIO_SUITE_LINK_DIR", thonny_link_dir()).spawn().map_err(|e| e.to_string())?;
     if let Ok(mut v) = THONNY_STARTED.lock() { v.push(child.id()); }
     Ok(targets[0].display().to_string())
 }
@@ -850,7 +882,7 @@ fn main() {
         .manage(WebApps::default())
         .manage(ActivityWindows::default())
         .manage(RobotWindows::default())
-        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, thonny_running, focus_thonny, quit_thonny, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
+        .invoke_handler(tauri::generate_handler![open_app, open_thonny, open_python_activity, list_activities, open_challenge, set_challenge_collapsed, close_challenge, request_solution, load_into_activity_window, activity_window_open, list_editors, focus_editor, close_editor, load_into_robot_window, thonny_running, thonny_state, thonny_use_robot, focus_thonny, quit_thonny, open_thymio_lab, device_manager_status, device_manager_log, restart_device_manager, save_report])
         .setup(|app| {
             let handle = app.handle().clone();
             let state = app.state::<WebApps>();

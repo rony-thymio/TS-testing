@@ -66,6 +66,10 @@ jobs:
           # this upstream commit has the fix.
           & "$dest\python.exe" -m pip install --no-warn-script-location --disable-pip-version-check `
             "tdmclient @ git+https://github.com/epfl-mobots/tdm-python@42ef302f2255ff0ede3c4b8e9d5abd1d31f9ad6a" tdmclient_ty
+          # Thymio Suite's version of the plug-in: uses the robot chosen in Thymio Suite (launcher/patches/tdmclient_ty).
+          $plugin = & "$dest\python.exe" -c "import os, thonnycontrib.tdmclient_ty as m; print(os.path.dirname(m.__file__))"
+          Copy-Item patches\tdmclient_ty\__init__.py (Join-Path $plugin "__init__.py") -Force
+          Remove-Item (Join-Path $plugin "__pycache__") -Recurse -Force -ErrorAction SilentlyContinue
           & "$dest\python.exe" -c "import thonnycontrib.tdmclient_ty, tdmclient; print('plug-in OK')"
           & "$dest\python.exe" -c "from tdmclient.atranspiler import ATranspiler; t=ATranspiler(); t.set_source('leds_top = [32, 0, 0]'); t.transpile(); print(t.get_output())"
           Remove-Item thonny-setup.exe
