@@ -127,14 +127,19 @@ def connect_tdm():
             client = ClientAsync(tdm_port=ClientAsync.DEFAULT_TDM_PORT)
 
             def on_nodes_changed(node_list):
-                global nodes, node, node_default
+                global nodes, node, node_default, wanted
                 nodes = [
                     node
                     for node in node_list
                     if node.status != ClientAsync.NODE_STATUS_DISCONNECTED
                 ]
-                if node not in nodes:
+                if node is not None and node not in nodes:
+                    # The robot went away (radio link, USB power saving, sleep): keep it as the
+                    # robot to use, so follow_thymio_suite() takes it again when it comes back.
+                    if wanted is None:
+                        wanted = {"id": node.id_str, "name": node.props.get("name"), "seq": wanted_seq}
                     node = None
+                    write_state("not-found")
                 if node_default not in nodes:
                     node_default = nodes[0] if len(nodes) > 0 else None
                 if robot_view is not None:

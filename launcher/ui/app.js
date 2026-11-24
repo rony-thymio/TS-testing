@@ -286,7 +286,7 @@
       id = r ? r.id : null;
     }
     // Thonny could not take the robot chosen for it: say so once.
-    if (st && st.error && st.seq && st.seq !== state.thonnyWarned && state.thonnyWanted) {
+    if (st && st.error === 'busy' && st.seq && st.seq !== state.thonnyWarned && state.thonnyWanted) {
       state.thonnyWarned = st.seq;
       toast(T('Thonny is waiting for {name}: it is used by another program.', { name: state.thonnyWanted.name || 'Thymio' }));
     }
