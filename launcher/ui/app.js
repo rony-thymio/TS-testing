@@ -717,7 +717,11 @@
 
   // Shared with pairing.js
   window.ThymioApp = { state, toast, fwNum, showFirmware, showView };
+  // The version comes from the app itself (tauri.conf.json), "0.21.0" shown as "0.21".
   const renderVersion = () => { $('version-label').textContent = T('Test version {v}', { v: window.THYMIO_VERSION || '' }); };
+  if (tauri && tauri.app && tauri.app.getVersion) {
+    tauri.app.getVersion().then((v) => { window.THYMIO_VERSION = String(v).replace(/\.0$/, ''); renderVersion(); }).catch(() => {});
+  }
   renderVersion();
 
   // Result of "Save" in a programming window (see handle_download in main.rs).
