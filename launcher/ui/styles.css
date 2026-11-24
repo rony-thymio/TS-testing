@@ -247,7 +247,7 @@ dialog::backdrop { background: rgba(28, 26, 41, .4); }
 .robot-note { margin-top: 6px; font-size: 12px; line-height: 1.4; color: var(--muted); }
 .badge.open { color: #6A0BB0; background: #F3E8FF; }
 .mini.primary { color: #fff; background: #9910FB; border-color: #9910FB; }
-.mode.is-open { border: 2px solid #9910FB; padding: 15px; }
+.mode.is-open { border: 2px solid #9910FB; padding: 15px; background: #FCF9FF; box-shadow: 0 3px 12px rgba(153, 16, 251, .07); }
 .age.open { color: #6A0BB0; background: #F3E8FF; }
 .mode-note { font-size: 11px; font-weight: 500; color: #8A4B00; }
 .mode-note.open { color: #6A0BB0; }
