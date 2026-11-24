@@ -1,6 +1,6 @@
 [package]
 name = "thymio-suite-next"
-version = "0.21.0"
+version = "0.20.0"
 description = "Launcher for Thymio II programming environments"
 authors = ["Mobsya"]
 license = "LGPL-3.0-only"
@@ -10,18 +10,14 @@ edition = "2021"
 tauri-build = { version = "2", features = [] }
 
 [dependencies]
-tauri = { version = "2", features = [] }
+# devtools: right-click > Inspect in test versions, to diagnose problems on testers' PCs
+tauri = { version = "2", features = ["devtools"] }
 tiny_http = "0.12"
 tauri-plugin-dialog = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 # finds Thonny's processes (to show which robot Thonny uses and to close it with the launcher)
 sysinfo = { version = "=0.30.13", default-features = false }
-
-[features]
-# Test versions only (the build adds --features test-tools): right-click > Inspect, to diagnose
-# problems on testers' PCs. Release versions are built without it.
-test-tools = ["tauri/devtools"]
 
 [profile.release]
 codegen-units = 1

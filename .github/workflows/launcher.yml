@@ -26,7 +26,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        include: ${{ fromJSON(inputs.macos && '[{"name":"Windows x64","os":"windows-latest","triple":"x86_64-pc-windows-msvc","tdm":"thymio-device-manager-Windows-X64","ext":".exe","bundles":"nsis,msi"},{"name":"macOS Apple Silicon","os":"macos-latest","triple":"aarch64-apple-darwin","tdm":"thymio-device-manager-macOS-ARM64","ext":"","bundles":"app,dmg"},{"name":"macOS Intel","os":"macos-15-intel","triple":"x86_64-apple-darwin","tdm":"thymio-device-manager-macOS-X64","ext":"","bundles":"app,dmg"}]' || '[{"name":"Windows x64","os":"windows-latest","triple":"x86_64-pc-windows-msvc","tdm":"thymio-device-manager-Windows-X64","ext":".exe","bundles":"nsis,msi"}]') }}
+        include: ${{ fromJSON(inputs.macos && '[{"name":"Windows x64","os":"windows-latest","triple":"x86_64-pc-windows-msvc","tdm":"thymio-device-manager-Windows-X64","ext":".exe","bundles":"nsis"},{"name":"macOS Apple Silicon","os":"macos-latest","triple":"aarch64-apple-darwin","tdm":"thymio-device-manager-macOS-ARM64","ext":"","bundles":"app,dmg"},{"name":"macOS Intel","os":"macos-15-intel","triple":"x86_64-apple-darwin","tdm":"thymio-device-manager-macOS-X64","ext":"","bundles":"app,dmg"}]' || '[{"name":"Windows x64","os":"windows-latest","triple":"x86_64-pc-windows-msvc","tdm":"thymio-device-manager-Windows-X64","ext":".exe","bundles":"nsis"}]') }}
     defaults:
       run:
         shell: bash
@@ -85,68 +85,7 @@ jobs:
         run: npx --yes @tauri-apps/cli@2 icon src-tauri/icons/app-icon.png
 
       - name: Build
-        # test-tools: right-click > Inspect in test versions only (see Cargo.toml).
-        run: npx --yes @tauri-apps/cli@2 build --bundles ${{ matrix.bundles }} --features test-tools
-
-      # What a school IT department does: silent install for all users, then uninstall. Checks the
-      # files, the firewall rule, and that nothing is left behind. Reported in the build summary.
-      - name: Installation test (silent MSI and .exe, firewall rule, uninstall)
-        if: runner.os == 'Windows'
-        continue-on-error: true
-        shell: pwsh
-        run: |
-          $rule = "Thymio Suite device manager"
-          $report = @("## Installation test")
-          function Check($ok, $text) { $script:report += $(if ($ok) { "- ✅ $text" } else { "- ❌ $text" }); if (-not $ok) { $script:failed = $true } }
-          function RuleExists { netsh advfirewall firewall show rule name="$rule" | Out-Null; return ($LASTEXITCODE -eq 0) }
-          function Installed($dir) { return (Test-Path "$dir\thymio-device-manager.exe") -and (Test-Path "$dir\thonny\thonny.exe") -and ((Get-ChildItem "$dir\*.exe" | Where-Object { $_.Name -like "Thymio*Suite*" }).Count -gt 0) }
-          $dir = "$env:ProgramFiles\Thymio Suite Next"
-
-          $msi = Get-ChildItem src-tauri/target/release/bundle/msi/*.msi | Select-Object -First 1
-          $p = Start-Process msiexec -ArgumentList "/i `"$($msi.FullName)`" /qn /norestart /l*v msi-install.log" -Wait -PassThru
-          Check ($p.ExitCode -eq 0) "MSI: silent install (msiexec /i … /qn), exit code $($p.ExitCode)"
-          Check (Installed $dir) "MSI: files in $dir"
-          Check (RuleExists) "MSI: firewall rule added"
-          $p = Start-Process msiexec -ArgumentList "/x `"$($msi.FullName)`" /qn /norestart" -Wait -PassThru
-          Check ($p.ExitCode -eq 0) "MSI: silent uninstall, exit code $($p.ExitCode)"
-          Check (-not (Test-Path "$dir\thymio-device-manager.exe")) "MSI: no files left"
-          Check (-not (RuleExists)) "MSI: firewall rule removed"
-
-          $exe = Get-ChildItem src-tauri/target/release/bundle/nsis/*.exe | Select-Object -First 1
-          $p = Start-Process $exe.FullName -ArgumentList "/S /P" -Wait -PassThru
-          Check ($p.ExitCode -eq 0) ".exe: silent install for all users (/S /P), exit code $($p.ExitCode)"
-          Check (Installed $dir) ".exe: files in $dir"
-          Check (RuleExists) ".exe: firewall rule added"
-          $un = Get-ChildItem "$dir\uninstall*.exe" | Select-Object -First 1
-          if ($un) { $p = Start-Process $un.FullName -ArgumentList "/S" -Wait -PassThru; Start-Sleep -Seconds 5 }
-          Check (-not (Test-Path "$dir\thymio-device-manager.exe")) ".exe: no files left after silent uninstall"
-          Check (-not (RuleExists)) ".exe: firewall rule removed"
-
-          $report -join "`n" | Out-File -Append -Encoding utf8 $env:GITHUB_STEP_SUMMARY
-          $report -join "`n"
-          if ($failed) { if (Test-Path msi-install.log) { Get-Content msi-install.log -Tail 40 }; exit 1 }
-
-      # Parts list (SBOM, CycloneDX) of everything the installer contains: Rust crates, the Python
-      # packages bundled with Thonny, the web apps. Needed for the EU Cyber Resilience Act, and
-      # scanned for known security flaws in the release job.
-      - name: Parts list (SBOM)
-        if: runner.os == 'Windows'
-        continue-on-error: true
-        uses: anchore/sbom-action@v0
-        with:
-          path: launcher
-          config: launcher/.syft.yaml
-          format: cyclonedx-json
-          output-file: launcher/sbom.cdx.json
-          upload-artifact: false
-
-      - name: Upload parts list
-        if: runner.os == 'Windows'
-        continue-on-error: true
-        uses: actions/upload-artifact@v4
-        with:
-          name: thymio-suite-next-sbom
-          path: launcher/sbom.cdx.json
+        run: npx --yes @tauri-apps/cli@2 build --bundles ${{ matrix.bundles }}
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
@@ -154,7 +93,6 @@ jobs:
           name: thymio-suite-next-${{ matrix.triple }}
           path: |
             launcher/src-tauri/target/release/bundle/nsis/*.exe
-            launcher/src-tauri/target/release/bundle/msi/*.msi
             launcher/src-tauri/target/release/bundle/dmg/*.dmg
           if-no-files-found: error
 
@@ -173,22 +111,6 @@ jobs:
           pattern: thymio-suite-next-*
           path: dist
           merge-multiple: true
-      # Known security flaws in the bundled parts: reported in the build summary, not blocking yet.
-      - name: Check the parts list for known security flaws
-        id: scan
-        continue-on-error: true
-        uses: anchore/scan-action@v6
-        with:
-          sbom: dist/sbom.cdx.json
-          fail-build: false
-          severity-cutoff: high
-          output-format: table
-      - name: Security report in the build summary
-        if: always()
-        continue-on-error: true
-        run: |
-          echo "## Known security flaws in the bundled parts" >> "$GITHUB_STEP_SUMMARY"
-          if [ -f "${{ steps.scan.outputs.report }}" ]; then echo '```' >> "$GITHUB_STEP_SUMMARY"; cat "${{ steps.scan.outputs.report }}" >> "$GITHUB_STEP_SUMMARY"; echo '```' >> "$GITHUB_STEP_SUMMARY"; else echo "No report (scan did not run)." >> "$GITHUB_STEP_SUMMARY"; fi
       - name: Create or replace the release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -198,10 +120,8 @@ jobs:
           # Simple file names without spaces, one per system.
           mkdir -p out
           find dist -type f -name '*.exe' -exec cp {} "out/ThymioSuiteNext-${version}-windows-x64-setup.exe" \;
-          find dist -type f -name '*.msi' -exec cp {} "out/ThymioSuiteNext-${version}-windows-x64.msi" \;
           find dist -type f -name '*aarch64*.dmg' -exec cp {} "out/ThymioSuiteNext-${version}-macos-apple-silicon.dmg" \;
           find dist -type f -name '*x64*.dmg' -exec cp {} "out/ThymioSuiteNext-${version}-macos-intel.dmg" \;
-          [ -f dist/sbom.cdx.json ] && cp dist/sbom.cdx.json "out/ThymioSuiteNext-${version}-sbom.cdx.json"
           ls -l out
           gh release delete "$tag" --yes --cleanup-tag 2>/dev/null || true
           gh release create "$tag" --prerelease --target "${{ github.sha }}" \

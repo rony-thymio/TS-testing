@@ -603,28 +603,6 @@ async fn open_thonny(app: tauri::AppHandle, window: WebviewWindow) -> Result<(),
     Ok(())
 }
 
-/// Where Thonny activities are copied: Documents/Thymio Suite/Activities. In schools, Documents
-/// may be on a server that is missing or read-only (or redirected by OneDrive): then the user's own
-/// folder, then the app's local data folder, so the activity still opens.
-fn activities_folder(app: &tauri::AppHandle) -> Result<PathBuf, String> {
-    let mut tried = Vec::new();
-    let candidates = [
-        app.path().document_dir().ok().map(|d| d.join("Thymio Suite").join("Activities")),
-        app.path().home_dir().ok().map(|d| d.join("Thymio Suite").join("Activities")),
-        app.path().app_local_data_dir().ok().map(|d| d.join("Activities")),
-    ];
-    for folder in candidates.into_iter().flatten() {
-        // Check that we can really write there (a folder may exist but be read-only).
-        let probe = folder.join(".thymio-write-test");
-        if fs::create_dir_all(&folder).is_ok() && fs::write(&probe, b"ok").is_ok() {
-            let _ = fs::remove_file(&probe);
-            return Ok(folder);
-        }
-        tried.push(folder.display().to_string());
-    }
-    Err(format!("Could not create a folder for the activities (tried: {})", tried.join(", ")))
-}
-
 /// Opens a Python activity of the library in Thonny. Files are copied to
 /// Documents/Thymio Suite/Activities first, so students can change and save them:
 /// - "challenge": <id>.py, copied only once, so a student's work is never overwritten;
@@ -639,7 +617,8 @@ async fn open_python_activity(app: tauri::AppHandle, window: WebviewWindow, id: 
     let dir = webapps_dir(&app)
         .ok_or("web apps folder missing from the installation")?
         .join("activities").join("python").join(&id);
-    let folder = activities_folder(&app)?;
+    let folder = app.path().document_dir().map_err(|e| e.to_string())?.join("Thymio Suite").join("Activities");
+    fs::create_dir_all(&folder).map_err(|e| format!("Could not create {}: {e}", folder.display()))?;
     let mut targets = Vec::new();
     match kind.as_str() {
         "challenge" => {

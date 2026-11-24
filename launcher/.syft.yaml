@@ -1,4 +1,0 @@
-# Parts list (SBOM) settings: build folders are not part of what is installed.
-exclude:
-  - "./src-tauri/target/**"
-  - "./node_modules/**"
